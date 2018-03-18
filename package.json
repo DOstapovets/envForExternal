@@ -5,20 +5,25 @@
   "author": "Dmytro Lisovskyi",
   "private": true,
   "scripts": {
-    "dev":
-      "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "dependencies": {
+    "lodash": "^4.17.5",
     "vue": "^2.5.2",
+    "vue-click-outside": "^1.0.7",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^3.3.15",
+    "@storybook/addons": "^3.3.15",
+    "@storybook/vue": "^3.3.15",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",
@@ -80,5 +85,9 @@
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }
