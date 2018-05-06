@@ -1,0 +1,12 @@
+@import './scss/reset/bootstrap';
+@import './scss/reset/main';
+@import './scss/dragula';
+@import './scss/or-rwc';
+@import './scss/svg-step-shape';
+
+html,
+body {
+  position: static;
+  background: #ffffff !important;
+  padding: 2px;
+}

@@ -1,0 +1,23 @@
+@import '~sass-rem/_rem';
+@import '../_mixins';
+@import '../colors';
+
+$rem-fallback: false;
+$rem-baseline: 16px;
+
+html {
+  @include rem-baseline;
+
+  body {
+    background: $grey-main-bg-color;
+
+    @include normal-font;
+  }
+}
+
+@-moz-document url-prefix() {
+  /* hack/fix for Firefox "scroll in flexbox" issue https://bugzilla.mozilla.org/show_bug.cgi?id=1135332 */
+  * {
+    min-height: 0;
+  }
+}

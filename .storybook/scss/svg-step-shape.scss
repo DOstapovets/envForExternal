@@ -1,0 +1,185 @@
+@import './colors';
+@import './_mixins';
+
+svg.step-shape {
+    fill: white;
+    stroke: #b4c3cd;
+    stroke-width: 2px;
+    width: 60px;
+    height: 60px;
+
+    &.shape-none {
+        fill: $grey-main-bg-color;
+        stroke: $grey-main-bg-color;
+    }
+
+    /* not showing active stroke for a fake 'start' step */
+    .step-type-start:hover > & {
+        stroke: #808080;
+    }
+}
+
+use.step-icon {
+    fill: #4e5d67;
+    stroke-width: 0;
+}
+
+svg.label-node {
+    > rect {
+        stroke: #C4C4C4;
+    }
+}
+
+svg.empty-node {
+    > svg.step-shape {
+        fill: #3F8EB9;
+        stroke: none;
+        transition: fill 0.3s;
+    }
+}
+
+// DEMO
+
+svg.step-type-start {
+    > rect {
+        width: 90px;
+        height: 55px;
+        stroke: #808080;
+        fill: #e9e9e9;
+        stroke-width: 0;
+        rx: 25;
+        ry: 25;
+    }
+
+    > text {
+        fill: #000;
+        font-size: 21px;
+    }
+}
+
+svg.or-tree {
+    g.tree-label {
+        svg.step-type-label {
+            > rect {
+                height: 28px;
+                width: 90px;
+                stroke: #808080;
+                fill: #e9e9e9;
+                stroke-width: 0;
+                rx: 12;
+                ry: 12;
+            }
+
+            > text {
+                fill: #000;
+                font-size: 13px;
+                font-weight: 600;
+            }
+        ;
+        }
+    }
+
+    g.empty-tree-node {
+        svg.empty-node {
+            svg.step-shape {
+                fill: $grey-button-icon-color;
+                stroke: none;
+                transition: fill 0.3s;
+
+                &:hover {
+                    fill: #7f8991;
+                }
+
+                &:active {
+                    fill: $active-pressed;
+                }
+            }
+            &.hover {
+                svg.step-shape {
+                    fill: $active;
+                }
+            }
+        }
+    }
+
+    g.tree-node {
+        &:hover,
+        &.hover {
+            svg.step-shape {
+                stroke: $active;
+                fill: #fff;
+
+                &.shape-none {
+                    stroke: #dbedf8;
+                }
+            }
+            .step-icon {
+                fill: $active;
+            }
+
+            &.step-error {
+                svg.step-shape {
+                    stroke: $danger-pressed;
+                }
+                &:not(.active) {
+                    .step-icon {
+                        fill: $danger-pressed;
+                    }
+                }
+
+            }
+        }
+
+        &.step-error {
+            svg.step-shape {
+                stroke: $danger-pressed;
+            }
+        }
+
+        &.active {
+            svg.step-shape {
+                stroke: $active;
+                fill: $active;
+
+                &.shape-none {
+                    stroke: $active;
+                }
+            }
+            .step-icon {
+                fill: #fff;
+            }
+
+            &.step-error {
+                svg.step-shape {
+                    fill: $danger-pressed;
+                    stroke: $danger-pressed;
+                }
+            }
+        }
+    }
+}
+
+div.or-tree-wrap.flow-graph {
+
+    div.node-tooltip {
+        background: transparent;
+        width: 185px;
+
+        .node-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: left;
+            margin-bottom: 5px;
+
+            @include normal-font;
+        }
+
+        .node-desc {
+            font-size: 16px;
+            text-align: left;
+
+            @include normal-font;
+        }
+    }
+}
+
