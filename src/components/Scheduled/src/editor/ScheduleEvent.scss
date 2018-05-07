@@ -1,0 +1,878 @@
+.schedule-step {
+    min-width: 475px;
+    .timezone {
+        display: flex;
+        align-items: baseline;
+        &__label {
+            padding-right: 25px;
+            color: #91969d;
+            font-size: 14px;
+            line-height: 16px;
+        }
+
+        .ui-select {
+            width: 100%;
+            margin-bottom: 0px;
+        }
+    }
+
+    .choose-date {
+        color: rgba(15, 35, 46, 0.55);
+        font-size: 17px;
+        font-weight: bold;
+        line-height: 23px;
+
+        &_start {
+            padding-right: 10px;
+        }
+
+        &_end {
+            max-width: 120px;
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .wr-time-item {
+        display: flex;
+        align-items: center;
+        .ui-checkbox {
+            margin-bottom: 0;
+        }
+    }
+
+    .wr-configs-every {
+        display: flex;
+    }
+
+    .wr-start-date {
+        display: flex;
+        align-items: center;
+    }
+
+    .configs-time {
+        position: relative;
+        width: 110px;
+        height: 30.8px;
+        &__date {
+            width: 140px;
+        }
+        &_with-conf {
+            margin-bottom: 2px;
+        }
+        &__with-conf {
+            display: flex;
+            align-items: center;
+        }
+
+        &__icon {
+            position: absolute;
+            z-index: 1;
+            font-size: 12px;
+            color: #e1e1e1;
+            top: 50%;
+            margin-top: -6px;
+            left: 8px;
+        }
+
+        &__from-to {
+            padding: 0 20px;
+        }
+
+        &__end-time {
+            cursor: pointer;
+            padding-left: 20px;
+            padding-right: 3px;
+        }
+
+        .time-picker input.display-time {
+            padding-left: 35px;
+            width: 110px;
+        }
+
+        .dropdown {
+            width: 110px;
+        }
+
+        &__wr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+
+    .every {
+        display: flex;
+        align-items: center;
+        padding-left: 22px;
+
+        &__icon {
+            margin-left: 0;
+        }
+
+        .ui-select {
+        }
+        .ui-select__label-text {
+            display: inline-block;
+            float: right;
+        }
+
+        .ui-select__display {
+            padding: 0;
+            display: inline-block;
+            width: auto;
+            line-height: 35px;
+            width: 25px;
+        }
+
+        .ui-select__label-text svg {
+            display: inline-block;
+            margin-top: 10px;
+            height: 15px;
+            width: 15px;
+        }
+
+        .xs-input {
+            width: 35px;
+            margin: 0 3px 0 8px;
+        }
+
+        .ui-select__content {
+            height: 35px;
+            width: 40px;
+            cursor: pointer;
+        }
+    }
+
+    .timepicker span.or-timepicker.time-picker {
+        width: 110px;
+    }
+
+    .list-time {
+        margin-bottom: 20px;
+    }
+
+    .extands-class__input-text {
+        font-size: 14px;
+        text-align: left;
+        color: #0f232e;
+    }
+
+    .extands-class__checkbox-before {
+        background-color: #f7f7f7;
+        border: 1px solid #c7c7c7;
+    }
+
+    .extands-class__checkbox-after {
+        border-right-color: #132530;
+        border-bottom-color: #132530;
+    }
+
+    .section-border {
+    }
+
+    .xs-input {
+        width: 35px;
+        margin: 0 5px;
+        .ui-textbox__content {
+            input {
+                border-radius: 3px;
+                background-color: #fbfbfb;
+                border: solid 1px #e7e7e7;
+                padding: 0 6px;
+                height: 24px;
+                min-height: auto;
+                text-align: center;
+                @extend .extands-class__input-text;
+            }
+        }
+    }
+
+    .text-box-error {
+        .ui-textbox__content {
+            .ui-textbox__label {
+                input {
+                    border: 1px solid rgba(244, 67, 5, 0.46);
+                }
+            }
+        }
+
+        .ui-datepicker__display {
+            border: 1px solid rgba(244, 67, 5, 0.46) !important;
+        }
+    }
+
+    .md-input {
+        width: 55px;
+        margin: 0 5px;
+        .ui-textbox__content {
+            input {
+                border-radius: 3px;
+                background-color: #fbfbfb;
+                border: solid 1px #e7e7e7;
+                padding: 0 6px;
+                height: 24px;
+                min-height: auto;
+                text-align: center;
+                @extend .extands-class__input-text;
+            }
+        }
+    }
+
+    .remove-time-btn {
+        width: 18px;
+        background-color: transparent;
+        .ui-icon-button__icon {
+            span {
+                color: #91969d;
+            }
+        }
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    .button-link {
+        border: 0;
+        background: transparent;
+        font-size: 16px;
+        padding: 0;
+        cursor: pointer;
+        font-size: 14px;
+        color: #64b2da;
+        margin-left: 3px;
+        &:hover {
+            color: #4b99c1;
+        }
+        &.is-disabled {
+            color: rgb(94, 101, 109);
+            &:hover {
+                color: rgb(94, 101, 109);
+            }
+        }
+    }
+
+    .time-selector-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .dimention-selector {
+        &.ui-select {
+            margin-bottom: 0;
+            .ui-select__display {
+                border: none;
+                font-size: 14px;
+                text-align: left;
+                color: #0f232e;
+                min-height: auto;
+                padding: 0 5px;
+                height: 24px;
+                background: transparent;
+                &:hover {
+                    color: #4b99c1;
+                }
+                .ui-icon {
+                    display: none;
+                }
+            }
+            .ui-select__dropdown {
+                width: 60px;
+                min-width: 60px;
+                padding: 0;
+                .is-highlighted {
+                    color: #000000;
+                    background-color: #f9f9f9;
+                }
+                .is-selected {
+                    color: #64b2da;
+                }
+            }
+            &.is-disabled {
+                .ui-select__display {
+                    color: rgb(94, 101, 109);
+                }
+                .ui-select__display-value {
+                    color: rgb(94, 101, 109);
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    // Global overwrite
+    @at-root {
+        .ui-calendar {
+            .ui-calendar__header {
+                display: none;
+            }
+            .ui-calendar-week__date {
+                &:hover {
+                    color: #000000;
+                    border-radius: 0;
+                    background-color: #e1e1e1;
+                }
+                &.is-selected {
+                    color: #ffffff;
+                    background-color: #64b2da;
+                    border-radius: 0;
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+    .schedule-step__start,
+    .schedule-step__end,
+    .schedule-step__next-run {
+        .schedule-step__next-run-title {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.38;
+            margin-bottom: 18px;
+            color: #0f232e;
+        }
+
+        .schedule-step__start-configs,
+        .schedule-step__end-configs {
+            display: flex;
+            justify-content: space-between;
+            .schedule-step__start-configs_date,
+            .schedule-step__end-configs_date {
+                display: flex;
+                width: calc(50% - 15px);
+
+                .ui-datepicker__display {
+                    padding: 11px;
+                    height: 38px;
+                    border-radius: 3px;
+                    background-color: #fbfbfb;
+                    border: solid 1px #e7e7e7;
+                    .ui-datepicker__display-value {
+                        @extend .extands-class__input-text;
+                    }
+                }
+
+                .ui-datepicker__dropdown-button {
+                    top: inherit;
+                }
+            }
+
+            .schedule-step__start-configs_time {
+                width: calc(50% - 15px);
+
+                max-height: fit-content;
+                position: relative;
+                margin-bottom: 16px;
+
+                .label {
+                    height: 2.25rem;
+                    line-height: 2.25rem;
+                    color: rgba(94, 101, 109, 0.55);
+                    font-size: 12px;
+                }
+
+                .ui-icon {
+                    position: absolute;
+                    z-index: 1;
+                    right: 18px;
+                    top: 42px;
+                    color: rgba(0, 0, 0, 0.54);
+                }
+
+                .time-picker {
+                    width: 100%;
+
+                    .display-time {
+                        border-radius: 3px;
+                        border: 1px solid #dfdfdf;
+                        background-color: #fbfbfb;
+                        cursor: pointer;
+                        width: 100%;
+                        height: 38px;
+                    }
+
+                    .dropdown {
+                        ::-webkit-scrollbar,
+                        ::-webkit-scrollbar-thumb,
+                        ::-webkit-scrollbar-track {
+                            display: none;
+                        }
+                    }
+
+                    &.readony {
+                        .display-time {
+                            cursor: default;
+                        }
+                        .dropdown {
+                            display: none;
+                        }
+                    }
+                }
+
+                // .ui-textbox__content {
+                //   input {
+                //     padding: 11px;
+                //     height: 38px;
+                //     border-radius: 3px;
+                //     background-color: #fbfbfb;
+                //     border: solid 1px #e7e7e7;
+                //     @extend .extands-class__input-text;
+                //   }
+                // }
+                // &.text-box-error {
+                //   @extend .text-box-error;
+                // }
+            }
+        }
+    }
+
+    .ui-datepicker__label-text {
+        font-size: 12px;
+        line-height: 2.25rem;
+        color: rgba(94, 101, 109, 0.55);
+    }
+
+    .schedule-step__deactivate-after-last-run {
+    }
+
+    .schedule-step__recuring {
+        .schedule-step__recuring-till {
+            padding: 0 16px;
+            color: #0f232e;
+            font-size: 14px;
+            line-height: 19px;
+            display: flex;
+            align-items: center;
+        }
+        .schedule-step__recuring-active {
+            display: flex;
+            .ui-checkbox {
+                margin-bottom: 0;
+                .ui-checkbox__checkmark::before {
+                    @extend .extands-class__checkbox-before;
+                }
+                &:hover {
+                    .ui-checkbox__checkmark::after {
+                        @extend .extands-class__checkbox-after;
+                    }
+                }
+                &.is-checked {
+                    .ui-checkbox__checkmark::after {
+                        border-right-color: rgb(19, 37, 48);
+                        border-bottom-color: rgb(19, 37, 48);
+                    }
+                }
+            }
+        }
+
+        .schedule-step__recuring-table {
+            .schedule-step__recuring-title {
+                font-size: 16px;
+                font-weight: bold;
+                line-height: 1.38;
+                color: #0f232e;
+                margin-bottom: 19px;
+            }
+
+            .schedule-step__recuring-configs {
+                .wr-config-event {
+                    .ui-tabs__header-items {
+                        justify-content: center;
+                        height: 37px;
+                        align-items: center;
+                        .ui-tab-header-item {
+                            flex-grow: 1;
+                            height: 37px;
+                            background-color: #ffffff;
+                            border: solid 1px #dedede;
+
+                            .ui-tab-header-item__text {
+                                font-size: 15px;
+                                font-weight: normal;
+                                color: #828282;
+                                text-transform: capitalize;
+                            }
+                            &.is-active {
+                                background-color: #e2e2e2;
+                                .ui-tab-header-item__text {
+                                    font-size: 15px;
+                                    color: #132f38;
+                                }
+                            }
+                        }
+                    }
+
+                    .ui-tabs__body {
+                        padding: 0;
+                    }
+
+                    .ui-tabs__active-tab-indicator {
+                        display: none;
+                    }
+
+                    .recuring-configs__daily,
+                    .recuring-configs__weekly,
+                    .recuring-configs__monthly {
+                        .sub-title {
+                            font-size: 14px;
+                            font-weight: bold;
+                            line-height: 1;
+                            color: #0f232e;
+                            margin: 24px 0;
+                        }
+
+                        .config-line {
+                            display: flex;
+                            margin-bottom: 5px;
+                            align-items: center;
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+
+                            &.wrap {
+                                flex-wrap: wrap;
+                            }
+
+                            .config-line__label {
+                                font-size: 14px;
+                                line-height: 1.14;
+                                text-align: left;
+                                color: rgb(94, 101, 109);
+                            }
+
+                            .config-line__radio {
+                                display: flex;
+                                align-items: center;
+                                margin-bottom: 5px;
+                                min-width: 80px;
+
+                                .ui-radio__label-text {
+                                    font-size: 14px;
+                                    line-height: 1.14;
+                                    text-align: left;
+                                    color: rgb(94, 101, 109);
+                                }
+                            }
+
+                            .config-line__select {
+                                height: 25px;
+                                margin-right: 5px;
+                                &.ui-select {
+                                    margin-bottom: 0;
+                                    .ui-select__display {
+                                        min-width: 80px;
+                                        padding: 0 11px;
+                                        height: 25px;
+                                        border-radius: 3px;
+                                        background-color: #fbfbfb;
+                                        border: solid 1px #e7e7e7;
+                                        .ui-select__display-value {
+                                            font-size: 14px;
+                                            color: #0f232e;
+                                        }
+                                    }
+                                    &.is-active {
+                                        .ui-select__display {
+                                            border: 1px solid #64b2da;
+                                            border-bottom-left-radius: 0;
+                                            border-bottom-right-radius: 0;
+                                        }
+                                        .ui-select__dropdown {
+                                            border: 1px solid #64b2da;
+                                            min-width: 80px;
+                                            padding: 0;
+                                            .is-highlighted {
+                                                color: #000000;
+                                                background-color: #f9f9f9;
+                                            }
+                                        }
+                                    }
+                                }
+                                &.select-box-error {
+                                    .ui-select__content {
+                                        .ui-select__label {
+                                            .ui-select__display {
+                                                border: 1px solid
+                                                    rgba(244, 67, 5, 0.46);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            .config-line__dimansion {
+                                font-size: 14px;
+                                text-align: left;
+                                color: #0f232e;
+                                margin-right: 10px;
+                            }
+                        }
+
+                        .recuring-configs__daily-date__section {
+                        }
+                    }
+                    .recuring-configs__monthly {
+                        padding-bottom: 12px;
+                    }
+
+                    .recuring-configs__weekly-day_input {
+                    }
+
+                    .recuring-configs__weekly-day__group {
+                        margin: 10px 0 0 0;
+                        .btn-group {
+                            font-size: 14px;
+                            color: #0f232e;
+                            width: 45px;
+                            height: 25px;
+                            margin-right: 5px;
+                            border: solid 1px #e7e7e7;
+                            border-radius: 3px;
+                            background-color: #fbfbfb;
+                            padding: 0;
+                            text-transform: uppercase;
+                            cursor: pointer;
+                            &:hover {
+                                color: #59a9d5;
+                                border: solid 1px #59a9d5;
+                                background-color: #fbfbfb;
+                            }
+                            &.is-disabled:hover {
+                                color: #0f232e;
+                                border: solid 1px #e7e7e7;
+                                background-color: #fbfbfb;
+                                cursor: default;
+                            }
+                            &.is-active,
+                            &.is-active:hover {
+                                background-color: #59a9d5;
+                                border-color: #59a9d5;
+                                color: #ffffff;
+                            }
+                        }
+                    }
+
+                    .recuring-configs__monthly-day_configs {
+                        margin-top: 15px;
+                        .config-line {
+                            flex-direction: column;
+                            align-items: start;
+                            .recuring-configs__monthly-day_configs-calendar {
+                                .month-calendar {
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                    width: 270px;
+                                    height: 190px;
+                                    border-radius: 3px;
+                                    background-color: #fafafa;
+                                    border: solid 1px #e3e3e3;
+                                    padding: 10px;
+                                    margin: 5px 0;
+                                    &-invalid {
+                                        border: 1px solid rgba(244, 67, 5, 0.46);
+                                    }
+                                    .month-calendar__day {
+                                        .month-calendar__day-value {
+                                            width: 35px;
+                                            height: 35px;
+                                            background-color: transparent;
+                                            border: none;
+                                            &[disabled='disabled']:hover {
+                                                background-color: transparent;
+                                                color: graytext;
+                                                cursor: default;
+                                            }
+                                            &:hover {
+                                                color: #000000;
+                                                border-radius: 1px;
+                                                background-color: #e1e1e1;
+                                                cursor: pointer;
+                                            }
+                                            &.is-active {
+                                                color: #ffffff !important;
+                                                background-color: #64b2da !important;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .monthly-periods {
+                            display: flex;
+                            align-items: center;
+                            .config-line__label {
+                                margin-right: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .schedule-step__recuring-expressions {
+        }
+    }
+
+    .schedule-step__end-wrapper {
+        display: flex;
+        .schedule-step__end-active {
+            display: flex;
+            padding-left: 30px;
+            .ui-checkbox {
+                .ui-checkbox__checkmark::before {
+                    @extend .extands-class__checkbox-before;
+                }
+                &:hover {
+                    .ui-checkbox__checkmark::after {
+                        @extend .extands-class__checkbox-after;
+                    }
+                }
+                &.is-checked {
+                    .ui-checkbox__checkmark::after {
+                        border-right-color: rgb(19, 37, 48);
+                        border-bottom-color: rgb(19, 37, 48);
+                    }
+                }
+            }
+        }
+
+        .schedule-step__end {
+            .schedule-step__include-end-active {
+                @extend .schedule-step__end-active;
+                padding-left: 0;
+            }
+        }
+    }
+
+    .schedule-step__month-picker-wrapper {
+        .schedule-step__month-picker-active {
+            display: flex;
+            .ui-checkbox {
+                .ui-checkbox__checkmark::before {
+                    @extend .extands-class__checkbox-before;
+                }
+                &:hover {
+                    .ui-checkbox__checkmark::after {
+                        @extend .extands-class__checkbox-after;
+                    }
+                }
+                &.is-checked {
+                    .ui-checkbox__checkmark::after {
+                        border-right-color: rgb(19, 37, 48);
+                        border-bottom-color: rgb(19, 37, 48);
+                    }
+                }
+            }
+        }
+    }
+
+    .schedule-step__next-run {
+        .next-run__section {
+            .next-run__section-item {
+                font-size: 14px;
+                text-align: left;
+                color: rgba(94, 101, 109, 0.55);
+                margin-bottom: 5px;
+            }
+        }
+    }
+
+    .schedule-step__advanced {
+        margin-bottom: 20px;
+        .or-collapsible {
+            .header-content {
+                font-weight: bold;
+            }
+            .body-wrapper {
+                .body {
+                    padding: 10px 0 0 0;
+                    .schedule-step__advanced-title {
+                        font-weight: 500;
+                        line-height: 1;
+                        color: #0f232e;
+                    }
+                    .or-select {
+                        margin-top: 10px;
+                        margin-left: 15px;
+                        .ui-select {
+                            .ui-select__display {
+                                padding: 0 11px;
+                                border-radius: 3px;
+                                background-color: #fbfbfb;
+                                border: solid 1px #e7e7e7;
+                                .ui-select__display-value {
+                                    font-size: 14px;
+                                    color: #0f232e;
+                                }
+                            }
+                            &.is-active {
+                                .ui-select__display {
+                                    border: 1px solid #64b2da;
+                                    border-bottom-left-radius: 0;
+                                    border-bottom-right-radius: 0;
+                                }
+                                .ui-select__dropdown {
+                                    border: 1px solid #64b2da;
+                                    min-width: 80px;
+                                    padding: 0;
+                                    .is-highlighted {
+                                        color: #000000;
+                                        background-color: #f9f9f9;
+                                    }
+                                    .is-selected {
+                                        color: #64b2da;
+                                    }
+                                    .ui-select__search-icon {
+                                        color: #64b2da;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ui-checkbox {
+    align-items: center;
+}
+.ui-checkbox .ui-checkbox__label-text {
+    font-size: 12px;
+    color: #0f232e;
+}
+.ui-checkbox .ui-checkbox__checkmark {
+    height: 1.125rem;
+    width: 1.125rem;
+    margin-top: 0;
+}
+
+.month-picker {
+    width: 201px;
+    height: 136px;
+    margin: 10px 0 0 0;
+    padding-top: 1px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    background-color: #e3e3e3;
+    border-radius: 4px;
+}
+
+.accordion__wr {
+    padding-top: 20px;
+}
+
+.calendar-picker__custom.ui-datepicker
+    .ui-datepicker__content
+    .ui-datepicker__display {
+    padding-left: 35px;
+    width: 140px;
+    min-height: 30.8px;
+    color: #0f232e;
+    font-size: 12px;
+    background: #fff;
+    border-radius: 0;
+}
