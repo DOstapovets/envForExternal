@@ -6,7 +6,6 @@ import { storiesOf } from '@storybook/vue';
 
 /* eslint-disable */
 import Accordion from './Accordion.vue';
-import AccordionItem from './AccordionItem.vue';
 /* eslint-enable */
 storiesOf('Accordion', module).add('Base accordion', () => ({
   data() {
