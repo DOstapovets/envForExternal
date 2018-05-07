@@ -41,7 +41,7 @@ export default {
 .months {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  min-width: 900px;
+  /* min-width: 900px; */
   min-height: 1070px;
   grid-row-gap: 1px;
   grid-column-gap: 1px;
