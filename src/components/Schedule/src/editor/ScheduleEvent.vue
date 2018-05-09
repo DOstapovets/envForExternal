@@ -13,8 +13,8 @@
           <or-timepicker v-model="objectStartTime" :class="[{ readony: readonly }]" format="HH:mm" hideClearButton></or-timepicker>
       </div> -->
     </div>
-
-    <!-- <div class="schedule-step__start">
+    {{startDate}}
+    <div class="schedule-step__start">
         <div class="schedule-step__start-configs">
             <or-datepicker :disabled="readonly" :class="['schedule-step__start-configs_date calendar-picker', { 'text-box-error': !isStartDateValid && ($v && $v.schema.$error) }]"
                 iconPosition="right" placeholder="Select date" :custom-formatter="formatDate" v-model="startDate">Date
@@ -26,7 +26,7 @@
                 <or-timepicker v-model="objectStartTime" :class="[{ readony: readonly }]" format="HH:mm" hideClearButton></or-timepicker>
             </div>
         </div>
-    </div> -->
+    </div>
     <or-list class="list-time" drag-handle-right v-model="times" add-button-label="Add Time" :new-item-method="listNewItemTime">
         <template scope="item">
             <div class="wr-time-item">
@@ -303,7 +303,7 @@
                                     <or-radio v-model="isDailyRepeatTime" true-value="false" :disabled="(!displayDailyDays && dailyPeriodMode === 'everyDay') || readonly"
                                         class="config-line__radio">Run at:
                                     </or-radio>
-                                    <div v-for="(runTime, index) in dailySchedule.dailyRunAtTime" class="time-selector-group">
+                                    <div v-for="(runTime, index) in runAtTimeLocal" class="time-selector-group">
                                         <or-textbox label="" placeholder="00:00" :class="['md-input', {'text-box-error': !runTime.isValid && isDailyRepeatTime === 'false'}]"
                                             :disabled="(!displayDailyDays && dailyPeriodMode === 'everyDay') || isDailyRepeatTime !== 'false' || readonly"
                                             @change="dailyRunAtChange(runTime)" v-model='runTime.time'>
@@ -312,7 +312,7 @@
                                             label="" class="dimention-selector" :options="[{value:'PM', label:'pm'}, {value:'AM', label:'am'}]"
                                             @change="dailyRunAtChange(runTime)" v-model="runTime.period">
                                         </or-select>
-                                        <or-icon-button v-if="index !== 0 && !readonly" @click="removeRuntAtItem(dailySchedule.dailyRunAtTime, index)" class="remove-time-btn"
+                                        <or-icon-button v-if="index !== 0 && !readonly" @click="removeRuntAtItem(runAtTimeLocal, index)" class="remove-time-btn"
                                             icon="clear" size="small" disable-ripple>
                                         </or-icon-button>
                                     </div>
@@ -355,7 +355,7 @@
                                 <div class="config-line wrap">
                                     <or-radio v-model="isWeeklyRepeatTime" true-value="false" :disabled="!weeklySchedule.weekDays.length || readonly" class="config-line__radio">Run at:
                                     </or-radio>
-                                    <div v-for="(runTime, index) in weeklySchedule.weeklyRunAtTime" class="time-selector-group">
+                                    <div v-for="(runTime, index) in runAtTimeLocal" class="time-selector-group">
                                         <or-textbox label="" placeholder="00:00" :class="['md-input', {'text-box-error': !runTime.isValid && isWeeklyRepeatTime === 'false'}]"
                                             :disabled="!weeklySchedule.weekDays.length || isWeeklyRepeatTime !== 'false' || readonly"
                                             @change="weeklyRunAtChange(runTime)" v-model="runTime.time">
@@ -364,7 +364,7 @@
                                             :options="[{value:'PM', label:'pm'}, {value:'AM', label:'am'}]" @change="weeklyRunAtChange(runTime)"
                                             v-model="runTime.period">
                                         </or-select>
-                                        <or-icon-button v-if="index !== 0 && !readonly" @click="removeRuntAtItem(weeklySchedule.weeklyRunAtTime, index)" class="remove-time-btn"
+                                        <or-icon-button v-if="index !== 0 && !readonly" @click="removeRuntAtItem(runAtTimeLocal, index)" class="remove-time-btn"
                                             icon="clear" size="small" disable-ripple>
                                         </or-icon-button>
                                     </div>
@@ -436,7 +436,7 @@
                                     <or-radio v-model="isMonthlyRepeatTime" true-value="false" :disabled="!monthlySelectedMonths.length || !monthlySchedule.monthDays.length && (!monthlySchedule.daysPeriod.period || !monthlySchedule.daysPeriod.day) || readonly"
                                         class="config-line__radio">Run at:
                                     </or-radio>
-                                    <div v-for="(runTime, index) in monthlySchedule.monthlyRunAtTime" class="time-selector-group">
+                                    <div v-for="(runTime, index) in runAtTimeLocal" class="time-selector-group">
                                         <or-textbox label="" placeholder="00:00" :class="['md-input', {'text-box-error': !runTime.isValid && isMonthlyRepeatTime === 'false'}]"
                                             :disabled="!monthlySelectedMonths.length || isMonthlyRepeatTime !== 'false' || readonly"
                                             @change="monthlyRunAtChange(runTime)" v-model="runTime.time">
@@ -445,7 +445,7 @@
                                             :options="[{value:'PM', label:'pm'}, {value:'AM', label:'am'}]" @change="monthlyRunAtChange(runTime)"
                                             v-model="runTime.period">
                                         </or-select>
-                                        <or-icon-button v-if="index !== 0 && !readonly" @click="removeRuntAtItem(monthlySchedule.monthlyRunAtTime, index)" class="remove-time-btn"
+                                        <or-icon-button v-if="index !== 0 && !readonly" @click="removeRuntAtItem(runAtTimeLocal, index)" class="remove-time-btn"
                                             icon="clear" size="small" disable-ripple>
                                         </or-icon-button>
                                     </div>
@@ -491,6 +491,53 @@ export default {
     times: {
       handler(newVal) {
         this.$emit('update:times', newVal);
+        this.runAtTimeLocal = [];
+        this.generateCronExpression();
+        _.forEach(newVal, item => {
+          if (item.start.HH && item.start.mm) {
+            const addVal = item.every.units === 'hh' ? 'hours' : 'minutes';
+
+            let nextRunAtTime = libs
+              .moment(`${item.start.HH}:${item.start.mm}`, ['HH:mm'])
+              .format('h:mm A');
+            const endTimeHmmA = libs
+              .moment(`${item.end.HH}:${item.end.mm}`, ['HH:mm'])
+              .format('h:mm A');
+
+            do {
+              const splitNextRunAtTime = nextRunAtTime.split(' ');
+              this.runAtTimeLocal.push({
+                time: splitNextRunAtTime[0],
+                period: splitNextRunAtTime[1],
+                isValid: true,
+              });
+              this.dailyRunAtChange(
+                this.runAtTimeLocal[this.runAtTimeLocal.length - 1],
+              );
+              this.weeklyRunAtChange(
+                this.runAtTimeLocal[this.runAtTimeLocal.length - 1],
+              );
+              this.monthlyRunAtChange(
+                this.runAtTimeLocal[this.runAtTimeLocal.length - 1],
+              );
+              nextRunAtTime = libs
+                .moment(nextRunAtTime, ['h:mm A'])
+                .add(parseInt(item.every.val, 10), addVal)
+                .format('h:mm A');
+            } while (
+              moment(nextRunAtTime, 'h:mma').isSameOrBefore(
+                moment(endTimeHmmA, 'h:mma'),
+              ) &&
+              item.end.HH &&
+              item.end.mm
+            );
+          }
+        });
+        // this.runAtTimeLocal = this.runAtTimeLocal;
+        // this.$set(this.dailySchedule, 'dailyRunAtTime', this.runAtTimeLocal);
+
+        // console.log('this.times', this.times);
+        // console.log('this.runAtTimeLocal', this.runAtTimeLocal);
       },
       deep: true,
     },
@@ -555,6 +602,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    // runAtTime: {
+    //   type: Array,
+    //   default: () => [],
+    // },
   },
   template: `<%= scheduledEventHtml %>`,
   data() {
@@ -584,6 +635,7 @@ export default {
       isStartTimeValid: true,
       isEndTimeValid: true,
       currDate: new Date(),
+      runAtTimeLocal: [],
     };
   },
 
@@ -814,18 +866,18 @@ export default {
         const templateRepeat = { time: '', period: 'mm' };
         switch (newValue) {
           case 'true':
-            this.dailySchedule.dailyRunAtTime = templateRunAt;
+            this.runAtTimeLocal = templateRunAt;
             this.daily.dailyRunAtTime = templateRunAt;
             break;
           case 'false':
             this.dailySchedule.dailyRepeatTime = templateRepeat;
             this.daily.dailyRepeatTime = templateRepeat;
-            this.dailyRunAtChange(_.head(this.dailySchedule.dailyRunAtTime));
+            this.dailyRunAtChange(_.head(this.runAtTimeLocal));
             break;
           default:
             this.dailySchedule.dailyRepeatTime = templateRepeat;
             this.daily.dailyRepeatTime = templateRepeat;
-            this.dailySchedule.dailyRunAtTime = templateRunAt;
+            this.runAtTimeLocal = templateRunAt;
             this.daily.dailyRunAtTime = templateRunAt;
         }
 
@@ -876,18 +928,18 @@ export default {
         const templateRepeat = { time: '', period: 'mm' };
         switch (newValue) {
           case 'true':
-            this.weeklySchedule.weeklyRunAtTime = templateRunAt;
+            this.runAtTimeLocal = templateRunAt;
             this.weekly.weeklyRunAtTime = templateRunAt;
             break;
           case 'false':
             this.weeklySchedule.weeklyRepeatTime = templateRepeat;
             this.weekly.weeklyRepeatTime = templateRepeat;
-            this.weeklyRunAtChange(_.head(this.weeklySchedule.weeklyRunAtTime));
+            this.weeklyRunAtChange(_.head(this.runAtTimeLocal));
             break;
           default:
             this.weeklySchedule.weeklyRepeatTime = templateRepeat;
             this.weekly.weeklyRepeatTime = templateRepeat;
-            this.weeklySchedule.weeklyRunAtTime = templateRunAt;
+            this.runAtTimeLocal = templateRunAt;
             this.weekly.weeklyRunAtTime = templateRunAt;
         }
 
@@ -1011,20 +1063,18 @@ export default {
         switch (newValue) {
           case 'true':
             this.monthly.monthlyRunAtTime = templateRunAt;
-            this.monthlySchedule.monthlyRunAtTime = templateRunAt;
+            this.runAtTimeLocal = templateRunAt;
             break;
           case 'false':
             this.monthly.monthlyRepeatTime = templateRepeat;
             this.monthlySchedule.monthlyRepeatTime = templateRepeat;
-            this.monthlyRunAtChange(
-              _.head(this.monthlySchedule.monthlyRunAtTime),
-            );
+            this.monthlyRunAtChange(_.head(this.runAtTimeLocal));
             break;
           default:
             this.monthly.monthlyRepeatTime = templateRepeat;
             this.monthlySchedule.monthlyRepeatTime = templateRepeat;
             this.monthly.monthlyRunAtTime = templateRunAt;
-            this.monthlySchedule.monthlyRunAtTime = templateRunAt;
+            this.runAtTimeLocal = templateRunAt;
         }
 
         this.validateMonthlyTab();
@@ -1145,7 +1195,7 @@ export default {
       time: '',
       period: 'mm',
     });
-    this.dailySchedule.dailyRunAtTime = _.get(this.daily, 'dailyRunAtTime', [
+    this.runAtTimeLocal = _.get(this.daily, 'dailyRunAtTime', [
       { time: '', period: 'PM', isValid: true },
     ]);
 
@@ -1154,11 +1204,9 @@ export default {
       'weeklyRepeatTime',
       { time: '', period: 'mm' },
     );
-    this.weeklySchedule.weeklyRunAtTime = _.get(
-      this.weekly,
-      'weeklyRunAtTime',
-      [{ time: '', period: 'PM', isValid: true }],
-    );
+    this.runAtTimeLocal = _.get(this.weekly, 'weeklyRunAtTime', [
+      { time: '', period: 'PM', isValid: true },
+    ]);
     this.weeklySchedule.weekDays = _.get(this.weekly, 'weekDays', []);
 
     this.monthlySchedule.monthlyRepeatTime = _.get(
@@ -1166,11 +1214,9 @@ export default {
       'monthlyRepeatTime',
       { time: '', period: 'mm' },
     );
-    this.monthlySchedule.monthlyRunAtTime = _.get(
-      this.monthly,
-      'monthlyRunAtTime',
-      [{ time: '', period: 'PM', isValid: true }],
-    );
+    this.runAtTimeLocal = _.get(this.monthly, 'monthlyRunAtTime', [
+      { time: '', period: 'PM', isValid: true },
+    ]);
     this.monthlySchedule.monthDays = _.get(this.monthly, 'monthDays', []);
     this.monthlySchedule.daysPeriod = _.get(this.monthly, 'daysPeriod', {
       period: '',
@@ -1215,7 +1261,7 @@ export default {
 
     dailyRunAtChange(runTime) {
       // direct mutation
-      this.daily.dailyRunAtTime = this.dailySchedule.dailyRunAtTime;
+      this.daily.dailyRunAtTime = this.runAtTimeLocal;
       this.generateCronExpression(); // update crons when data changed
 
       // simple validation
@@ -1230,7 +1276,7 @@ export default {
 
     weeklyRunAtChange(runTime) {
       // direct mutation
-      this.weekly.weeklyRunAtTime = this.weeklySchedule.weeklyRunAtTime;
+      this.weekly.weeklyRunAtTime = this.runAtTimeLocal;
       this.generateCronExpression(); // update crons when data changed
 
       // simple validation
@@ -1240,7 +1286,7 @@ export default {
 
     monthlyRunAtChange(runTime) {
       // direct mutation
-      this.monthly.monthlyRunAtTime = this.monthlySchedule.monthlyRunAtTime;
+      this.monthly.monthlyRunAtTime = this.runAtTimeLocal;
       this.generateCronExpression(); // update crons when data changed
 
       // simple validation
@@ -1255,7 +1301,7 @@ export default {
     },
 
     addNewDailyRunAt() {
-      this.dailySchedule.dailyRunAtTime.push({
+      this.runAtTimeLocal.push({
         time: '',
         period: 'PM',
         isValid: true,
@@ -1263,7 +1309,7 @@ export default {
     },
 
     addNewWeeklyRunAt() {
-      this.weeklySchedule.weeklyRunAtTime.push({
+      this.runAtTimeLocal.push({
         time: '',
         period: 'PM',
         isValid: true,
@@ -1271,7 +1317,7 @@ export default {
     },
 
     addNewMonthlyRunAt() {
-      this.monthlySchedule.monthlyRunAtTime.push({
+      this.runAtTimeLocal.push({
         time: '',
         period: 'PM',
         isValid: true,
@@ -1364,38 +1410,38 @@ export default {
 
         const everyDay = `${dateStartingFromPrefix}/${daily.days || 2}`;
 
-        if (daily.isDailyRepeatTime === 'true' && daily.dailyRepeatTime.time) {
-          let min = null;
-          let hour = null;
-          switch (daily.dailyRepeatTime.period) {
-            case 'mm':
-              min = `*/${daily.dailyRepeatTime.time}`;
-              return [`${min} * ${everyDay} * *`];
-            case 'hh':
-              hour = `*/${daily.dailyRepeatTime.time}`;
-              return [`0 ${hour} ${everyDay} * *`];
+        // if (daily.isDailyRepeatTime === 'true' && daily.dailyRepeatTime.time) {
+        //   let min = null;
+        //   let hour = null;
+        //   switch (daily.dailyRepeatTime.period) {
+        //     case 'mm':
+        //       min = `*/${daily.dailyRepeatTime.time}`;
+        //       return [`${min} * ${everyDay} * *`];
+        //     case 'hh':
+        //       hour = `*/${daily.dailyRepeatTime.time}`;
+        //       return [`0 ${hour} ${everyDay} * *`];
+        //   }
+        // }
+
+        // if (daily.isDailyRepeatTime === 'false') {
+        const time = [];
+        _.forEach(daily.dailyRunAtTime, runTime => {
+          if (runTime.time) {
+            time.push(
+              libs
+                .moment(`${runTime.time} ${runTime.period}`, ['h:mm A'])
+                .format('HH:mm'),
+            );
           }
-        }
+        });
 
-        if (daily.isDailyRepeatTime === 'false') {
-          const time = [];
-          _.forEach(daily.dailyRunAtTime, runTime => {
-            if (runTime.time) {
-              time.push(
-                libs
-                  .moment(`${runTime.time} ${runTime.period}`, ['h:mm A'])
-                  .format('HH:mm'),
-              );
-            }
-          });
+        const crons = _.map(time, _time => {
+          const splitedTime = _time.split(':');
+          return `${splitedTime[1]} ${splitedTime[0]} ${everyDay} * *`;
+        });
 
-          const crons = _.map(time, _time => {
-            const splitedTime = _time.split(':');
-            return `${splitedTime[1]} ${splitedTime[0]} ${everyDay} * *`;
-          });
-
-          return crons;
-        }
+        return crons;
+        // }
 
         return [`0 0 ${everyDay} * *`];
       } catch (error) {
@@ -1422,45 +1468,45 @@ export default {
 
           const weekDaysCron = `0 0 * * ${weekDaysJoin}`;
 
-          if (
-            weekly.isWeeklyRepeatTime === 'true' &&
-            weekly.weeklyRepeatTime.time
-          ) {
-            let min = null;
-            let hour = null;
+          // if (
+          //   weekly.isWeeklyRepeatTime === 'true' &&
+          //   weekly.weeklyRepeatTime.time
+          // ) {
+          //   let min = null;
+          //   let hour = null;
 
-            switch (weekly.weeklyRepeatTime.period) {
-              case 'mm':
-                min = `*/${weekly.weeklyRepeatTime.time}`;
-                return `${min} * * * ${weekDaysJoin}`;
-              case 'hh':
-                hour = `*/${weekly.weeklyRepeatTime.time}`;
-                return `0 ${hour} * * ${weekDaysJoin}`;
-            }
-          }
+          //   switch (weekly.weeklyRepeatTime.period) {
+          //     case 'mm':
+          //       min = `*/${weekly.weeklyRepeatTime.time}`;
+          //       return `${min} * * * ${weekDaysJoin}`;
+          //     case 'hh':
+          //       hour = `*/${weekly.weeklyRepeatTime.time}`;
+          //       return `0 ${hour} * * ${weekDaysJoin}`;
+          //   }
+          // }
 
-          if (weekly.isWeeklyRepeatTime === 'false') {
-            const time = [];
-            _.forEach(weekly.weeklyRunAtTime, runTime => {
-              if (runTime.time) {
-                time.push(
-                  libs
-                    .moment(`${runTime.time} ${runTime.period}`, ['h:mm A'])
-                    .format('HH:mm'),
-                );
-              }
-            });
-
-            const crons = [];
-            _.forEach(time, _time => {
-              const splitedTime = _time.split(':');
-              crons.push(
-                `${splitedTime[1]} ${splitedTime[0]} * * ${weekDaysJoin}`,
+          // if (weekly.isWeeklyRepeatTime === 'false') {
+          const time = [];
+          _.forEach(weekly.weeklyRunAtTime, runTime => {
+            if (runTime.time) {
+              time.push(
+                libs
+                  .moment(`${runTime.time} ${runTime.period}`, ['h:mm A'])
+                  .format('HH:mm'),
               );
-            });
+            }
+          });
 
-            return crons;
-          }
+          const crons = [];
+          _.forEach(time, _time => {
+            const splitedTime = _time.split(':');
+            crons.push(
+              `${splitedTime[1]} ${splitedTime[0]} * * ${weekDaysJoin}`,
+            );
+          });
+
+          return crons;
+          // }
 
           return _.isEmpty(weekDaysCron)
             ? [] // no cron if week days not selected
@@ -1473,12 +1519,12 @@ export default {
     },
 
     getMonthlyCronExpressions() {
-      if (
-        !this.monthlySchedule.isMonthlyDaysValid ||
-        !this.monthlySchedule.isMonthlyRepeatTimeValid
-      ) {
-        return;
-      }
+      // if (
+      //   !this.monthlySchedule.isMonthlyDaysValid ||
+      //   !this.monthlySchedule.isMonthlyRepeatTimeValid
+      // ) {
+      //   return;
+      // }
       const monthly = _.cloneDeep(this.monthly);
 
       try {
@@ -1489,44 +1535,44 @@ export default {
           const daysPeriod = monthly.daysPeriod;
 
           if (monthly.isMonthlyDays === 'true' && monthDays) {
-            if (
-              monthly.isMonthlyRepeatTime === 'true' &&
-              monthly.monthlyRepeatTime.time
-            ) {
-              let min = null;
-              let hour = null;
+            // if (
+            //   monthly.isMonthlyRepeatTime === 'true' &&
+            //   monthly.monthlyRepeatTime.time
+            // ) {
+            //   let min = null;
+            //   let hour = null;
 
-              switch (_.get(monthly, 'monthlyRepeatTime.period')) {
-                case 'mm':
-                  min = `*/${monthly.monthlyRepeatTime.time}`;
-                  return [`${min} * ${monthDays} ${everyMonth} *`];
-                case 'hh':
-                  hour = `*/${monthly.monthlyRepeatTime.time}`;
-                  return [`0 ${hour} ${monthDays} ${everyMonth} *`];
+            //   switch (_.get(monthly, 'monthlyRepeatTime.period')) {
+            //     case 'mm':
+            //       min = `*/${monthly.monthlyRepeatTime.time}`;
+            //       return [`${min} * ${monthDays} ${everyMonth} *`];
+            //     case 'hh':
+            //       hour = `*/${monthly.monthlyRepeatTime.time}`;
+            //       return [`0 ${hour} ${monthDays} ${everyMonth} *`];
+            //   }
+            // }
+
+            // if (monthly.isMonthlyRepeatTime === 'false') {
+            const time = [];
+            _.forEach(monthly.monthlyRunAtTime, runTime => {
+              if (runTime.time) {
+                time.push(
+                  libs
+                    .moment(`${runTime.time} ${runTime.period}`, ['h:mm A'])
+                    .format('HH:mm'),
+                );
               }
-            }
+            });
 
-            if (monthly.isMonthlyRepeatTime === 'false') {
-              const time = [];
-              _.forEach(monthly.monthlyRunAtTime, runTime => {
-                if (runTime.time) {
-                  time.push(
-                    libs
-                      .moment(`${runTime.time} ${runTime.period}`, ['h:mm A'])
-                      .format('HH:mm'),
-                  );
-                }
-              });
+            const crons = _.map(time, _time => {
+              const splitedTime = _time.split(':');
+              return `${splitedTime[1]} ${
+                splitedTime[0]
+              } ${monthDays} ${everyMonth} *`;
+            });
 
-              const crons = _.map(time, _time => {
-                const splitedTime = _time.split(':');
-                return `${splitedTime[1]} ${
-                  splitedTime[0]
-                } ${monthDays} ${everyMonth} *`;
-              });
-
-              return crons;
-            }
+            return crons;
+            // }
 
             return _.isEmpty(monthDays)
               ? []
@@ -1544,44 +1590,44 @@ export default {
                 ? `${daysPeriod.day}`
                 : `${daysPeriod.day}${daysPeriod.period}`;
 
-            if (
-              monthly.isMonthlyRepeatTime === 'true' &&
-              monthly.monthlyRepeatTime.time
-            ) {
-              let min = null;
-              let hour = null;
+            // if (
+            //   monthly.isMonthlyRepeatTime === 'true' &&
+            //   monthly.monthlyRepeatTime.time
+            // ) {
+            //   let min = null;
+            //   let hour = null;
 
-              switch (monthly.monthlyRepeatTime.period) {
-                case 'mm':
-                  min = `*/${monthly.monthlyRepeatTime.time}`;
-                  return [`${min} * * ${everyMonth} ${period}`];
-                case 'hh':
-                  hour = `*/${monthly.monthlyRepeatTime.time}`;
-                  return [`0 ${hour} * ${everyMonth} ${period}`];
+            //   switch (monthly.monthlyRepeatTime.period) {
+            //     case 'mm':
+            //       min = `*/${monthly.monthlyRepeatTime.time}`;
+            //       return [`${min} * * ${everyMonth} ${period}`];
+            //     case 'hh':
+            //       hour = `*/${monthly.monthlyRepeatTime.time}`;
+            //       return [`0 ${hour} * ${everyMonth} ${period}`];
+            //   }
+            // }
+
+            // if (monthly.isMonthlyRepeatTime === 'false') {
+            const time = [];
+            _.forEach(monthly.monthlyRunAtTime, runTime => {
+              if (runTime.time) {
+                time.push(
+                  libs
+                    .moment(`${runTime.time} ${runTime.period}`, ['h:mm A'])
+                    .format('HH:mm'),
+                );
               }
-            }
+            });
 
-            if (monthly.isMonthlyRepeatTime === 'false') {
-              const time = [];
-              _.forEach(monthly.monthlyRunAtTime, runTime => {
-                if (runTime.time) {
-                  time.push(
-                    libs
-                      .moment(`${runTime.time} ${runTime.period}`, ['h:mm A'])
-                      .format('HH:mm'),
-                  );
-                }
-              });
+            const crons = _.map(time, _time => {
+              const splitedTime = _time.split(':');
+              return `${splitedTime[1]} ${
+                splitedTime[0]
+              } * ${everyMonth} ${period}`;
+            });
 
-              const crons = _.map(time, _time => {
-                const splitedTime = _time.split(':');
-                return `${splitedTime[1]} ${
-                  splitedTime[0]
-                } * ${everyMonth} ${period}`;
-              });
-
-              return crons;
-            }
+            return crons;
+            // }
 
             return daysPeriod.period && daysPeriod.day
               ? `0 0 * ${everyMonth} ${period}`

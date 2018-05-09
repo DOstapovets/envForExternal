@@ -8,7 +8,10 @@
           :year="year"
           :month="month"
           :years-calendar="true"
+          :selected-date="selectedDate"
+          not-show-selected-on-prev-next-days
           class="calendar_years"
+          @selected-date="selectDateHandler"
       >
       </one-month-calendar>
     </div>
@@ -26,10 +29,20 @@ export default {
       months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     };
   },
+
   props: {
     year: {
       type: Number,
       default: new Date().getFullYear(),
+    },
+    selectedDate: {
+      type: Object,
+    },
+  },
+
+  methods: {
+    selectDateHandler(day, month, year) {
+      this.$emit('selected-date', day, month, year);
     },
   },
 

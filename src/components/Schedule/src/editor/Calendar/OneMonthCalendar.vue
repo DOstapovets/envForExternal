@@ -26,23 +26,58 @@
               v-if="!index"
               v-for="previousMonthDays in dPrevDays"
               :key="previousMonthDays.toString()"
+              @click="sendChosenDate(previousMonthDays, month - 1, year)"
           >
-              <div><span class="calendar__item_event calendar__item_event-recurring">{{previousMonthDays}}</span></div>
+              <div>
+                <span 
+                  class="calendar__item_event calendar__item_event-recurring"
+                  :class="{'calendar__iselected-item':
+                    selectedDate.day === previousMonthDays
+                    && selectedDate.month === (month - 1 === 0 ? 12 : month - 1)
+                    && selectedDate.year === (month - 1 === 0 ? year - 1 : year)
+                    && !notShowSelectedOnPrevNextDays}"
+                >
+                  {{previousMonthDays}}
+                </span>
+              </div>
           </div>
           <div
               class="calendar__item"
               v-for="day in monthDays"
               :key="day.toString()"
+              @click="sendChosenDate(day, month, year)"
           >
-              <div><span class="calendar__item_event calendar__item_event-actice calendar__item_event-recurring">{{day}}</span></div>
+              <div>
+                <span 
+                  class="calendar__item_event calendar__item_event-actice calendar__item_event-recurring"
+                  :class="{'calendar__iselected-item': 
+                    selectedDate.day === day 
+                    && selectedDate.month === month 
+                    && selectedDate.year === year}"
+                >
+                    {{day}}
+                </span>
+               </div>
           </div>
           <div
               class="calendar__item calendar__item_not-curr"
               v-if="index === currDays.length - 1"
               v-for="nextMonthDays in dNextDays"
               :key="nextMonthDays.toString()"
+              @click="sendChosenDate(nextMonthDays, month + 1, year)"
           >
-              <div><span class="calendar__item_event calendar__item_event-recurring">{{nextMonthDays}}</span></div>
+              <div>
+                <span 
+                  class="calendar__item_event calendar__item_event-recurring"
+                  :class="{'calendar__iselected-item':
+                    selectedDate.day === nextMonthDays
+                    && selectedDate.month === (month + 1 === 13 ? 1 : month + 1)
+                    && selectedDate.year === (month + 1 === 13 ? year + 1 : year)
+                    && !notShowSelectedOnPrevNextDays}"
+                >
+                  {{nextMonthDays}}
+                </span>
+                </div>
           </div>
         </div>
       </div>
@@ -83,6 +118,13 @@ export default {
       default: new Date().getMonth() + 1,
     },
     yearsCalendar: {
+      type: Boolean,
+      default: false,
+    },
+    selectedDate: {
+      type: Object,
+    },
+    notShowSelectedOnPrevNextDays: {
       type: Boolean,
       default: false,
     },
@@ -149,6 +191,20 @@ export default {
       //   if (day === 0) day = 7;
       //   return day - 1;
       return date.getDay();
+    },
+    sendChosenDate(day, month, year) {
+      let localMonth = month;
+      let localYear = year;
+      if (localMonth === 0) {
+        localMonth = 12;
+        localYear -= 1;
+      } else if (localMonth === 13) {
+        localMonth = 1;
+        localYear += 1;
+      }
+
+      // console.log(day, localMonth, localYear);
+      this.$emit('selected-date', day, localMonth, localYear);
     },
   },
   watch: {
@@ -222,6 +278,12 @@ export default {
   color: #0f232e;
 } */
 
+.calendar__iselected-item {
+  background-color: #42c3f8;
+  border-radius: 50%;
+  color: #fff;
+}
+
 .calendar__items_title {
   color: rgba(94, 101, 109, 0.55);
   font-size: 14px;
@@ -235,6 +297,7 @@ export default {
 .calendar__item {
   align-content: center;
   display: grid;
+  cursor: pointer;
 }
 
 .calendar__item_not-curr {
