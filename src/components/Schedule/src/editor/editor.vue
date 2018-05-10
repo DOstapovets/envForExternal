@@ -2,13 +2,13 @@
   <div>
     <or-list
       label="Basic List" 
-      v-model="scheduleEventsLocal" 
+      v-model="scheduleEvents" 
       :steps="steps" 
       :step-id="stepId"
       add-button-label="Add Event"
       :new-item-method="listNewItemMethod">
       <template scope="item">
-        <or-button @click="openModal('modal')">Basic Modal</or-button>
+        <or-button @click="openModal('modal'), doEditable(item.index)">Basic Modal</or-button>
       </template>
     </or-list>
     <or-modal
@@ -19,18 +19,22 @@
         <div class="schedule__calendar">
           <calendar
             :month="1"
+            @selected-date="selectedDate"
+            :selected-days="startDays"
           >
           </calendar>
         </div>
         <div class="schedule__events">
           <or-list
-            v-model="scheduleEventsLocal" 
+            v-model="scheduleEvents" 
             :steps="steps" 
             :step-id="stepId"
             add-button-label="Add Event"
             :new-item-method="listNewItemMethod">
             <template scope="item">
               <schedule-event
+                v-if="editableEventNum === item.index"
+                :editable-event-num="editableEventNum"
                 :start-expression.sync="item.item.startExpression"
                 :deactivate-after-last-run.sync="item.item.deactivateAfterLastRun"
                 :is-reccuring.sync="item.item.isReccuring"
@@ -49,6 +53,11 @@
                 :steps="steps"
               >
               </schedule-event>
+              <schedule-event-preview
+                v-if="editableEventNum !== item.index"
+                @do-editable="doEditable" :index="item.index"
+              >
+              </schedule-event-preview>
             </template>
           </or-list>
         </div>
@@ -57,15 +66,16 @@
   </div>
 </template>
 <script>
+import _ from 'lodash';
+
 // import * as _ from 'lodash';
 // import { validators } from '_validators';
-
 // const { required, jsExpressionNonEmptyString, validateIf } = validators;
-
+const randomColor = require('randomcolor').randomColor;
 /* eslint-disable */
 import ScheduleEvent from './ScheduleEvent.vue';
+import ScheduleEventPreview from './ScheduleEventPreview/ScheduleEventPreview.vue';
 import Calendar from './Calendar/Calendar.vue';
-
 /* eslint-enable */
 
 export default {
@@ -80,15 +90,32 @@ export default {
     'steps',
     'readonly',
   ],
-  components: { ScheduleEvent, Calendar },
-  computed: {},
+  components: { ScheduleEvent, Calendar, ScheduleEventPreview },
 
   created() {
     // console.log('!!!!!!!!!!!!!!', this.$v);
   },
 
   data() {
-    return { scheduleEventsLocal: this.scheduleEvents };
+    return {
+      // scheduleEventsLocal: this.scheduleEvents,
+      editableEventNum: null,
+    };
+  },
+  computed: {
+    startDays() {
+      return this.scheduleEvents.map(item => {
+        const dateSplice = item.startExpression.date.split('-');
+        return {
+          color: item.color,
+          date: {
+            day: dateSplice[2],
+            month: dateSplice[1],
+            year: dateSplice[0],
+          },
+        };
+      });
+    },
   },
 
   methods: {
@@ -112,6 +139,7 @@ export default {
         weekly: {},
         monthly: {},
         times: [],
+        color: randomColor(),
       };
     },
     openModal(ref) {
@@ -119,6 +147,15 @@ export default {
     },
     closeModal(ref) {
       this.$refs[ref].close();
+    },
+    selectedDate(day, month, year) {
+      // this.startDay = `${year}-${month}-${day}`;
+      this.scheduleEvents[
+        this.editableEventNum
+      ].startExpression.date = `${year}-${month}-${day}`;
+    },
+    doEditable(index) {
+      this.editableEventNum = index;
     },
   },
 

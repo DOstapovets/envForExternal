@@ -16,42 +16,42 @@ import Vue from 'vue';
 /* eslint-enable */
 
 storiesOf('Schedule', module)
-    .add('MonthPicker', () => ({
-        data() {
-            return { monthlySelectedMonths: [] };
-        },
-        methods: {},
-        components: { MonthPicker },
-        template: `
+  .add('MonthPicker', () => ({
+    data() {
+      return { monthlySelectedMonths: [] };
+    },
+    methods: {},
+    components: { MonthPicker },
+    template: `
     <div>
         <month-picker v-model="monthlySelectedMonths" :disabled="readonly"></month-picker>
     </div>
   `,
-    }))
-    .add('ScheduleEvent', () => ({
-        data() {
-            return {
-                startExpression: { time: '00:00', date: '' },
-                deactivateAfterLastRun: false,
-                includeEndTime: false,
-                isReccuring: false,
-                expressions: [],
-                isEndTime: false,
-                endExpression: { time: '00:00', date: '' },
-                timeZone: {},
-                daily: {},
-                weekly: {},
-                monthly: {},
-                times: [],
-                // $v: null,
-                readonly: false,
-                stepId: {},
-                steps: {},
-            };
-        },
-        methods: {},
-        components: { ScheduleEvent },
-        template: `
+  }))
+  .add('ScheduleEvent', () => ({
+    data() {
+      return {
+        startExpression: { time: '00:00', date: '' },
+        deactivateAfterLastRun: false,
+        includeEndTime: false,
+        isReccuring: false,
+        expressions: [],
+        isEndTime: false,
+        endExpression: { time: '00:00', date: '' },
+        timeZone: {},
+        daily: {},
+        weekly: {},
+        monthly: {},
+        times: [],
+        // $v: null,
+        readonly: false,
+        stepId: {},
+        steps: {},
+      };
+    },
+    methods: {},
+    components: { ScheduleEvent },
+    template: `
         <div>
             <schedule-event
                 :start-expression.sync="startExpression"
@@ -73,31 +73,30 @@ storiesOf('Schedule', module)
             ></schedule-event>
         </div>
       `,
-    }))
-    .add('Schedule', () => ({
-        data() {
-            return {
-                schema:
-                    JSON.parse(Vue.localStorage.get('schema')) || schemaData(),
-            };
+  }))
+  .add('Schedule', () => ({
+    data() {
+      return {
+        schema: JSON.parse(Vue.localStorage.get('schema')) || schemaData(),
+      };
+    },
+    created() {
+      console.log('this.schema', this.schema);
+    },
+    watch: {
+      schema: {
+        handler(newSchema) {
+          Vue.localStorage.set('schema', JSON.stringify(newSchema));
+          console.log('newSchema', newSchema);
         },
-        created() {
-            console.log('this.schema', this.schema);
-        },
-        watch: {
-            schema: {
-                handler(newSchema) {
-                    Vue.localStorage.set('schema', JSON.stringify(newSchema));
-                    // console.log(newSchema);
-                },
-                deep: true,
-            },
-        },
-        methods: {},
-        components: { ScheduleEvents },
-        template: `
+        deep: true,
+      },
+    },
+    methods: {},
+    components: { ScheduleEvents },
+    template: `
     <div>
         <schedule-events :schedule-events.sync="schema.scheduleEvents"></schedule-events>
     </div>
   `,
-    }));
+  }));

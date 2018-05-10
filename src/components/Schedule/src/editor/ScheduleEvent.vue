@@ -6,6 +6,7 @@
             v-model="displayTimeZone">
         </or-select>
     </label>
+      
     <div class="wr-start-date">
       <div class="choose-date choose-date_start">Choose date on calendar</div>
       <!-- <div class="configs-time">
@@ -473,7 +474,8 @@
 
 
 <script>
-import _ from 'lodash';
+import * as _ from 'lodash';
+console.log('123', _);
 import moment from 'moment-timezone';
 import later from 'later';
 import Accordion from './Accordion/Accordion.vue';
@@ -606,6 +608,14 @@ export default {
     //   type: Array,
     //   default: () => [],
     // },
+    // startDay: {
+    //   type: String,
+    //   default: null,
+    // },
+    editableEventNum: {
+      type: Number,
+      default: null,
+    },
   },
   template: `<%= scheduledEventHtml %>`,
   data() {
@@ -644,15 +654,19 @@ export default {
       get() {
         const date = _.get(this.startExpression, 'date');
         // console.log('date', date);
+        // console.log('startDay', this.startDay);
+
         const startTime = !_.isEmpty(this.startTime)
           ? libs.moment(this.startTime, 'HH:mm').format('HH:mm')
           : '00:00';
+        // console.log(new Date(date + ' ' + startTime));
         return date ? new Date(date + ' ' + startTime) : null;
         // console.log('new Date(date + \' \' + startTime)', new Date(date + ' ' + startTime));
         // console.log('new Date(date)', new Date(date));
         // return date ? new Date(date) : null;
       },
       set(newValue) {
+        // console.log(newValue);
         const date = new Date(newValue);
         const timeZone = libs.moment.tz.guess();
         // console.log('this.startExpression', this.startExpression);

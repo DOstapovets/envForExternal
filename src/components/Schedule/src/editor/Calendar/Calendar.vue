@@ -52,14 +52,14 @@
         v-model="interval"
         v-if="state === 'month'"
         @selected-date="selectDateHandler"
-        :selected-date="selectedDate"
+        :selected-days="selectedDays"
     >
     </one-month-calendar>
     <one-year-calendar
         :year="year"
         v-if="state === 'year'"
         @selected-date="selectDateHandler"
-        :selected-date="selectedDate"
+        :selected-days="selectedDays"
     >
     </one-year-calendar>
   </div>
@@ -72,18 +72,19 @@ import OneYearCalendar from './OneYearCalendar.vue';
 /* eslint-enable */
 
 export default {
-  mounted() {
-    this.$on('select-date', (day, month, year) => {
-      console.log(day, month, year);
-    });
-  },
+  // mounted() {
+  //   this.$on('select-date', (day, month, year) => {
+  //     this.$emit('select-date', day, month, year);
+  //     console.log(12);
+  //   });
+  // },
   data() {
     return {
       interval: '',
       state: 'month',
       year: parseInt(this.startYear, 10),
       month: parseInt(this.startMonth, 10),
-      selectedDate: { day: null, month: null, year: null },
+      // selectedDate: { day: null, month: null, year: null },
     };
   },
   props: {
@@ -94,6 +95,12 @@ export default {
     startMonth: {
       type: Number,
       default: new Date().getMonth() + 1,
+    },
+    selectedDays: {
+      type: Array,
+      default() {
+        return [];
+      },
     },
   },
   components: { OneMonthCalendar, OneYearCalendar },
@@ -149,8 +156,8 @@ export default {
       this.state = 'year';
     },
     selectDateHandler(day, month, year) {
-      this.selectedDate = { day, month, year };
-      console.log(day, month, year);
+      // this.selectedDate = { day, month, year };
+      this.$emit('selected-date', day, month, year);
     },
   },
 };

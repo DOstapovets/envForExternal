@@ -82,7 +82,8 @@ ul {
   color: #0f232e;
   font-size: 14px;
   line-height: 16px;
-  width: 115px;
+  min-width: 100px;
+  padding-right: 5px;
   display: inline-block;
   vertical-align: top;
 }

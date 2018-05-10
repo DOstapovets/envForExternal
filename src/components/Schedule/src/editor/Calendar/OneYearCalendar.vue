@@ -8,7 +8,7 @@
           :year="year"
           :month="month"
           :years-calendar="true"
-          :selected-date="selectedDate"
+          :selected-days="selectedDays"
           not-show-selected-on-prev-next-days
           class="calendar_years"
           @selected-date="selectDateHandler"
@@ -35,9 +35,9 @@ export default {
       type: Number,
       default: new Date().getFullYear(),
     },
-    selectedDate: {
-      type: Object,
-    },
+    // selectedDate: {
+    //   type: Object,
+    // },
   },
 
   methods: {

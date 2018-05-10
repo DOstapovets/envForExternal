@@ -29,7 +29,7 @@
               @click="sendChosenDate(previousMonthDays, month - 1, year)"
           >
               <div>
-                <span 
+                <!-- <span 
                   class="calendar__item_event calendar__item_event-recurring"
                   :class="{'calendar__iselected-item':
                     selectedDate.day === previousMonthDays
@@ -38,7 +38,7 @@
                     && !notShowSelectedOnPrevNextDays}"
                 >
                   {{previousMonthDays}}
-                </span>
+                </span> -->
               </div>
           </div>
           <div
@@ -51,9 +51,8 @@
                 <span 
                   class="calendar__item_event calendar__item_event-actice calendar__item_event-recurring"
                   :class="{'calendar__iselected-item': 
-                    selectedDate.day === day 
-                    && selectedDate.month === month 
-                    && selectedDate.year === year}"
+                 isHighlightingDate({day, month, year})}"
+                    
                 >
                     {{day}}
                 </span>
@@ -67,7 +66,7 @@
               @click="sendChosenDate(nextMonthDays, month + 1, year)"
           >
               <div>
-                <span 
+                <!-- <span 
                   class="calendar__item_event calendar__item_event-recurring"
                   :class="{'calendar__iselected-item':
                     selectedDate.day === nextMonthDays
@@ -76,7 +75,7 @@
                     && !notShowSelectedOnPrevNextDays}"
                 >
                   {{nextMonthDays}}
-                </span>
+                </span> -->
                 </div>
           </div>
         </div>
@@ -85,6 +84,11 @@
 </template>
 
 <script>
+// import _  'lodash';
+// import _  from 'lodash';
+
+// console.log('____', _);
+
 export default {
   beforeUpdate() {
     this.mon = this.month - 1;
@@ -121,8 +125,11 @@ export default {
       type: Boolean,
       default: false,
     },
-    selectedDate: {
-      type: Object,
+    selectedDays: {
+      type: Array,
+      default() {
+        return [];
+      },
     },
     notShowSelectedOnPrevNextDays: {
       type: Boolean,
@@ -205,6 +212,10 @@ export default {
 
       // console.log(day, localMonth, localYear);
       this.$emit('selected-date', day, localMonth, localYear);
+    },
+    isHighlightingDate(day) {
+      // return _.some(this.selectedDays, day);
+      return true;
     },
   },
   watch: {
