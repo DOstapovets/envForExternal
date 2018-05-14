@@ -29,16 +29,18 @@
               @click="sendChosenDate(previousMonthDays, month - 1, year)"
           >
               <div>
-                <!-- <span 
+                <span 
                   class="calendar__item_event calendar__item_event-recurring"
                   :class="{'calendar__iselected-item':
-                    selectedDate.day === previousMonthDays
-                    && selectedDate.month === (month - 1 === 0 ? 12 : month - 1)
-                    && selectedDate.year === (month - 1 === 0 ? year - 1 : year)
+                    isHighlightingDate({day: previousMonthDays, month, year}, 'prevMonth')
                     && !notShowSelectedOnPrevNextDays}"
+                  :style="{ background: (isHighlightingDate({day: previousMonthDays, month, year}, 'prevMonth')
+                  && !notShowSelectedOnPrevNextDays) ? 
+                  isHighlightingDate({day: previousMonthDays, month, year}, 'prevMonth').color : ''}"
+                    
                 >
                   {{previousMonthDays}}
-                </span> -->
+                </span>
               </div>
           </div>
           <div
@@ -51,7 +53,9 @@
                 <span 
                   class="calendar__item_event calendar__item_event-actice calendar__item_event-recurring"
                   :class="{'calendar__iselected-item': 
-                 isHighlightingDate({day, month, year})}"
+                  isHighlightingDate({day, month, year})}"
+                  :style="{ background: isHighlightingDate({day, month, year}) ? 
+                  isHighlightingDate({day, month, year}).color : ''}"
                     
                 >
                     {{day}}
@@ -66,16 +70,17 @@
               @click="sendChosenDate(nextMonthDays, month + 1, year)"
           >
               <div>
-                <!-- <span 
+                <span 
                   class="calendar__item_event calendar__item_event-recurring"
                   :class="{'calendar__iselected-item':
-                    selectedDate.day === nextMonthDays
-                    && selectedDate.month === (month + 1 === 13 ? 1 : month + 1)
-                    && selectedDate.year === (month + 1 === 13 ? year + 1 : year)
+                    isHighlightingDate({day: nextMonthDays, month, year}, 'nextMonth')
                     && !notShowSelectedOnPrevNextDays}"
+                  :style="{ background: (isHighlightingDate({day: nextMonthDays, month, year}, 'nextMonth')
+                  && !notShowSelectedOnPrevNextDays) ? 
+                  isHighlightingDate({day: nextMonthDays, month, year}, 'nextMonth').color : ''}"
                 >
                   {{nextMonthDays}}
-                </span> -->
+                </span>
                 </div>
           </div>
         </div>
@@ -85,7 +90,7 @@
 
 <script>
 // import _  'lodash';
-// import _  from 'lodash';
+import _ from 'lodash';
 
 // console.log('____', _);
 
@@ -213,9 +218,35 @@ export default {
       // console.log(day, localMonth, localYear);
       this.$emit('selected-date', day, localMonth, localYear);
     },
-    isHighlightingDate(day) {
-      // return _.some(this.selectedDays, day);
-      return true;
+    isHighlightingDate(date, nexOrPrevMonth) {
+      let month = date.month;
+      let year = date.year;
+
+      if (nexOrPrevMonth === 'nextMonth') {
+        month = month + 1 === 13 ? 1 : month + 1;
+        year = month + 1 === 13 ? year + 1 : year;
+      } else if (nexOrPrevMonth === 'prevMonth') {
+        month = month - 1 === 0 ? 12 : month - 1;
+        year = month - 1 === 0 ? year - 1 : year;
+      }
+      let res = null;
+      _.forEach(this.selectedDays, item => {
+        if (
+          item.date.day === date.day &&
+          item.date.month === month &&
+          item.date.year === year
+        ) {
+          res = item;
+          return false;
+        }
+        return true;
+      });
+      return res;
+      // return _.some(this.selectedDays.map(item => item.date), {
+      //   day: date.day,
+      //   month,
+      //   year,
+      // });
     },
   },
   watch: {

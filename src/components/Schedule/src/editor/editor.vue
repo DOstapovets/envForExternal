@@ -8,7 +8,12 @@
       add-button-label="Add Event"
       :new-item-method="listNewItemMethod">
       <template scope="item">
-        <or-button @click="openModal('modal'), doEditable(item.index)">Basic Modal</or-button>
+        <div class="schedule__wr-event-preview" @click="openModal('modal'), doEditable(item.index)">
+          <schedule-event-preview
+            :color="item.item.color"
+          >
+          </schedule-event-preview>
+        </div>
       </template>
     </or-list>
     <or-modal
@@ -55,7 +60,9 @@
               </schedule-event>
               <schedule-event-preview
                 v-if="editableEventNum !== item.index"
-                @do-editable="doEditable" :index="item.index"
+                :color="item.item.color"
+                @do-editable="doEditable"
+                :index="item.index"
               >
               </schedule-event-preview>
             </template>
@@ -109,9 +116,9 @@ export default {
         return {
           color: item.color,
           date: {
-            day: dateSplice[2],
-            month: dateSplice[1],
-            year: dateSplice[0],
+            day: parseInt(dateSplice[2], 10),
+            month: parseInt(dateSplice[1], 10),
+            year: parseInt(dateSplice[0], 10),
           },
         };
       });
@@ -199,8 +206,12 @@ export const meta = {
     display: flex;
   }
   &__calendar {
-    min-width: 850px;
+    min-width: 800px;
+    width: 100%;
     padding-right: 30px;
+  }
+  &__wr-event-preview {
+    width: 100%;
   }
 }
 </style>

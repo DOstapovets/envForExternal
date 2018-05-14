@@ -50,14 +50,14 @@
         :year="year"
         :month="month"
         v-model="interval"
-        v-if="state === 'month'"
+        v-show="state === 'month'"
         @selected-date="selectDateHandler"
         :selected-days="selectedDays"
     >
     </one-month-calendar>
     <one-year-calendar
         :year="year"
-        v-if="state === 'year'"
+        v-show="state === 'year'"
         @selected-date="selectDateHandler"
         :selected-days="selectedDays"
     >

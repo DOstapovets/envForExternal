@@ -35,6 +35,12 @@ export default {
       type: Number,
       default: new Date().getFullYear(),
     },
+    selectedDays: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
     // selectedDate: {
     //   type: Object,
     // },
