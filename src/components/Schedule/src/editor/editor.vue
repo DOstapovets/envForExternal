@@ -142,8 +142,16 @@ export default {
           date: '',
         },
         timeZone: {},
-        daily: {},
-        weekly: {},
+        daily: {
+          dailyPeriodMode: 'everyDay',
+          periodDays: 1,
+          cronExpressions: [],
+        },
+        weekly: {
+          period: '1',
+          cronExpressions: [],
+          weekDays: [],
+        },
         monthly: {},
         times: [],
         color: randomColor(),
