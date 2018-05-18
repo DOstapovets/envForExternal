@@ -57,6 +57,14 @@
               ></cron-generators-weekly>
             </div>
         </template>
+        <template  slot="item3">
+            <div placeholderItem="Set recurring monthly"  titleItem="Monthly">
+              <cron-generators-monthly
+                :selected-months.sync="monthly.selectedMonths"
+                :readonly="readonly"
+              ></cron-generators-monthly>
+            </div>
+        </template>
     </accordion>
   </div>
 </template>
@@ -64,18 +72,15 @@
 <script>
 import _ from 'lodash';
 import moment from 'moment-timezone';
-import later from 'later';
+// import later from 'later';
 
 /* eslint-disable */
-import TimePeriodList from './TimePeriodList/TimePeriodList.vue';
-import Accordion from './Accordion/Accordion.vue';
-import CronGeneratorsDaily from './CronGenerators/Daily.vue';
-import CronGeneratorsWeekly from './CronGenerators/Weekly.vue';
+import TimePeriodList from '../TimePeriodList/TimePeriodList.vue';
+import Accordion from '../../../../../Ui/Accordion/Accordion.vue';
+import CronGeneratorsDaily from '../CronGenerators/Daily.vue';
+import CronGeneratorsWeekly from '../CronGenerators/Weekly.vue';
+import CronGeneratorsMonthly from '../CronGenerators/Monthly.vue';
 /* eslint-enable */
-
-const libs = {};
-libs.moment = moment;
-libs.later = later;
 
 export default {
   props: {
@@ -159,7 +164,7 @@ export default {
   computed: {
     getRegions() {
       // return only canonical zones
-      const timeZones = libs.moment.tz._zones;
+      const timeZones = moment.tz._zones;
 
       return _.chain(timeZones)
         .keys()
@@ -176,7 +181,7 @@ export default {
     },
     displayTimeZone: {
       get() {
-        const timeZone = libs.moment.tz.guess();
+        const timeZone = moment.tz.guess();
         return _.isEmpty(this.timeZone)
           ? timeZone
           : _.get(this.timeZone, 'value', '');
@@ -232,7 +237,7 @@ export default {
       },
       set(newValue) {
         const date = new Date(newValue);
-        this.endExpression.date = libs.moment(date).format('YYYY-MM-DD');
+        this.endExpression.date = moment(date).format('YYYY-MM-DD');
         // this.generateCronExpression(); // update crons when data changed
       },
     },
@@ -267,9 +272,9 @@ export default {
     //   }
     //   let nextRuns = [];
     //   _.forEach(cronExpressions, expression => {
-    //     libs.later.date.UTC();
-    //     const parsedCron = libs.later.parse.cron(expression);
-    //     const nextRunTimeString = libs.later
+    //     later.date.UTC();
+    //     const parsedCron = later.parse.cron(expression);
+    //     const nextRunTimeString = later
     //       .schedule(parsedCron)
     //       .next(5, startTime.toDate());
     //     if (nextRunTimeString) {
@@ -283,39 +288,37 @@ export default {
     //     numberOfRun,
     //   );
     //   this.nextRuns = _.map(firstFive, timeMs => {
-    //     return libs.moment(timeMs).format('YYYY-MM-DD, hh:mm A');
+    //     return moment(timeMs).format('YYYY-MM-DD, hh:mm A');
     //   });
     // },
     // _getStartTime() {
     //   if (this.startDate) {
-    //     libs.moment.tz.setDefault('Etc/UTC');
+    //     moment.tz.setDefault('Etc/UTC');
     //     const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-    //     // const start = libs.moment.utc(this.startDate).format('YYYY-MM-DD');
-    //     const timeZone = libs.moment.tz.guess();
-    //     const start = libs
-    //       .moment(this.startDate)
+    //     // const start = moment.utc(this.startDate).format('YYYY-MM-DD');
+    //     const timeZone = moment.tz.guess();
+    //     const start = moment(this.startDate)
     //       .tz(timeZone)
     //       .format('YYYY-MM-DD');
     //     var timeString = start;
     //     // validate entered time
-    //     const _startTime = libs.moment(this.startTime, 'HH:mm').format('HH:mm');
+    //     const _startTime = moment(this.startTime, 'HH:mm').format('HH:mm');
     //     if (this.startTime && _startTime !== 'Invalid date') {
     //       timeString = `${start} ${_startTime}`;
     //     }
-    //     const years = libs.moment(timeString).year();
-    //     const months = libs.moment(timeString).month();
-    //     const dates = libs.moment(timeString).date();
-    //     const hours = libs.moment(timeString).hour();
-    //     const minutes = libs.moment(timeString).minute();
+    //     const years = moment(timeString).year();
+    //     const months = moment(timeString).month();
+    //     const dates = moment(timeString).date();
+    //     const hours = moment(timeString).hour();
+    //     const minutes = moment(timeString).minute();
     //     return this.startDate && !this.startTime
-    //       ? libs.moment(start, dateFormat)
-    //       : libs.moment([years, months, dates, hours, minutes]);
+    //       ? moment(start, dateFormat)
+    //       : moment([years, months, dates, hours, minutes]);
     //   }
     // },
     formatDate(date) {
-      const timeZone = libs.moment.tz.guess();
-      return libs
-        .moment(date)
+      const timeZone = moment.tz.guess();
+      return moment(date)
         .tz(timeZone)
         .format('YYYY-MM-DD');
     },
@@ -329,11 +332,10 @@ export default {
           if (item.start.HH && item.start.mm) {
             const units = item.every.units === 'hh' ? 'hours' : 'minutes';
 
-            let nextRunAtTime = libs.moment(
-              `${item.start.HH}:${item.start.mm}`,
-              ['HH:mm'],
-            );
-            const endTimeHmmA = libs.moment(`${item.end.HH}:${item.end.mm}`, [
+            let nextRunAtTime = moment(`${item.start.HH}:${item.start.mm}`, [
+              'HH:mm',
+            ]);
+            const endTimeHmmA = moment(`${item.end.HH}:${item.end.mm}`, [
               'HH:mm',
             ]);
 
@@ -365,6 +367,7 @@ export default {
     TimePeriodList,
     CronGeneratorsDaily,
     CronGeneratorsWeekly,
+    CronGeneratorsMonthly,
   },
 };
 </script>

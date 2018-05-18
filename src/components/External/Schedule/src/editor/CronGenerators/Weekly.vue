@@ -170,21 +170,17 @@ export default {
 }
 
 .weekly-days {
-  margin: 10px 0 0 0;
+  margin: 10px 0 0 30px;
   .btn-group {
     font-size: 14px;
     color: #0f232e;
-    width: 38px;
+    width: 35px;
     height: 25px;
     border: solid 1px #e7e7e7;
-    border-radius: 3px;
     background-color: #fbfbfb;
     padding: 0;
-    text-transform: uppercase;
+    font-size: 12px;
     cursor: pointer;
-    &:not(:last-child) {
-      margin-right: 4px;
-    }
     &:hover {
       color: #59a9d5;
       border: solid 1px #59a9d5;
@@ -199,7 +195,7 @@ export default {
     &.is-active,
     &.is-active:hover {
       background-color: #59a9d5;
-      border-color: #59a9d5;
+      // border-color: #59a9d5;
       color: #ffffff;
     }
   }

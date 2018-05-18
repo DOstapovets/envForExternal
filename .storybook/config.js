@@ -14,10 +14,9 @@ Vue.use(VueLocalStorage);
 
 function loadStories() {
   // You can require as many stories as you need.
-  require('../src/components/Autocomplete/Autocomplete.stories.js');
-  require('../src/components/Calendar/Calendar.stories.js');
-  require('../src/components/Accordion/Accordion.stories.js');
-  require('../src/components/Schedule/Schedule.stories.js');
+  require('../src/components/Ui/Calendar/Calendar.stories.js');
+  require('../src/components/Ui/Accordion/Accordion.stories.js');
+  require('../src/components/External/Schedule/Schedule.stories.js');
 }
 
 configure(loadStories, module);

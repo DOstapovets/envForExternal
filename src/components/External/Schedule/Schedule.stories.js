@@ -5,8 +5,8 @@ import { storiesOf } from '@storybook/vue';
 // import _ from 'lodash';
 
 /* eslint-disable */
-import MonthPicker from './src/editor/MonthPicker.vue';
-import ScheduleEvent from './src/editor/ScheduleEvent.vue';
+import MonthPicker from './src/editor/MonthPicker/MonthPicker.vue';
+import ScheduleEvent from './src/editor/ScheduleEvent/ScheduleEvent.vue';
 import ScheduleEvents, { data as schemaData } from './src/editor/editor.vue';
 import Vue from 'vue';
 // Vue.localStorage.set('schema', JSON.stringify(schema()));

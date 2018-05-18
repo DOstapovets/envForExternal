@@ -80,9 +80,9 @@ import _ from 'lodash';
 // const { required, jsExpressionNonEmptyString, validateIf } = validators;
 const randomColor = require('randomcolor').randomColor;
 /* eslint-disable */
-import ScheduleEvent from './ScheduleEvent.vue';
+import ScheduleEvent from './ScheduleEvent/ScheduleEvent.vue';
 import ScheduleEventPreview from './ScheduleEventPreview/ScheduleEventPreview.vue';
-import Calendar from './Calendar/Calendar.vue';
+import Calendar from '../../../../Ui/Calendar/Calendar.vue';
 /* eslint-enable */
 
 export default {
@@ -152,7 +152,9 @@ export default {
           cronExpressions: [],
           weekDays: [],
         },
-        monthly: {},
+        monthly: {
+          selectedMonths: [],
+        },
         times: [],
         color: randomColor(),
       };

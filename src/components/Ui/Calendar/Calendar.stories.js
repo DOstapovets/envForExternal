@@ -10,7 +10,7 @@ import OneYearCalendar from './OneYearCalendar.vue';
 import Calendar from './Calendar.vue';
 /* eslint-enable */
 
-storiesOf('OneMonthCalendar', module)
+storiesOf('Calendar', module)
   .add('One month component', () => ({
     data() {
       return {
@@ -60,22 +60,6 @@ storiesOf('OneMonthCalendar', module)
     <div>
         <calendar
           :month="1"
-        >
-        </calendar>
-    </div>
-  `,
-  }))
-  .add('Calendar with events', () => ({
-    data() {
-      return {
-        value: '',
-      };
-    },
-    methods: {},
-    components: { Calendar },
-    template: `
-    <div>
-        <calendar
         >
         </calendar>
     </div>
