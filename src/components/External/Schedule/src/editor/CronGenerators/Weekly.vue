@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="weekly">
     <div class="radio-custom__wr">
         <or-radio v-model="periodMode" true-value="everyWeek" :disabled="readonly">
             Every:
@@ -139,64 +139,66 @@ export default {
 </script>
 
 <style lang="scss">
-.radio-custom__wr {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-
-  .xs-input {
-    margin-bottom: 0;
-    padding-right: 16px;
-  }
-
-  .xs-input .ui-textbox__input {
-    min-height: 26px;
-    height: 26px;
-    width: 41px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-  }
-  .ui-radio__label-text {
-    color: #0f232e;
-    font-size: 14px;
-    line-height: 16px;
-  }
-
-  .ui-radio {
+.weekly {
+  .radio-custom__wr {
     display: flex;
     align-items: center;
-    padding-right: 16px;
-  }
-}
+    margin-bottom: 5px;
 
-.weekly-days {
-  margin: 10px 0 0 30px;
-  .btn-group {
-    font-size: 14px;
-    color: #0f232e;
-    width: 35px;
-    height: 25px;
-    border: solid 1px #e7e7e7;
-    background-color: #fbfbfb;
-    padding: 0;
-    font-size: 12px;
-    cursor: pointer;
-    &:hover {
-      color: #59a9d5;
-      border: solid 1px #59a9d5;
-      background-color: #fbfbfb;
+    .xs-input {
+      margin-bottom: 0;
+      padding-right: 16px;
     }
-    &.is-disabled:hover {
+
+    .xs-input .ui-textbox__input {
+      min-height: 26px;
+      height: 26px;
+      width: 41px;
+      padding-top: 6px;
+      padding-bottom: 6px;
+    }
+    .ui-radio__label-text {
       color: #0f232e;
+      font-size: 14px;
+      line-height: 16px;
+    }
+
+    .ui-radio {
+      display: flex;
+      align-items: center;
+      padding-right: 16px;
+    }
+  }
+
+  .weekly-days {
+    margin: 10px 0 0 30px;
+    .btn-group {
+      font-size: 14px;
+      color: #0f232e;
+      width: 35px;
+      height: 25px;
       border: solid 1px #e7e7e7;
       background-color: #fbfbfb;
-      cursor: default;
-    }
-    &.is-active,
-    &.is-active:hover {
-      background-color: #59a9d5;
-      // border-color: #59a9d5;
-      color: #ffffff;
+      padding: 0;
+      font-size: 12px;
+      cursor: pointer;
+      &:hover {
+        color: #59a9d5;
+        border: solid 1px #59a9d5;
+        background-color: #fbfbfb;
+      }
+      &.is-disabled:hover {
+        color: #0f232e;
+        border: solid 1px #e7e7e7;
+        background-color: #fbfbfb;
+        cursor: default;
+      }
+      &.is-active,
+      &.is-active:hover {
+        background-color: #59a9d5;
+        // border-color: #59a9d5;
+        color: #ffffff;
+      }
     }
   }
 }

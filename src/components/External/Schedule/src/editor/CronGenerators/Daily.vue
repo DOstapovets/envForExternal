@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="daily">
       <div class="radio-custom__wr">
           <or-radio v-model="dailyDataLocal.dailyPeriodMode" true-value="everyDay" class="" :disabled="readonly">
               Every:
@@ -102,33 +102,35 @@ export default {
 </script>
 
 <style lang="scss">
-.radio-custom__wr {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-
-  .xs-input {
-    margin-bottom: 0;
-    padding-right: 16px;
-  }
-
-  .xs-input .ui-textbox__input {
-    min-height: 26px;
-    height: 26px;
-    width: 41px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-  }
-  .ui-radio__label-text {
-    color: #0f232e;
-    font-size: 14px;
-    line-height: 16px;
-  }
-
-  .ui-radio {
+.daily {
+  .radio-custom__wr {
     display: flex;
     align-items: center;
-    padding-right: 16px;
+    margin-bottom: 5px;
+
+    .xs-input {
+      margin-bottom: 0;
+      padding-right: 16px;
+    }
+
+    .xs-input .ui-textbox__input {
+      min-height: 26px;
+      height: 26px;
+      width: 41px;
+      padding-top: 6px;
+      padding-bottom: 6px;
+    }
+    .ui-radio__label-text {
+      color: #0f232e;
+      font-size: 14px;
+      line-height: 16px;
+    }
+
+    .ui-radio {
+      display: flex;
+      align-items: center;
+      padding-right: 16px;
+    }
   }
 }
 </style>

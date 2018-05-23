@@ -60,9 +60,28 @@
         <template  slot="item3">
             <div placeholderItem="Set recurring monthly"  titleItem="Monthly">
               <cron-generators-monthly
+                :runAtTime="runAtTimeLocal"
                 :selected-months.sync="monthly.selectedMonths"
+                :selected-days.sync="monthly.selectedDays"
                 :readonly="readonly"
+                :days-period.sync="monthly.daysPeriod"
+                :mode.sync="monthly.mode"
+                :period.sync="monthly.period"
+                v-model="monthly.cronExpressions"
               ></cron-generators-monthly>
+            </div>
+        </template>
+        <template  slot="item4">
+            <div placeholderItem="Set recurring yearly"  titleItem="Yearly">
+              <cron-generators-yearly
+                :runAtTime="runAtTimeLocal"
+                :readonly="readonly"
+                v-model="yearly.cronExpressions"
+                :period.sync="yearly.period"
+                :selected-months.sync="yearly.selectedMonths"
+                :days-period.sync="yearly.daysPeriod"
+                :on-the.sync="yearly.onThe"
+              ></cron-generators-yearly>
             </div>
         </template>
     </accordion>
@@ -80,6 +99,7 @@ import Accordion from '../../../../../Ui/Accordion/Accordion.vue';
 import CronGeneratorsDaily from '../CronGenerators/Daily.vue';
 import CronGeneratorsWeekly from '../CronGenerators/Weekly.vue';
 import CronGeneratorsMonthly from '../CronGenerators/Monthly.vue';
+import CronGeneratorsYearly from '../CronGenerators/Yearly.vue';
 /* eslint-enable */
 
 export default {
@@ -136,6 +156,10 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    yearly: {
+      type: Object,
+      default: () => ({}),
+    },
     steps: null,
     stepId: null,
     $v: null,
@@ -164,7 +188,7 @@ export default {
   computed: {
     getRegions() {
       // return only canonical zones
-      const timeZones = moment.tz._zones;
+      const timeZones = moment.tz._zones; // eslint-disable-line no-underscore-dangle
 
       return _.chain(timeZones)
         .keys()
@@ -368,6 +392,7 @@ export default {
     CronGeneratorsDaily,
     CronGeneratorsWeekly,
     CronGeneratorsMonthly,
+    CronGeneratorsYearly,
   },
 };
 </script>

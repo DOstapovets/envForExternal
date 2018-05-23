@@ -51,6 +51,7 @@
                 :daily.sync="item.item.daily"   
                 :weekly.sync="item.item.weekly"   
                 :monthly.sync="item.item.monthly"
+                :yearly.sync="item.item.yearly"
                 :times.sync="item.item.times"
                 :$v="$v"
                 :readonly="readonly"  
@@ -73,7 +74,7 @@
   </div>
 </template>
 <script>
-import _ from 'lodash';
+// import _ from 'lodash';
 
 // import * as _ from 'lodash';
 // import { validators } from '_validators';
@@ -154,6 +155,19 @@ export default {
         },
         monthly: {
           selectedMonths: [],
+          selectedDays: [],
+          mode: 'each',
+          daysPeriod: { day: '', period: '' },
+          period: '1',
+          cronExpressions: [],
+        },
+        yearly: {
+          selectedMonths: [],
+          period: '1',
+          cronExpressions: [],
+          selectedDays: [],
+          daysPeriod: { day: '', period: '' },
+          onThe: false,
         },
         times: [],
         color: randomColor(),

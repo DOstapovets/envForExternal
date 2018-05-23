@@ -66,40 +66,24 @@ export default {
 
 <style lang="scss">
 .month-picker {
-  width: 201px;
-  height: 136px;
   margin: 10px 0 0 0;
-  padding-top: 1px;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  background-color: #e3e3e3;
-  border-radius: 4px;
+  border-top: solid 1px #e3e3e3;
+  border-left: solid 1px #e3e3e3;
 
   .month-picker-item {
-    height: 44px;
-    width: 49px;
+    height: 25px;
+    width: 25%;
     padding: 0;
     border: none;
+    border-right: solid 1px #e3e3e3;
+    border-bottom: solid 1px #e3e3e3;
     background-color: #fafafa;
     color: #0f232e;
     font-size: 13px;
-
-    &:nth-child(1) {
-      border-top-left-radius: 3px;
-    }
-
-    &:nth-child(4) {
-      border-top-right-radius: 3px;
-    }
-
-    &:nth-child(9) {
-      border-bottom-left-radius: 3px;
-    }
-
-    &:nth-child(12) {
-      border-bottom-right-radius: 3px;
-    }
 
     &:hover {
       background-color: #e3e3e3;

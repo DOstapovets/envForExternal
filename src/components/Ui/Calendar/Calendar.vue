@@ -203,7 +203,7 @@ export default {
 }
 
 .nav__wr-right {
-  margin-right: 35px;
+  /* margin-right: 35px; */
 }
 
 .nav__month {
