@@ -1,6 +1,13 @@
 <template>
   <div>
-    <or-list class="list-time" drag-handle-right v-model="times" add-button-label="Add Time" :new-item-method="listNewItemTime">
+    <or-list 
+      class="list-time" 
+      drag-handle-right 
+      v-model="times" 
+      add-button-label="Add Time" 
+      :new-item-method="listNewItemTime"
+      :can-remove-last-item="false"
+    >
         <template scope="item">
             <time-period-item
                 :readonly="readonly"
@@ -58,5 +65,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

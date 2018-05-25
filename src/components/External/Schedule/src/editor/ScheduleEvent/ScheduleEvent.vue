@@ -3,7 +3,7 @@
     <label class="timezone">
         <span class="timezone__label">Timezone</span>
         <or-select :disabled="readonly" placeholder="Select a time zone" class="config-line__select" :has-search="true" :options="getRegions"
-            v-model="displayTimeZone">
+            v-model="timeZoneComp">
         </or-select>
     </label>
     <div class="date">
@@ -11,14 +11,14 @@
       <span v-else class="date__start-date">{{startDateUi}}</span>
     </div>
     <time-period-list
-      :times.sync="times"
+      :times.sync="copyData.timesLocal"
       :readonly="readonly"
     ></time-period-list>
     <div class="recurring-controls">
-        <or-checkbox v-model="isReccuringChecked" :disabled="readonly">Recurring</or-checkbox>
-        <span v-if="!isEndChecked" class="recurring-controls__recuring-till">till</span>
+        <or-checkbox v-model="copyData.isReccuringLocal" :disabled="readonly">Recurring</or-checkbox>
+        <span v-if="!copyData.isEndTimeLocal && copyData.isReccuringLocal" class="recurring-controls__recuring-till">till</span>
         <div class="recurring-controls__wr-configs-time">
-            <div class="" v-if="!isEndChecked">
+            <div class="" v-if="!copyData.isEndTimeLocal && copyData.isReccuringLocal">
                 <div class="">
                     <div class="">
                       <div class="recurring-controls__date">
@@ -30,27 +30,27 @@
                     </div>
                 </div>
             </div>
-            <div class="recurring-controls__wr-is-end">
-                <or-checkbox v-model="isEndChecked" :disabled="readonly">No end</or-checkbox>
+            <div v-if="copyData.isReccuringLocal" class="recurring-controls__wr-is-end">
+                <or-checkbox v-model="copyData.isEndTimeLocal" :disabled="readonly">No end</or-checkbox>
             </div>
         </div>
     </div>
-    <accordion>
+    <accordion v-if="copyData.isReccuringLocal">
         <template  slot="item1">
             <div placeholderItem="Set recurring daily"  titleItem="Daily">
               <cron-generators-daily
-                :daily-data.sync="daily"
+                :daily-data.sync="copyData.dailyLocal"
                 :runAtTime="runAtTimeLocal"
                 :readonly="readonly"
-                v-model="daily.cronExpressions"
+                v-model="copyData.dailyCronExpressionsLocal"
               ></cron-generators-daily>
             </div>
         </template>
         <template  slot="item2">
             <div placeholderItem="Set recurring weekly"  titleItem="Weekly">
               <cron-generators-weekly
-                :week-days.sync="weekly.weekDays"
-                :period.sync="weekly.period"
+                :week-days.sync="copyData.weeklyWeekDaysLocal"
+                :period.sync="copyData.weeklyPeriodLocal"
                 :runAtTime="runAtTimeLocal"
                 :readonly="readonly"
                 v-model="weekly.cronExpressions"
@@ -61,12 +61,12 @@
             <div placeholderItem="Set recurring monthly"  titleItem="Monthly">
               <cron-generators-monthly
                 :runAtTime="runAtTimeLocal"
-                :selected-months.sync="monthly.selectedMonths"
-                :selected-days.sync="monthly.selectedDays"
                 :readonly="readonly"
-                :days-period.sync="monthly.daysPeriod"
-                :mode.sync="monthly.mode"
-                :period.sync="monthly.period"
+                :selected-months.sync="copyData.monthlySelectedMonthsLocal"
+                :selected-days.sync="copyData.monthlySelectedDaysLocal"
+                :days-period.sync="copyData.monthlyDaysPeriodLocal"
+                :mode.sync="copyData.monthlyModeLocal"
+                :period.sync="copyData.monthlyPeriodLocal"
                 v-model="monthly.cronExpressions"
               ></cron-generators-monthly>
             </div>
@@ -77,14 +77,18 @@
                 :runAtTime="runAtTimeLocal"
                 :readonly="readonly"
                 v-model="yearly.cronExpressions"
-                :period.sync="yearly.period"
-                :selected-months.sync="yearly.selectedMonths"
-                :days-period.sync="yearly.daysPeriod"
-                :on-the.sync="yearly.onThe"
+                :period.sync="copyData.yearlyPeriodLocal"
+                :selected-months.sync="copyData.yearlySelectedMonthsLocal"
+                :days-period.sync="copyData.yearlyDaysPeriodLocal"
+                :on-the.sync="copyData.yearlyOnTheLocal"
               ></cron-generators-yearly>
             </div>
         </template>
     </accordion>
+    <div class="schedule-event__wr-buttons">
+      <or-button @click="cancel" class="schedule-event__bottom-button" color="primary" type="secondary">Cancel</or-button>
+      <or-button :loading="loadingApply" :disabled="!isDataChanged" @click="apply" class="schedule-event__bottom-button" color="primary">Apply</or-button>
+    </div>
   </div>
 </template>
 
@@ -115,27 +119,26 @@ export default {
         date: '',
       }),
     },
-    deactivateAfterLastRun: {
-      type: Boolean,
-      default: false,
-    },
+    // deactivateAfterLastRun: {
+    //   type: Boolean,
+    //   default: false,
+    // },
     isReccuring: {
       type: Boolean,
       default: false,
     },
-    expressions: {
-      type: Array,
-      default: () => [],
-    },
-
+    // expressions: {
+    //   type: Array,
+    //   default: () => [],
+    // },
     isEndTime: {
       type: Boolean,
       default: false,
     },
-    includeEndTime: {
-      type: Boolean,
-      default: false,
-    },
+    // includeEndTime: {
+    //   type: Boolean,
+    //   default: false,
+    // },
     endExpression: {
       time: '00:00',
       date: '',
@@ -179,10 +182,64 @@ export default {
       type: Number,
       default: null,
     },
+    index: {
+      type: Number,
+      default: null,
+    },
   },
   data() {
     return {
       runAtTimeLocal: [],
+      isDataChanged: false,
+      loadingApply: false,
+
+      copyData: {
+        isEndTimeLocal: this.isEndTime,
+        isReccuringLocal: this.isReccuring,
+        timeZoneLocal: this.timeZone,
+        timesLocal: _.cloneDeep(this.times),
+
+        dailyLocal: _.cloneDeep(this.daily),
+        dailyCronExpressionsLocal: this.daily.cronExpressions,
+
+        weeklyWeekDaysLocal: _.cloneDeep(this.weekly.weekDays),
+        weeklyPeriodLocal: _.cloneDeep(this.weekly.period),
+
+        monthlySelectedMonthsLocal: _.cloneDeep(this.monthly.selectedMonths),
+        monthlySelectedDaysLocal: _.cloneDeep(this.monthly.selectedDays),
+        monthlyDaysPeriodLocal: _.cloneDeep(this.monthly.daysPeriod),
+        monthlyModeLocal: _.cloneDeep(this.monthly.mode),
+        monthlyPeriodLocal: _.cloneDeep(this.monthly.period),
+
+        yearlyPeriodLocal: _.cloneDeep(this.yearly.period),
+        yearlySelectedMonthsLocal: _.cloneDeep(this.yearly.selectedMonths),
+        yearlyDaysPeriodLocal: _.cloneDeep(this.yearly.daysPeriod),
+        yearlyOnTheLocal: _.cloneDeep(this.yearly.onThe),
+      },
+
+      currData: {
+        isEndTimeLocal: this.isEndTime,
+        isReccuringLocal: this.isReccuring,
+        timeZoneLocal: this.timeZone,
+        timesLocal: this.times,
+
+        dailyLocal: this.daily,
+        dailyCronExpressionsLocal: this.daily.cronExpressions,
+
+        weeklyWeekDaysLocal: this.weekly.weekDays,
+        weeklyPeriodLocal: this.weekly.period,
+
+        monthlySelectedMonthsLocal: this.monthly.selectedMonths,
+        monthlySelectedDaysLocal: this.monthly.selectedDays,
+        monthlyDaysPeriodLocal: this.monthly.daysPeriod,
+        monthlyModeLocal: this.monthly.mode,
+        monthlyPeriodLocal: this.monthly.period,
+
+        yearlyPeriodLocal: this.yearly.period,
+        yearlySelectedMonthsLocal: this.yearly.selectedMonths,
+        yearlyDaysPeriodLocal: this.yearly.daysPeriod,
+        yearlyOnTheLocal: this.yearly.onThe,
+      },
     };
   },
   computed: {
@@ -203,19 +260,19 @@ export default {
         .map(value => ({ label: value, value }))
         .value();
     },
-    displayTimeZone: {
+    timeZoneComp: {
       get() {
         const timeZone = moment.tz.guess();
-        return _.isEmpty(this.timeZone)
+        return _.isEmpty(this.copyData.timeZoneLocal)
           ? timeZone
-          : _.get(this.timeZone, 'value', '');
+          : _.get(this.copyData.timeZoneLocal, 'value', '');
       },
       set(newValue) {
         if (newValue) {
-          this.$emit('update:timeZone', {
+          this.copyData.timeZoneLocal = {
             value: newValue,
             label: newValue,
-          });
+          };
           // this.$nextTick(this.getNextTimeRunUI); // update UI based on new regions
         }
       },
@@ -223,37 +280,36 @@ export default {
     startDateUi() {
       return moment(this.startExpression.date).format('LL');
     },
-    isReccuringChecked: {
-      get() {
-        return this.isReccuring;
-      },
-      set(newValue) {
-        this.$emit('update:isReccuring', newValue);
-        // delete all setting if checkbox uncheked
-        // if (!newValue) {
-        //   this.resetRecurringData();
-        // }
-
-        // // update crons when data changed
-        // this.$nextTick(this.generateCronExpression);
-      },
-    },
-    isEndChecked: {
-      get() {
-        return this.isEndTime;
-      },
-      set(newValue) {
-        // if end day unchecked - clear date
-        // if (!newValue) {
-        //   // direct mutation
-        //   _.set(this.endExpression, 'date', '');
-        //   _.set(this.endExpression, 'time', '00:00');
-        //   this.isIncludedEndTime = false;
-        // }
-        this.$emit('update:isEndTime', newValue);
-        // this.generateCronExpression(); // update crons when data changed
-      },
-    },
+    // copyData.isReccuringLocal: {
+    //   get() {
+    //     return this.isReccuring;
+    //   },
+    //   set(newValue) {
+    //     this.$emit('update:isReccuring', this.copyData.isReccuringLocal);
+    //     // delete all setting if checkbox uncheked
+    //     // if (!newValue) {
+    //     //   this.resetRecurringData();
+    //     // }
+    //     // // update crons when data changed
+    //     // this.$nextTick(this.generateCronExpression);
+    //   },
+    // },
+    // isEndTimeLocal: {
+    //   get() {
+    //     return this.isEndTime;
+    //   },
+    //   set(newValue) {
+    //     // if end day unchecked - clear date
+    //     // if (!newValue) {
+    //     //   // direct mutation
+    //     //   _.set(this.endExpression, 'date', '');
+    //     //   _.set(this.endExpression, 'time', '00:00');
+    //     //   this.isIncludedEndTime = false;
+    //     // }
+    //     this.$emit('update:isEndTime', newValue);
+    //     // this.generateCronExpression(); // update crons when data changed
+    //   },
+    // },
     endDate: {
       get() {
         const date = _.get(this.endExpression, 'date');
@@ -267,6 +323,79 @@ export default {
     },
   },
   methods: {
+    apply() {
+      this.$emit('update:isEndTime', this.copyData.isEndTimeLocal);
+      this.$emit('update:isReccuring', this.copyData.isReccuringLocal);
+      this.$emit('update:timeZone', this.copyData.timeZoneLocal);
+      this.$emit('update:times', this.copyData.timesLocal);
+      this.$emit('update:daily', this.copyData.dailyLocal);
+      this.$emit(
+        'update:weekly',
+        Object.assign({}, this.weekly, {
+          weekDays: this.copyData.weeklyWeekDaysLocal,
+          period: this.copyData.weeklyPeriodLocal,
+        }),
+      );
+      this.$emit(
+        'update:monthly',
+        Object.assign({}, this.monthly, {
+          selectedMonths: this.copyData.monthlySelectedMonthsLocal,
+          selectedDays: this.copyData.monthlySelectedDaysLocal,
+          mode: this.copyData.monthlyModeLocal,
+          daysPeriod: this.copyData.monthlyDaysPeriodLocal,
+          period: this.copyData.monthlyPeriodLocal,
+        }),
+      );
+      this.$emit(
+        'update:yearly',
+        Object.assign({}, this.yearly, {
+          period: this.copyData.yearlyPeriodLocal,
+          selectedMonths: this.copyData.yearlySelectedMonthsLocal,
+          daysPeriod: this.copyData.yearlyDaysPeriodLocal,
+          onThe: this.copyData.yearlyOnTheLocal,
+        }),
+      );
+
+      this.loadingApply = true;
+      setTimeout(() => {
+        this.loadingApply = false;
+      }, 200);
+      this.isDataChanged = false;
+    },
+    cancel() {
+      if (this.isDataChanged) {
+        this.copyData.isEndTimeLocal = this.isEndTime;
+        this.copyData.isReccuringLocal = this.isReccuring;
+        this.copyData.timeZoneLocal = this.timeZone;
+        this.copyData.dailyLocal = _.cloneDeep(this.daily);
+        this.copyData.weeklyWeekDaysLocal = _.cloneDeep(this.weekly.weekDays);
+        this.copyData.weeklyPeriodLocal = _.cloneDeep(this.weekly.period);
+        this.copyData.timesLocal = _.cloneDeep(this.times);
+        this.copyData.monthlySelectedMonthsLocal = _.cloneDeep(
+          this.monthly.selectedMonths,
+        );
+        this.copyData.monthlySelectedDaysLocal = _.cloneDeep(
+          this.monthly.selectedDays,
+        );
+        this.copyData.monthlyDaysPeriodLocal = _.cloneDeep(
+          this.monthly.daysPeriod,
+        );
+        this.copyData.monthlyModeLocal = _.cloneDeep(this.monthly.mode);
+        this.copyData.monthlyPeriodLocal = _.cloneDeep(this.monthly.period);
+
+        this.copyData.yearlyPeriodLocal = _.cloneDeep(this.yearly.period);
+        this.copyData.yearlySelectedMonthsLocal = _.cloneDeep(
+          this.yearly.selectedMonths,
+        );
+        this.copyData.yearlyDaysPeriodLocal = _.cloneDeep(
+          this.yearly.daysPeriod,
+        );
+        this.copyData.yearlyOnTheLocal = _.cloneDeep(this.yearly.onThe);
+
+        this.isDataChanged = false;
+      }
+    },
+
     // // methods generates next time that shown on UI
     // getNextTimeRunUI() {
     //   const dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -385,6 +514,25 @@ export default {
       },
       deep: true,
     },
+    copyData: {
+      handler() {
+        if (!_.isEqual(this.copyData, this.currData)) {
+          this.isDataChanged = true;
+          console.log(1);
+        }
+      },
+      deep: true,
+    },
+    // editableEventNum(newValue, oldValue) {
+    //   this.isEditable = newValue === this.index;
+    //   if (newValue === this.index) {
+    //     this.$emit('save-copy', this.index);
+    //   } else if (oldValue === this.index) {
+    //     this.$emit('return-state', this.index);
+    //   } else {
+    //     console.log(3);
+    //   }
+    // },
   },
   components: {
     Accordion,
@@ -400,6 +548,15 @@ export default {
 <style lang="scss">
 .schedule-event {
   min-width: 410px;
+  &__wr-buttons {
+    padding-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+  }
+  &__bottom-button:not(:last-child) {
+    margin-right: 12px;
+  }
 }
 
 .config-line__select {

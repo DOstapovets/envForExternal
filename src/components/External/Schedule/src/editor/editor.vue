@@ -6,7 +6,9 @@
       :steps="steps" 
       :step-id="stepId"
       add-button-label="Add Event"
-      :new-item-method="listNewItemMethod">
+      :new-item-method="listNewItemMethod"
+      :drag-handle-right="true"
+    >
       <template scope="item">
         <div class="schedule__wr-event-preview" @click="openModal('modal'), doEditable(item.index)">
           <schedule-event-preview
@@ -35,11 +37,12 @@
             :steps="steps" 
             :step-id="stepId"
             add-button-label="Add Event"
-            :new-item-method="listNewItemMethod">
+            :new-item-method="listNewItemMethod"
+            :drag-handle-right="true"
+          >
             <template scope="item">
               <schedule-event
-                v-if="editableEventNum === item.index"
-                :editable-event-num="editableEventNum"
+                v-if="editableEventNum == item.index"
                 :start-expression.sync="item.item.startExpression"
                 :deactivate-after-last-run.sync="item.item.deactivateAfterLastRun"
                 :is-reccuring.sync="item.item.isReccuring"
@@ -57,6 +60,8 @@
                 :readonly="readonly"  
                 :step-id="stepId"
                 :steps="steps"
+                @save-copy="/*saveCopy*/"
+                @return-state="/*returnState*/"
               >
               </schedule-event>
               <schedule-event-preview
@@ -108,6 +113,7 @@ export default {
     return {
       // scheduleEventsLocal: this.scheduleEvents,
       editableEventNum: null,
+      // editableCopy: [],
     };
   },
   computed: {
@@ -169,7 +175,23 @@ export default {
           daysPeriod: { day: '', period: '' },
           onThe: false,
         },
-        times: [],
+        times: [
+          {
+            start: {
+              HH: '',
+              mm: '',
+            },
+            end: {
+              HH: '',
+              mm: '',
+            },
+            every: {
+              val: 10,
+              units: 'mm',
+            },
+            endTime: false,
+          },
+        ],
         color: randomColor(),
       };
     },
@@ -188,6 +210,14 @@ export default {
     doEditable(index) {
       this.editableEventNum = index;
     },
+    // saveCopy(index) {
+    //   this.editableCopy[index] = this.scheduleEvents[index];
+    //   console.log('this.editableCopy',this.editableCopy);
+    // },
+    // returnState(index) {
+    //   this.scheduleEvents[index] = this.editableCopy[index];
+    //   console.log('this.scheduleEvents[index]', this.scheduleEvents[index]);
+    // },
   },
 
   validations() {
@@ -221,6 +251,9 @@ export const meta = {
 <style lang="scss" rel="stylesheet/scss">
 .ui-modal__container {
   width: 100%;
+}
+.schedule-event-preview {
+  margin-bottom: 20px;
 }
 </style>
 

@@ -1,5 +1,6 @@
 <template>
   <div class="daily">
+      {{value}}
       <div class="radio-custom__wr">
           <or-radio v-model="dailyDataLocal.dailyPeriodMode" true-value="everyDay" class="" :disabled="readonly">
               Every:
