@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- {{scheduleEvents[0].daily}} -->
     <or-list
       label="Basic List" 
       v-model="scheduleEvents" 
@@ -12,7 +13,7 @@
       <template scope="item">
         <div class="schedule__wr-event-preview" @click="openModal('modal'), doEditable(item.index)">
           <schedule-event-preview
-            :color="item.item.color"
+            :color="item.item.scheduleEventData.color"
           >
           </schedule-event-preview>
         </div>
@@ -26,7 +27,7 @@
         <div class="schedule__calendar">
           <calendar
             :month="1"
-            @selected-date="selectedDate"
+            @selected-date="changeSelectedDate"
             :selected-days="startDays"
           >
           </calendar>
@@ -41,21 +42,10 @@
             :drag-handle-right="true"
           >
             <template scope="item">
-              <schedule-event
+              <!-- <schedule-event
                 v-if="editableEventNum == item.index"
-                :start-expression.sync="item.item.startExpression"
-                :deactivate-after-last-run.sync="item.item.deactivateAfterLastRun"
-                :is-reccuring.sync="item.item.isReccuring"
-                :expressions.sync="item.item.expressions" 
-                :is-end-time.sync="item.item.isEndTime" 
-                :end-expression.sync="item.item.endExpression" 
-                :include-end-time.sync="item.item.includeEndTime" 
-                :time-zone.sync="item.item.timeZone"     
-                :daily.sync="item.item.daily"   
-                :weekly.sync="item.item.weekly"   
-                :monthly.sync="item.item.monthly"
-                :yearly.sync="item.item.yearly"
-                :times.sync="item.item.times"
+                :schedule-event-data.sync="item.item.scheduleEventData"
+                :selected-date="selectedDateLocal"
                 :$v="$v"
                 :readonly="readonly"  
                 :step-id="stepId"
@@ -63,10 +53,24 @@
                 @save-copy="/*saveCopy*/"
                 @return-state="/*returnState*/"
               >
+              </schedule-event> -->
+              <schedule-event
+                v-if="editableEventNum == item.index && copyScheduleEventData"
+                :copy-schedule-event-data.sync="copyScheduleEventData"
+                :schedule-event-data.sync="scheduleEvents[editableEventNum].scheduleEventData"
+                :$v="$v"
+                :readonly="readonly"
+                :step-id="stepId"
+                :steps="steps"
+                @save-copy="/*saveCopy*/"
+                @return-state="/*returnState*/"
+                @apply-changes="applyChanges"
+                @cancel-changes="cancelChanges"
+              >
               </schedule-event>
               <schedule-event-preview
                 v-if="editableEventNum !== item.index"
-                :color="item.item.color"
+                :color="item.item.scheduleEventData.color"
                 @do-editable="doEditable"
                 :index="item.index"
               >
@@ -79,7 +83,7 @@
   </div>
 </template>
 <script>
-// import _ from 'lodash';
+import _ from 'lodash';
 
 // import * as _ from 'lodash';
 // import { validators } from '_validators';
@@ -113,86 +117,109 @@ export default {
     return {
       // scheduleEventsLocal: this.scheduleEvents,
       editableEventNum: null,
+      copyScheduleEventData: null
       // editableCopy: [],
     };
   },
   computed: {
     startDays() {
-      return this.scheduleEvents.map(item => {
-        const dateSplice = item.startExpression.date.split('-');
+      const dates = this.scheduleEvents.map(item => {
+        const dateSplice = item.scheduleEventData.startExpression.date.split('-');
+        
         return {
-          color: item.color,
+          color: item.scheduleEventData.color,
           date: {
             day: parseInt(dateSplice[2], 10),
             month: parseInt(dateSplice[1], 10),
             year: parseInt(dateSplice[0], 10),
           },
         };
-      });
+
+      })
+      .filter((item, index) => index !== this.editableEventNum);
+
+      if (this.copyScheduleEventData) {
+        const copyScheduleEventDataSplice = this.copyScheduleEventData.startExpression.date.split('-');
+        dates.push({
+            color: this.scheduleEvents[this.editableEventNum].scheduleEventData.color,
+            date: {
+              day: parseInt(copyScheduleEventDataSplice[2], 10),
+              month: parseInt(copyScheduleEventDataSplice[1], 10),
+              year: parseInt(copyScheduleEventDataSplice[0], 10),
+            },
+          }
+        );
+      }
+      return dates;
     },
   },
 
   methods: {
     listNewItemMethod() {
       return {
-        startExpression: {
-          time: '00:00',
-          date: '',
-        },
-        deactivateAfterLastRun: false,
-        includeEndTime: false,
-        isReccuring: false,
-        expressions: [],
-        isEndTime: false,
-        endExpression: {
-          time: '00:00',
-          date: '',
-        },
-        timeZone: {},
-        daily: {
-          dailyPeriodMode: 'everyDay',
-          periodDays: 1,
-          cronExpressions: [],
-        },
-        weekly: {
-          period: '1',
-          cronExpressions: [],
-          weekDays: [],
-        },
-        monthly: {
-          selectedMonths: [],
-          selectedDays: [],
-          mode: 'each',
-          daysPeriod: { day: '', period: '' },
-          period: '1',
-          cronExpressions: [],
-        },
-        yearly: {
-          selectedMonths: [],
-          period: '1',
-          cronExpressions: [],
-          selectedDays: [],
-          daysPeriod: { day: '', period: '' },
-          onThe: false,
-        },
-        times: [
-          {
-            start: {
-              HH: '',
-              mm: '',
-            },
-            end: {
-              HH: '',
-              mm: '',
-            },
-            every: {
-              val: 10,
-              units: 'mm',
-            },
-            endTime: false,
+        scheduleEventData: {
+          startExpression: {
+            time: '00:00',
+            date: '',
           },
-        ],
-        color: randomColor(),
+          deactivateAfterLastRun: false,
+          includeEndTime: false,
+          isReccuring: false,
+          expressions: [],
+          isEndTime: false,
+          endExpression: {
+            time: '00:00',
+            date: '',
+          },
+          timeZone: {
+            label: '',
+            value: ''
+          },
+          daily: {
+            periodMode: 'everyDay',
+            period: '1',
+            cronExpressions: [],
+          },
+          weekly: {
+            period: '1',
+            cronExpressions: [],
+            weekDays: [],
+          },
+          monthly: {
+            selectedMonths: [],
+            selectedDays: [],
+            mode: 'each',
+            daysPeriod: { day: '', period: '' },
+            period: '1',
+            cronExpressions: [],
+          },
+          yearly: {
+            selectedMonths: [],
+            period: '1',
+            cronExpressions: [],
+            selectedDays: [],
+            daysPeriod: { day: '', period: '' },
+            onThe: false,
+          },
+          times: [
+            {
+              start: {
+                HH: '',
+                mm: '',
+              },
+              end: {
+                HH: '',
+                mm: '',
+              },
+              every: {
+                val: 10,
+                units: 'mm',
+              },
+              endTime: false,
+            },
+          ],
+          color: randomColor(),
+        },
       };
     },
     openModal(ref) {
@@ -201,14 +228,14 @@ export default {
     closeModal(ref) {
       this.$refs[ref].close();
     },
-    selectedDate(day, month, year) {
-      // this.startDay = `${year}-${month}-${day}`;
-      this.scheduleEvents[
-        this.editableEventNum
-      ].startExpression.date = `${year}-${month}-${day}`;
+    changeSelectedDate(day, month, year) {
+      this.copyScheduleEventData.startExpression.date = `${year}-${month}-${day}`;
+      // this.selectedDateLocal = `${year}-${month}-${day}`;
     },
     doEditable(index) {
       this.editableEventNum = index;
+      // this.copyScheduleEventData = _.cloneDeep(this.scheduleEvents[index].scheduleEventData);
+      this.$set(this, 'copyScheduleEventData', _.cloneDeep(this.scheduleEvents[index].scheduleEventData));
     },
     // saveCopy(index) {
     //   this.editableCopy[index] = this.scheduleEvents[index];
@@ -218,6 +245,12 @@ export default {
     //   this.scheduleEvents[index] = this.editableCopy[index];
     //   console.log('this.scheduleEvents[index]', this.scheduleEvents[index]);
     // },
+    applyChanges() {
+      this.scheduleEvents[this.editableEventNum].scheduleEventData = _.cloneDeep(this.copyScheduleEventData);
+    },
+    cancelChanges() {
+      this.copyScheduleEventData = _.cloneDeep(this.scheduleEvents[this.editableEventNum].scheduleEventData);
+    }
   },
 
   validations() {

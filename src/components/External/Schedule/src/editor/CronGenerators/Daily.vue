@@ -1,23 +1,22 @@
 <template>
   <div class="daily">
-      {{value}}
       <div class="radio-custom__wr">
-          <or-radio v-model="dailyDataLocal.dailyPeriodMode" true-value="everyDay" class="" :disabled="readonly">
+          <or-radio v-model="periodModeLocal" true-value="everyDay" class="" :disabled="readonly">
               Every:
           </or-radio>
-          <or-textbox :disabled="readonly || dailyDataLocal.dailyPeriodMode !== 'everyDay'" :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
-              label="" v-model="dailyDataLocal.periodDays" placeholder="">
+          <or-textbox :disabled="readonly || periodModeLocal !== 'everyDay'" :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
+              label="" v-model="periodLocal" placeholder="">
           </or-textbox>
           <div class="">day(s)</div>
       </div>
       <div class="radio-custom__wr">
-          <or-radio v-model="dailyDataLocal.dailyPeriodMode" true-value="evenDay" class="" :disabled="readonly">
+          <or-radio v-model="periodModeLocal" true-value="evenDay" class="" :disabled="readonly">
               Every:
           </or-radio>
           <div class="">even day</div>
       </div>
       <div class="radio-custom__wr">
-          <or-radio v-model="dailyDataLocal.dailyPeriodMode" true-value="oddDay" class="" :disabled="readonly">
+          <or-radio v-model="periodModeLocal" true-value="oddDay" class="" :disabled="readonly">
               Every:
           </or-radio>
           <div class="">odd day</div>
@@ -38,15 +37,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    dailyData: {
-      type: Object,
-      default() {
-        return {
-          dailyPeriodMode: 'everyDay',
-          periodDays: 1,
-          cronExpressions: [],
-        };
-      },
+    period: {
+      type: String,
+      default: '1',
+    },
+    periodMode: {
+      type: String,
+      default: 'everyDay',
     },
     runAtTime: {
       type: Array,
@@ -62,18 +59,26 @@ export default {
     },
   },
   computed: {
-    dailyDataLocal: {
+    periodLocal: {
       get() {
-        return this.dailyData;
+        return this.period;
       },
-      set(newDailyData) {
-        this.$emit('update:dailyData', newDailyData);
+      set(newValue) {
+        this.$emit('update:period', newValue);
+      },
+    },
+    periodModeLocal: {
+      get() {
+        return this.periodMode;
+      },
+      set(newValue) {
+        this.$emit('update:periodMode', newValue);
       },
     },
     dailyValue() {
-      switch (this.dailyDataLocal.dailyPeriodMode) {
+      switch (this.periodModeLocal) {
         case 'everyDay':
-          return `1/${this.dailyDataLocal.periodDays}`;
+          return `1/${this.periodLocal}`;
         case 'evenDay':
           return '1-31/2';
         case 'oddDay':

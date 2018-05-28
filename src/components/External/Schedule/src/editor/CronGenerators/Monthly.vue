@@ -1,6 +1,7 @@
 <template>
 <div class="monthly">
   {{value}}
+  {{runAtTime}}
     <div class="monthly__month-picker">
         <month-picker v-model="selectedMonthsComp" :disabled="readonly"></month-picker>
     </div>

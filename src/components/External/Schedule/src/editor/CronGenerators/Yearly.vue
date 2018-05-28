@@ -1,6 +1,5 @@
 <template>
   <div class="recuring-configs__monthly-day_configs yearly">
-    {{value}}
     <div class="radio-custom__wr">
         Every
         <or-textbox :disabled="readonly" :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
