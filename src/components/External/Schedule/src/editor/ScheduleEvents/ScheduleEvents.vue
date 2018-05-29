@@ -33,7 +33,7 @@
           </calendar>
         </div>
         <div class="schedule__events">
-          <or-list
+          <!-- <or-list
             v-model="scheduleEvents" 
             :steps="steps" 
             :step-id="stepId"
@@ -64,7 +64,7 @@
               >
               </schedule-event-preview>
             </template>
-          </or-list>
+          </or-list> -->
         </div>
       </div>
     <!-- </or-modal> -->
