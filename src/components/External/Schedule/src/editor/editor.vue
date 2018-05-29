@@ -6,9 +6,12 @@
 </template>
 <script>
 import * as _ from 'lodash';
+import {validators} from '_validators';
+
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
 /* eslint-enable */
+
 
 export default {
   name: 'editor-schedule',
@@ -57,7 +60,7 @@ export default {
 
   validations() {
     return {
-      // schema: validator(this.template),
+      schema: validator(this.template),
     };
   },
 };
