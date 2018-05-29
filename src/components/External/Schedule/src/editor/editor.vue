@@ -1,7 +1,6 @@
 <template>
   <div>
     {{scheduleEventsComp}}
-    555
   </div>
 </template>
 <script>
@@ -24,7 +23,8 @@ export default {
   ],
   components: { ScheduleEvents },
   data() {
-    return {};
+    return {
+    };
   },
   computed: {
     scheduleEventsComp: {
@@ -34,7 +34,7 @@ export default {
       set(newValue) {
         this.schema.scheduleEvents = newValue;
       }
-    }
+    },
   },
 
   methods: {},
@@ -56,9 +56,9 @@ export const data = template => ({
   // passwordLabel: template.passwordLabel,
 });
 
-// export const validator = template => {
-// return {};
-// };
+export const validator = template => {
+return {};
+};
 
 export const meta = {
   name: 'Shcedule',
