@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{schema.scheduleEvents}}
       <schedule-events 
         :schedule-events.sync="schema.scheduleEvents"
         :step="step"
@@ -59,15 +60,6 @@ export const meta = {
   version: '1.0',
 };
 </script>
-
-<style lang="scss" rel="stylesheet/scss">
-.ui-modal__container {
-  width: 100%;
-}
-.schedule-event-preview {
-  margin-bottom: 20px;
-}
-</style>
 
 <style scoped lang="scss" rel="stylesheet/scss">
 </style>
