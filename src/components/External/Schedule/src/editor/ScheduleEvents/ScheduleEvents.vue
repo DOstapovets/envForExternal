@@ -25,12 +25,12 @@
     > -->
       <div class="schedule__wr-events-calendar">
         <div class="schedule__calendar">
-          <calendar
+          <!-- <calendar
             :month="1"
             @selected-date="changeSelectedDate"
             :selected-days="startDays"
           >
-          </calendar>
+          </calendar> -->
         </div>
         <div class="schedule__events">
           <!-- <or-list
