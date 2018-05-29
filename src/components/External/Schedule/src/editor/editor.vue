@@ -1,7 +1,7 @@
 <template>
   <div>
     1
-    <!-- {{scheduleEventsComp}} -->
+    {{scheduleEventsComp}}
   </div>
 </template>
 <script>
