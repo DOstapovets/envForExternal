@@ -7,7 +7,7 @@ import { storiesOf } from '@storybook/vue';
 /* eslint-disable */
 import MonthPicker from './src/editor/MonthPicker/MonthPicker.vue';
 import ScheduleEvent from './src/editor/ScheduleEvent/ScheduleEvent.vue';
-import ScheduleEvents, { data as schemaData } from './src/editor/editor.vue';
+import ScheduleEditor, { data as schemaData } from './src/editor/editor.vue';
 import Vue from 'vue';
 // Vue.localStorage.set('schema', JSON.stringify(schema()));
 
@@ -93,10 +93,10 @@ storiesOf('Schedule', module)
       },
     },
     methods: {},
-    components: { ScheduleEvents },
+    components: { ScheduleEditor },
     template: `
     <div>
-        <schedule-events :schedule-events.sync="schema.scheduleEvents"></schedule-events>
+        <schedule-editor :schema.sync="schema"></schedule-editor>
     </div>
   `,
   }));

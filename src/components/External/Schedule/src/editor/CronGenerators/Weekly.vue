@@ -1,6 +1,5 @@
 <template>
 <div class="weekly">
-    {{value}}
     <div class="radio-custom__wr">
         <or-radio v-model="periodMode" true-value="everyWeek" :disabled="readonly">
             Every:

@@ -1,12 +1,5 @@
 <template>
   <div class="schedule-event">
-    {{copyScheduleEventData.daily.cronExpressions}}
-    {{copyScheduleEventData.weekly.cronExpressions}}
-    {{copyScheduleEventData.monthly.cronExpressions}}
-    {{copyScheduleEventData.yearly.cronExpressions}}
-
-    sdf
-    {{copyScheduleEventData.expressions}}
     <label class="timezone">
         <span class="timezone__label">Timezone</span>
         <or-select :disabled="readonly" placeholder="Select a time zone" class="config-line__select" :has-search="true" :options="getRegions"
