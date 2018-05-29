@@ -12,16 +12,31 @@ import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
 
 export default {
   name: 'editor-schedule',
-  props: [
-    'scheduleEvents',
-    '$v',
-    'template',
-    'schema',
-    'step',
-    'stepId',
-    'steps',
-    'readonly',
-  ],
+  props :   {
+      template : {
+          type : Object,
+          default () {
+              return {}
+          }
+      },
+      schema : {
+          type : Object,
+          default () {
+              return {}
+          }
+      },
+      stepId : '',
+      steps  : {
+          type : Array,
+          default () {
+              return []
+          }
+      },
+      readonly : {
+          type : Boolean,
+          default : false
+      },
+  },
   components: { ScheduleEvents },
   data() {
     return {
