@@ -1,14 +1,15 @@
 <template>
   <div>
-    {{schema.scheduleEvents}}
+    {{scheduleEventsLocal}}
       <schedule-events 
-        :schedule-events.sync="schema.scheduleEvents"
+        :schedule-events.sync="scheduleEventsLocal"
         :step="step"
         :stepId="stepId"
       ></schedule-events>
   </div>
 </template>
 <script>
+import _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
 /* eslint-enable */
@@ -27,7 +28,9 @@ export default {
   ],
   components: { ScheduleEvents },
   data() {
-    return {};
+    return {
+      scheduleEventsLocal: _.get(this, 'schema.scheduleEvents') || []
+    };
   },
   computed: {},
 
