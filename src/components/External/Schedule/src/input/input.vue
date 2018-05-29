@@ -9,10 +9,10 @@
             </editor>
         </div>
 
-        <or-modal ref="configModal" :remove-close-button="true"
+        <!-- <or-modal ref="configModal" :remove-close-button="true"
                   title="Configure component"
                   class="input-message-settings"
-                  :contain-focus="false">
+                  :contain-focus="false"> -->
             <!-- <or-textbox name="label" label="Email Label" placeholder="label text"
                         v-model="input.data.emailLabel"
                         help="input label text">
@@ -33,14 +33,14 @@
                         help="input label text">
             </or-textbox> -->
 
-            <div slot="footer">
+            <!-- <div slot="footer">
                 <or-button color="primary"
                            type="secondary"
                            @click.prevent="$refs.configModal.close()">
                     Close
                 </or-button>
             </div>
-        </or-modal>
+        </or-modal> -->
     </div>
 </template>
 
