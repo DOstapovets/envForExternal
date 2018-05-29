@@ -40,23 +40,23 @@ export default {
           default : false
       },
   },
-  components: { ScheduleEvents },
-  data() {
-    return {
-    };
-  },
-  computed: {
-    scheduleEventsComp: {
-      get() {
-          return this.schema.scheduleEvents || [];
-      },
-      set(newValue) {
-        this.schema.scheduleEvents = newValue;
-      }
-    },
-  },
+  // components: { ScheduleEvents },
+  // data() {
+  //   return {
+  //   };
+  // },
+  // computed: {
+  //   scheduleEventsComp: {
+  //     get() {
+  //         return this.schema.scheduleEvents || [];
+  //     },
+  //     set(newValue) {
+  //       this.schema.scheduleEvents = newValue;
+  //     }
+  //   },
+  // },
 
-  methods: {},
+  // methods: {},
 
   validations() {
     return {
