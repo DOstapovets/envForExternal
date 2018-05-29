@@ -1,11 +1,7 @@
 <template>
   <div>
     {{scheduleEventsComp}}
-      <schedule-events 
-        :schedule-events.sync="scheduleEventsComp"
-        :step="step"
-        :stepId="stepId"
-      ></schedule-events>
+    555
   </div>
 </template>
 <script>
