@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import _ from 'lodash';
+import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
 /* eslint-enable */
@@ -64,16 +64,10 @@ export default {
 
 export const data = template => ({
   scheduleEvents: [],
-  // email: '',
-  // emailPlaceholder: template.emailPlaceholder,
-  // emailLabel: template.emailLabel,
-  // password: '',
-  // passwordPlaceholder: template.passwordPlaceholder,
-  // passwordLabel: template.passwordLabel,
 });
 
 export const validator = template => {
-return {};
+  return {};
 };
 
 export const meta = {
