@@ -19,10 +19,10 @@
         </div>
       </template>
     </or-list>
-    <or-modal
+    <!-- <or-modal
       ref="modal"
       title="Set schedule"
-    >
+    > -->
       <div class="schedule__wr-events-calendar">
         <div class="schedule__calendar">
           <calendar
@@ -42,18 +42,6 @@
             :drag-handle-right="true"
           >
             <template scope="item">
-              <!-- <schedule-event
-                v-if="editableEventNum == item.index"
-                :schedule-event-data.sync="item.item.scheduleEventData"
-                :selected-date="selectedDateLocal"
-                :$v="$v"
-                :readonly="readonly"  
-                :step-id="stepId"
-                :steps="steps"
-                @save-copy="/*saveCopy*/"
-                @return-state="/*returnState*/"
-              >
-              </schedule-event> -->
               <schedule-event
                 v-if="editableEventNum == item.index && copyScheduleEventData"
                 :copy-schedule-event-data.sync="copyScheduleEventData"
@@ -79,7 +67,7 @@
           </or-list>
         </div>
       </div>
-    </or-modal>
+    <!-- </or-modal> -->
   </div>
 </template>
 <script>
