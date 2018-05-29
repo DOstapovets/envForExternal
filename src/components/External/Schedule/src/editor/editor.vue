@@ -1,8 +1,8 @@
 <template>
   <div>
-    {{scheduleEventsLocal}}
+    {{scheduleEventsComp}}
       <schedule-events 
-        :schedule-events.sync="scheduleEventsLocal"
+        :schedule-events.sync="scheduleEventsComp"
         :step="step"
         :stepId="stepId"
       ></schedule-events>
@@ -28,11 +28,18 @@ export default {
   ],
   components: { ScheduleEvents },
   data() {
-    return {
-      scheduleEventsLocal: _.get(this, 'schema.scheduleEvents') || []
-    };
+    return {};
   },
-  computed: {},
+  computed: {
+    scheduleEventsComp: {
+      get() {
+          return this.schema.scheduleEvents || [];
+      },
+      set(newValue) {
+        this.schema.scheduleEvents = newValue;
+      }
+    }
+  },
 
   methods: {},
 
