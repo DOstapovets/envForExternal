@@ -54,9 +54,9 @@ export default {
   components: {
     editor,
   },
-  defaultValue() {
-    return _.cloneDeep(data);
-  },
+  // defaultValue() {
+  //   return _.cloneDeep(data);
+  // },
 };
 
 export const label = 'Test shedule';
