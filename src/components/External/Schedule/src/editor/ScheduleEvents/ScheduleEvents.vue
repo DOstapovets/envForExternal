@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- {{scheduleEvents[0].daily}} -->
-    <or-list
+    <!-- <or-list
       label="Basic List" 
       v-model="scheduleEvents" 
       :steps="steps" 
@@ -18,7 +18,7 @@
           </schedule-event-preview>
         </div>
       </template>
-    </or-list>
+    </or-list> -->
     <!-- <or-modal
       ref="modal"
       title="Set schedule"
