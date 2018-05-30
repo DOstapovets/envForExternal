@@ -95,7 +95,7 @@ import ScheduleEvent from '../ScheduleEvent/ScheduleEvent.vue';
 import ScheduleEventPreview from '../ScheduleEventPreview/ScheduleEventPreview.vue';
 import Calendar from '../../../../../Ui/Calendar/Calendar.vue';
 /* eslint-enable */
-
+console.log(randomcolor.randomColor());
 const randomColor = randomcolor.randomColor;
 
 export default {
@@ -221,7 +221,7 @@ export default {
               endTime: false,
             },
           ],
-          color: randomColor(),
+          color: '#e074d3',
         },
       };
     },
