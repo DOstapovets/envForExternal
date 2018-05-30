@@ -99,7 +99,7 @@ import Calendar from '../../../../../Ui/Calendar/Calendar.vue';
 /* eslint-enable */
 // console.log(randomcolor)
 // const randomColor = randomcolor.exports.randomColor;
-console.log(randomMC);
+console.log(randomMC.module.exports.getColor);
 const randomColor = _.get(randomMC, 'module.exports.getColor', randomMC.getColor);
 
 export default {
