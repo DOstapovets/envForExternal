@@ -18,6 +18,16 @@
     // const {required, jsExpressionNonEmptyString, validateIf} = validators;
 
     export default {
+      props: [
+        'scheduleEvents',
+        '$v',
+        'template',
+        'schema',
+        'step',
+        'stepId',
+        'steps',
+        'readonly',
+      ],
       computed: {
         scheduleEventsComp: {
             get() {
