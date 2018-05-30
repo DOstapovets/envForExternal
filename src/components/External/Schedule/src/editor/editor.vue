@@ -31,7 +31,7 @@
     };
 
     export const data = (template) => ({
-        isSingleExit            : false,
+        scheduleEvents  : [],
     });
 
     export const validator = (template) => {
