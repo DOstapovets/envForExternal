@@ -1,78 +1,49 @@
 <template>
-    <div class="example-input-component-wrapper">
+    <div class="condition-builder-component-wrapper">
         <div class="wrapper" @click="$refs.configModal.open()">
-            <editor :template="input.data"
-                    :schema="defaultStep.data"
-                    :step="defaultStep"
-                    :steps="[defaultStep]"
-                    :readonly="true">
+            <editor>
             </editor>
         </div>
 
-        <!-- <or-modal ref="configModal" :remove-close-button="true"
+        <or-modal ref="configModal" :remove-close-button="true"
                   title="Configure component"
                   class="input-message-settings"
-                  :contain-focus="false"> -->
-            <!-- <or-textbox name="label" label="Email Label" placeholder="label text"
-                        v-model="input.data.emailLabel"
-                        help="input label text">
-            </or-textbox>
-
-            <or-textbox name="label" label="Email placeholder" placeholder="placeholder text"
-                        v-model="input.data.emailPlaceholder"
-                        help="input label text">
-            </or-textbox>
-
-            <or-textbox name="label" label="Password Label" placeholder="label text"
-                        v-model="input.data.passwordLabel"
-                        help="input label text">
-            </or-textbox>
-
-            <or-textbox name="label" label="Password placeholder" placeholder="placeholder text"
-                        v-model="input.data.passwordPlaceholder"
-                        help="input label text">
-            </or-textbox> -->
-
-            <!-- <div slot="footer">
-                <or-button color="primary"
-                           type="secondary"
-                           @click.prevent="$refs.configModal.close()">
-                    Close
-                </or-button>
-            </div>
-        </or-modal> -->
+                  :contain-focus="false">
+                  fsdfsdfsdfsdfs
+        </or-modal>
     </div>
 </template>
 
 <script>
-import _ from 'lodash';
-import base from '@default/src/inputs/_design_base.vue';
-import editor from '../editor/editor.vue';
+    import _ from 'lodash';
+    import base from '@default/src/inputs/_design_base.vue';
+    import editor from '../editor/editor.vue';
 
-export default {
-  extends: base,
-  components: {
-    editor,
-  },
-  // defaultValue() {
-  //   return _.cloneDeep(data);
-  // },
-};
+    export default {
+        extends    : base,
 
-export const label = 'Test shedule';
-export const data = {
-  // email               : '',
-  // emailPlaceholder    : 'Test email placeholder',
-  // emailLabel          : '',
-  // password            : '',
-  // passwordPlaceholder : 'Test password placeholder',
-  // passwordLabel       : '',
-  // validateRequired    : true
-};
+        components : {
+            editor
+        },
 
-export const meta = {
-  name: 'test-external-component',
-  type: 'onereach-studio-form-input',
-  version: '1.0',
-};
+        defaultValue () {
+            return _.cloneDeep(data);
+        }
+    };
+
+    export const label = 'Conditon builder v0.5.0';
+    export const data = {
+        // isSingleExit : true,
+        // conditionRuleHasDataOut : true,
+        // conditionExits : [],
+        // singleExitRules : {
+        //     rules : []
+        // }
+    };
+
+    export const meta = {
+      name: 'test-external-component',
+      type: 'onereach-studio-form-input',
+      version: '1.0',
+    };
 </script>

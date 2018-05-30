@@ -6,7 +6,7 @@
 </template>
 <script>
 import * as _ from 'lodash';
-import {validators} from '_validators';
+// import {validators} from '_validators';
 
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
