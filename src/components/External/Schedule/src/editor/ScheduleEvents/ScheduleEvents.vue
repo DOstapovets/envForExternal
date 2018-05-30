@@ -100,7 +100,7 @@ import Calendar from '../../../../../Ui/Calendar/Calendar.vue';
 // console.log(randomcolor)
 // const randomColor = randomcolor.exports.randomColor;
 console.log(randomMC);
-const randomColor = _.get(randomMC, 'exports.getColor', randomMC.getColor);
+const randomColor = _.get(randomMC, 'module.exports.getColor', randomMC.getColor);
 
 export default {
   name: 'schedule-events',
