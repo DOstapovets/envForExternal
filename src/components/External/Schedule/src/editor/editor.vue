@@ -1,49 +1,29 @@
 <template>
-    <div class="condition-builder-component-wrapper">
-        <div class="wrapper" @click="$refs.configModal.open()">
-            <editor>
-            </editor>
-        </div>
-
-        <or-modal ref="configModal" :remove-close-button="true"
-                  title="Configure component"
-                  class="input-message-settings"
-                  :contain-focus="false">
-                  fsdfsdfsdfsdfs
-        </or-modal>
-    </div>
+  <div>
+    2222
+  </div>
 </template>
 
 <script>
-    import _ from 'lodash';
-    import base from '@default/src/inputs/_design_base.vue';
-    import editor from '../editor/editor.vue';
+    import * as _ from 'lodash';
 
-    export default {
-        extends    : base,
+    // import {validators} from '_validators';
+    
+    // const {required, jsExpressionNonEmptyString, validateIf} = validators;
 
-        components : {
-            editor
-        },
+    export default {};
 
-        defaultValue () {
-            return _.cloneDeep(data);
-        }
-    };
+    export const data = (template) => ({
+        isSingleExit            : false,
+    });
 
-    export const label = 'Conditon builder v0.5.0';
-    export const data = {
-        isSingleExit : true,
-        conditionRuleHasDataOut : true,
-        conditionExits : [],
-        singleExitRules : {
-            rules : []
-        }
+    export const validator = (template) => {
+        return {};
     };
 
     export const meta = {
         name    : 'condition-builder-component',
-        type    : 'onereach-studio-form-input',
+        type    : 'onereach-studio-form-editor',
         version : '0.5.0'
     };
 </script>
