@@ -88,12 +88,15 @@ import _ from 'lodash';
 // import * as _ from 'lodash';
 // import { validators } from '_validators';
 // const { required, jsExpressionNonEmptyString, validateIf } = validators;
-const randomColor = require('randomcolor').randomColor;
+
+import randomcolor from 'randomcolor';
 /* eslint-disable */
 import ScheduleEvent from '../ScheduleEvent/ScheduleEvent.vue';
 import ScheduleEventPreview from '../ScheduleEventPreview/ScheduleEventPreview.vue';
 import Calendar from '../../../../../Ui/Calendar/Calendar.vue';
 /* eslint-enable */
+
+const randomColor = randomcolor.randomColor;
 
 export default {
   name: 'schedule-events',
