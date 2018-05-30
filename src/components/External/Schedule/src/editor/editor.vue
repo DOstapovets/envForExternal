@@ -31,10 +31,13 @@
       computed: {
         scheduleEventsComp: {
             get() {
-              return _.get(this, 'schema.scheduleEvents') || [];
+              return _.get(this, 'schema.scheduleEvents', null) || [];
             },
             set(newValue) {
-              this.schema.scheduleEvents = newValue;
+              if (_.get(this, 'schema.scheduleEvents', null)) {
+                this.schema.scheduleEvents = newValue;
+              }
+              
             }
           }
         },
