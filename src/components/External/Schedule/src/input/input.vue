@@ -33,6 +33,7 @@
 
     export const label = 'Conditon builder v0.5.0';
     export const data = {
+      scheduleEvents: [],
         // isSingleExit : true,
         // conditionRuleHasDataOut : true,
         // conditionExits : [],
