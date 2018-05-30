@@ -95,8 +95,8 @@ import ScheduleEvent from '../ScheduleEvent/ScheduleEvent.vue';
 import ScheduleEventPreview from '../ScheduleEventPreview/ScheduleEventPreview.vue';
 import Calendar from '../../../../../Ui/Calendar/Calendar.vue';
 /* eslint-enable */
-console.log(randomcolor.randomColor());
-const randomColor = randomcolor.randomColor;
+console.log(randomcolor());
+// const randomColor = randomcolor.randomColor;
 
 export default {
   name: 'schedule-events',
