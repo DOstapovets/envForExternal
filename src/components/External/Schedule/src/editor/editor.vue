@@ -5,13 +5,10 @@
   </div>
 </template>
 <script>
-import * as _ from 'lodash';
-// import {validators} from '_validators';
-
+// import _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
 /* eslint-enable */
-
 
 export default {
   name: 'editor-schedule',
@@ -40,27 +37,27 @@ export default {
           default : false
       },
   },
-  // components: { ScheduleEvents },
-  // data() {
-  //   return {
-  //   };
-  // },
-  // computed: {
-  //   scheduleEventsComp: {
-  //     get() {
-  //         return this.schema.scheduleEvents || [];
-  //     },
-  //     set(newValue) {
-  //       this.schema.scheduleEvents = newValue;
-  //     }
-  //   },
-  // },
+  components: { ScheduleEvents },
+  data() {
+    return {
+    };
+  },
+  computed: {
+    scheduleEventsComp: {
+      get() {
+          return this.schema.scheduleEvents || [];
+      },
+      set(newValue) {
+        this.schema.scheduleEvents = newValue;
+      }
+    },
+  },
 
-  // methods: {},
+  methods: {},
 
   validations() {
     return {
-      schema: validator(this.template),
+      // schema: validator(this.template),
     };
   },
 };
@@ -74,9 +71,11 @@ export const validator = template => {
 };
 
 export const meta = {
-  name: 'Shcedule',
-  type: 'onereach-studio-form-editor',
-  version: '1.0',
+  name    : 'condition-builder-component',
+  type    : 'onereach-studio-form-input',
+  version : '0.5.0'
 };
 </script>
 
+<style scoped lang="scss" rel="stylesheet/scss">
+</style>
