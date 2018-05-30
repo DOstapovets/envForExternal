@@ -84,12 +84,11 @@
 </template>
 <script>
 import _ from 'lodash';
+import moment from 'moment';
 
 // import * as _ from 'lodash';
 // import { validators } from '_validators';
 // const { required, jsExpressionNonEmptyString, validateIf } = validators;
-
-// import randomcolor from 'randomcolor';
 import randomMC from 'random-material-color';
 
 /* eslint-disable */
@@ -97,10 +96,7 @@ import ScheduleEvent from '../ScheduleEvent/ScheduleEvent.vue';
 import ScheduleEventPreview from '../ScheduleEventPreview/ScheduleEventPreview.vue';
 import Calendar from '../../../../../Ui/Calendar/Calendar.vue';
 /* eslint-enable */
-// console.log(randomcolor)
-// const randomColor = randomcolor.exports.randomColor;
-console.log(randomMC.module.exports.getColor);
-console.log(_.get(randomMC, 'module.exports.getColor', randomMC.getColor));
+
 const randomColor = _.get(randomMC, 'module.exports.getColor', randomMC.getColor);
 
 export default {
@@ -237,7 +233,7 @@ export default {
       this.$refs[ref].close();
     },
     changeSelectedDate(day, month, year) {
-      this.copyScheduleEventData.startExpression.date = `${year}-${month}-${day}`;
+      this.copyScheduleEventData.startExpression.date = moment(`${year}-${month}-${day}`).format('YYYY-MM-DD');
       // this.selectedDateLocal = `${year}-${month}-${day}`;
     },
     doEditable(index) {
