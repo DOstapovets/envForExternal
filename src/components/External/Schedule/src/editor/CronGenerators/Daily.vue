@@ -92,7 +92,7 @@ export default {
     cronExpression() {
       return _.map(
         this.runAtTime,
-        item => `${item.mm} ${item.HH} ${this.dailyValue} * *`,
+        item => `${item.mm} ${item.HH} ${this.dailyValue}  * ? *`,
       );
     },
   },
