@@ -31,7 +31,7 @@
       computed: {
         scheduleEventsComp: {
             get() {
-              return this.schema.scheduleEvents || [];
+              return _.get(this, 'schema.scheduleEvents') || [];
             },
             set(newValue) {
               this.schema.scheduleEvents = newValue;
