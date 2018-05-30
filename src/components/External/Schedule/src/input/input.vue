@@ -1,5 +1,5 @@
 <template>
-    <div class="condition-builder-component-wrapper">
+    <div class="schedule-wrapper">
         <div class="wrapper" @click="$refs.configModal.open()">
             <editor>
             </editor>
@@ -31,13 +31,13 @@
         }
     };
 
-    export const label = 'Conditon builder v0.5.0';
+    export const label = 'Schedule v0.5.0';
     export const data = {
         scheduleEvents : [],
     };
 
     export const meta = {
-        name    : 'condition-builder-component',
+        name    : 'schedule-component',
         type    : 'onereach-studio-form-input',
         version : '0.5.0'
     };

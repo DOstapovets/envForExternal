@@ -52,7 +52,7 @@
     };
 
     export const meta = {
-        name    : 'condition-builder-component',
+        name    : 'schedule-component',
         type    : 'onereach-studio-form-editor',
         version : '0.5.0'
     };
