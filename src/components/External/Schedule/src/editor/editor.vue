@@ -1,17 +1,34 @@
 <template>
   <div>
-    2222
+      <schedule-events 
+        :schedule-events.sync="scheduleEventsComp"
+        :step="step"
+        :stepId="stepId"
+      ></schedule-events>
   </div>
 </template>
 
 <script>
     import * as _ from 'lodash';
+    /* eslint-disable */
+    import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
+    /* eslint-enable */
 
     // import {validators} from '_validators';
-    
     // const {required, jsExpressionNonEmptyString, validateIf} = validators;
 
-    export default {};
+    export default {
+      computed: {
+        scheduleEventsComp: {
+            get() {
+              return this.schema.scheduleEvents || [];
+            },
+            set(newValue) {
+              this.schema.scheduleEvents = newValue;
+            }
+          }
+        },
+    };
 
     export const data = (template) => ({
         isSingleExit            : false,
