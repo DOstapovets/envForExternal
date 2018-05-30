@@ -89,13 +89,13 @@ import _ from 'lodash';
 // import { validators } from '_validators';
 // const { required, jsExpressionNonEmptyString, validateIf } = validators;
 
-import randomcolor from 'randomcolor';
+// import randomcolor from 'randomcolor';
 /* eslint-disable */
 import ScheduleEvent from '../ScheduleEvent/ScheduleEvent.vue';
 import ScheduleEventPreview from '../ScheduleEventPreview/ScheduleEventPreview.vue';
 import Calendar from '../../../../../Ui/Calendar/Calendar.vue';
 /* eslint-enable */
-console.log(randomcolor());
+// console.log(randomcolor());
 // const randomColor = randomcolor.randomColor;
 
 export default {
