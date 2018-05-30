@@ -1,81 +1,29 @@
 <template>
   <div>
-    1
-    <!-- {{scheduleEventsComp}} -->
+    2222
   </div>
 </template>
+
 <script>
-// import _ from 'lodash';
-/* eslint-disable */
-import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-/* eslint-enable */
+    import * as _ from 'lodash';
 
-export default {
-  name: 'editor-schedule',
-  props :   {
-      template : {
-          type : Object,
-          default () {
-              return {}
-          }
-      },
-      schema : {
-          type : Object,
-          default () {
-              return {}
-          }
-      },
-      stepId : '',
-      steps  : {
-          type : Array,
-          default () {
-              return []
-          }
-      },
-      readonly : {
-          type : Boolean,
-          default : false
-      },
-  },
-  components: { ScheduleEvents },
-  data() {
-    return {
+    // import {validators} from '_validators';
+    
+    // const {required, jsExpressionNonEmptyString, validateIf} = validators;
+
+    export default {};
+
+    export const data = (template) => ({
+        isSingleExit            : false,
+    });
+
+    export const validator = (template) => {
+        return {};
     };
-  },
-  computed: {
-    scheduleEventsComp: {
-      get() {
-          return this.schema.scheduleEvents || [];
-      },
-      set(newValue) {
-        this.schema.scheduleEvents = newValue;
-      }
-    },
-  },
 
-  methods: {},
-
-  validations() {
-    return {
-      // schema: validator(this.template),
+    export const meta = {
+        name    : 'condition-builder-component',
+        type    : 'onereach-studio-form-editor',
+        version : '0.5.0'
     };
-  },
-};
-
-export const data = template => ({
-  scheduleEvents: [],
-});
-
-export const validator = template => {
-  return {};
-};
-
-export const meta = {
-  name    : 'condition-builder-component',
-  type    : 'onereach-studio-form-input',
-  version : '0.5.0'
-};
 </script>
-
-<style scoped lang="scss" rel="stylesheet/scss">
-</style>
