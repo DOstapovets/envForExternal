@@ -19,7 +19,6 @@
 
     export default {
       props: [
-        'scheduleEvents',
         '$v',
         'template',
         'schema',
@@ -41,6 +40,7 @@
             }
           }
         },
+      components: { ScheduleEvents }
     };
 
     export const data = (template) => ({
