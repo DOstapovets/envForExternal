@@ -33,18 +33,17 @@
 
     export const label = 'Conditon builder v0.5.0';
     export const data = {
-      scheduleEvents: [],
-        // isSingleExit : true,
-        // conditionRuleHasDataOut : true,
-        // conditionExits : [],
-        // singleExitRules : {
-        //     rules : []
-        // }
+        isSingleExit : true,
+        conditionRuleHasDataOut : true,
+        conditionExits : [],
+        singleExitRules : {
+            rules : []
+        }
     };
 
     export const meta = {
-      name: 'test-external-component',
-      type: 'onereach-studio-form-input',
-      version: '1.0',
+        name    : 'condition-builder-component',
+        type    : 'onereach-studio-form-input',
+        version : '0.5.0'
     };
 </script>
