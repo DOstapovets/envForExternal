@@ -31,15 +31,75 @@
               <div>
                 <span 
                   class="calendar__item_event calendar__item_event-recurring"
-                  :class="{'calendar__iselected-item':
-                    isHighlightingDate({day: previousMonthDays, month, year}, 'prevMonth')
-                    && !notShowSelectedOnPrevNextDays}"
-                  :style="{ background: (isHighlightingDate({day: previousMonthDays, month, year}, 'prevMonth')
-                  && !notShowSelectedOnPrevNextDays) ? 
-                  isHighlightingDate({day: previousMonthDays, month, year}, 'prevMonth').color : ''}"
-                    
                 >
-                  {{previousMonthDays}}
+                  <div class="calendar__events-names">
+                    <div>
+                      <span
+                        class="calendar__event"
+                        :key="key"
+                        v-if="key < 3"
+                        v-for="(value, key) in isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth')"
+                        :style="{color : value.lighter ? '#0F232E' : ''}"
+                      >
+                        <span 
+                          class="calendar__event-background"
+                          :style="{background: value.color, opacity : value.lighter ? '0.3' : ''}"
+                        ></span>
+                        {{value.eventName}}
+                      </span>
+                    </div>
+                    <span
+                      class="calendar__event calendar__event_more"
+                      v-if="isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length > 3 && !yearsCalendar"
+                    >
+                      <span 
+                        class="calendar__event-background calendar__event-background_more"
+                      ></span>
+                      More
+                    </span>
+                    <div 
+                      class="calendar__event-more-items"
+                      :class="{'calendar__event-more-items_year': yearsCalendar}"
+                    >
+                      <span
+                        class="calendar__event"
+                        :key="key"
+                        v-if="key >= 3"
+                        v-for="(value, key) in isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth')"
+                        :style="{color : value.lighter ? '#0F232E' : ''}"
+                      >
+                        <span 
+                          class="calendar__event-background"
+                          :style="{background: value.color, opacity : value.lighter ? '0.3' : ''}"
+                        ></span>
+                        {{value.eventName}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="calendar__day-num">
+                    <span></span>
+                    <div
+                      class="stroke__wr"
+                      v-if="isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length > 0 && yearsCalendar" 
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" height="34" width="34">
+                        <circle 
+                          v-for="(value, key) in isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth')"
+                          :key="key"
+                          :style="{stroke: value.color, 'stroke-dasharray': key !== 0 ? 
+                          `${(isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length - parseInt(key)) * 2 * 15 * Math.PI / isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length},
+                          ${2 * 15 * Math.PI / isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length * parseInt(key)}`
+                          : ''}"
+                          class="stroke" 
+                          cy="17" cx="17" 
+                          r="15"
+                        ></circle>
+                      </svg>
+                    </div>
+                    <div class="calendar__day-num-text">
+                      {{previousMonthDays}}
+                    </div>
+                  </div>
                 </span>
               </div>
           </div>
@@ -51,14 +111,74 @@
           >
               <div>
                 <span 
-                  class="calendar__item_event calendar__item_event-actice calendar__item_event-recurring"
-                  :class="{'calendar__iselected-item': 
-                  isHighlightingDate({day, month, year})}"
-                  :style="{ background: isHighlightingDate({day, month, year}) ? 
-                  isHighlightingDate({day, month, year}).color : ''}"
-                    
-                >
-                    {{day}}
+                  class="calendar__item_event calendar__item_event-actice calendar__item_event-recurring"  
+                > 
+                  <div class="calendar__events-names">
+                    <div>
+                      <span
+                        class="calendar__event"
+                        :key="key"
+                        v-if="key < 3"
+                        v-for="(value, key) in isHighlightedItem({day, month, year})"
+                        :style="{color : value.lighter ? '#0F232E' : ''}"
+                      >
+                        <span 
+                          class="calendar__event-background"
+                          :style="{background: value.color, opacity : value.lighter ? '0.3' : ''}"
+                        ></span>
+                        {{value.eventName}}
+                      </span>
+                    </div>
+                    <span
+                      class="calendar__event calendar__event_more"
+                      v-if="isHighlightedItem({day, month, year}).length > 3 && !yearsCalendar"
+                    >
+                      <span 
+                        class="calendar__event-background calendar__event-background_more"
+                      ></span>
+                      More
+                    </span>
+                    <div 
+                      class="calendar__event-more-items"
+                      :class="{'calendar__event-more-items_year': yearsCalendar}"
+                    >
+                      <span
+                        class="calendar__event"
+                        :key="key"
+                        v-if="key >= 3"
+                        v-for="(value, key) in isHighlightedItem({day, month, year})"
+                        :style="{color : value.lighter ? '#0F232E' : ''}"
+                      >
+                        <span 
+                          class="calendar__event-background"
+                          :style="{background: value.color, opacity : value.lighter ? '0.3' : ''}"
+                        ></span>
+                        {{value.eventName}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="calendar__day-num">
+                    <span></span>
+                    <div
+                      class="stroke__wr"
+                      v-if="isHighlightedItem({day, month, year}).length > 0 && yearsCalendar" 
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" height="34" width="34">
+                        <circle 
+                          v-for="(value, key) in isHighlightedItem({day, month, year})"
+                          :key="key"
+                          :style="{stroke: value.color, 'stroke-dasharray': key !== 0 ? 
+                          `${(isHighlightedItem({day, month, year}).length - parseInt(key)) * 2 * 15 * Math.PI / isHighlightedItem({day, month, year}).length},
+                          ${2 * 15 * Math.PI / isHighlightedItem({day, month, year}).length * parseInt(key)}`
+                          : ''}"
+                          class="stroke" 
+                          cy="17" cx="17" 
+                          r="15"
+                        ></circle>
+                      </svg>
+                    </div>
+                    <div class="calendar__day-num-text">{{day}}</div>
+                  </div>
                 </span>
                </div>
           </div>
@@ -69,19 +189,60 @@
               :key="nextMonthDays.toString()"
               @click="sendChosenDate(nextMonthDays, month + 1, year)"
           >
-              <div>
-                <span 
-                  class="calendar__item_event calendar__item_event-recurring"
-                  :class="{'calendar__iselected-item':
-                    isHighlightingDate({day: nextMonthDays, month, year}, 'nextMonth')
-                    && !notShowSelectedOnPrevNextDays}"
-                  :style="{ background: (isHighlightingDate({day: nextMonthDays, month, year}, 'nextMonth')
-                  && !notShowSelectedOnPrevNextDays) ? 
-                  isHighlightingDate({day: nextMonthDays, month, year}, 'nextMonth').color : ''}"
-                >
-                  {{nextMonthDays}}
-                </span>
+            <div>
+              <span 
+                class="calendar__item_event calendar__item_event-recurring"
+              >
+              <div class="calendar__events-names">
+                <div>
+                  <span
+                    class="calendar__event"
+                    :key="key"
+                    v-if="key < 3"
+                    v-for="(value, key) in isHighlightedItem({day: nextMonthDays, month, year}, 'nextMonth')"
+                    :style="{color : value.lighter ? '#0F232E' : ''}"
+                  >
+                    <span 
+                      class="calendar__event-background"
+                      :style="{background: value.color, opacity : value.lighter ? '0.3' : ''}"
+                    ></span>
+                    {{value.eventName}}
+                  </span>
                 </div>
+                <span
+                  class="calendar__event calendar__event_more"
+                  v-if="isHighlightedItem({day: nextMonthDays, month, year}, 'nextMonth').length > 3 && !yearsCalendar"
+                >
+                  <span 
+                    class="calendar__event-background calendar__event-background_more"
+                  ></span>
+                  More
+                </span>
+                <div
+                  class="calendar__event-more-items"
+                  :class="{'calendar__event-more-items_year': yearsCalendar}"
+                >
+                  <span
+                    class="calendar__event"
+                    v-if="key >= 3"
+                    :key="key"
+                    v-for="(value, key) in isHighlightedItem({day: nextMonthDays, month, year}, 'nextMonth')"
+                    :style="{color : value.lighter ? '#0F232E' : ''}"
+                  >
+                    <span 
+                      class="calendar__event-background"
+                      :style="{background: value.color, opacity : value.lighter ? '0.3' : ''}"
+                    ></span>
+                    {{value.eventName}}
+                  </span>
+                </div>
+              </div>
+              <div class="calendar__day-num">
+                <span></span>
+                <span class="calendar__day-num-text">{{nextMonthDays}}</span>
+              </div>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -130,10 +291,16 @@ export default {
       type: Boolean,
       default: false,
     },
-    selectedDays: {
-      type: Array,
+    // selectedDays: {
+    //   type: Array,
+    //   default() {
+    //     return [];
+    //   },
+    // },
+    highlightedDates: {
+      type: Object,
       default() {
-        return [];
+        return {};
       },
     },
     notShowSelectedOnPrevNextDays: {
@@ -193,8 +360,16 @@ export default {
         : `${currDaysLast[currDaysLast.length - 1]} ${
             this.monthNames[this.month - 1]
           }`;
-      this.$emit('input', `${start} - ${end}, ${this.year}`);
-      return `${start} - ${end}, ${this.year}`;
+      this.$emit('input', {
+        start,
+        end,
+        year: this.year,
+      });
+      return {
+        start,
+        end,
+        year: this.year,
+      };
     },
   },
   methods: {
@@ -218,46 +393,104 @@ export default {
       // console.log(day, localMonth, localYear);
       this.$emit('selected-date', day, localMonth, localYear);
     },
-    isHighlightingDate(date, nexOrPrevMonth) {
+    // isHighlightingDate(date, nexOrPrevMonth ) {
+    //   let month = date.month;
+    //   let year = date.year;
+    //   return false;
+    //   if (nexOrPrevMonth === 'nextMonth') {
+    //     month = month + 1 === 13 ? 1 : month + 1;
+    //     year = month + 1 === 13 ? year + 1 : year;
+    //   } else if (nexOrPrevMonth === 'prevMonth') {
+    //     month = month - 1 === 0 ? 12 : month - 1;
+    //     year = month - 1 === 0 ? year - 1 : year;
+    //   }
+    //   let res = null;
+    //   _.forEach(this.highlightedDates, item => {
+    //     if(!item) return false;
+
+    //     if (_.isArray(item.dates) &&
+    //         item.dates.length > 0 &&
+    //         item.dates.filter(
+    //           ArrItem => ArrItem.day === date.day &&
+    //           ArrItem.month === month &&
+    //           ArrItem.year === year
+    //         ).length > 0) {
+    //           res = item;
+    //           return false;
+    //     }
+    //     if (
+    //       !_.isArray(item.dates) &&
+    //       item.dates &&
+    //       item.dates.day === date.day &&
+    //       item.dates.month === month &&
+    //       item.dates.year === year
+    //     ) {
+    //       res = item;
+    //       return false;
+    //     }
+    //     return true;
+    //   });
+    //   return res;
+    // },
+    isHighlightedItem(date, nexOrPrevMonthFlag) {
       let month = date.month;
       let year = date.year;
-
-      if (nexOrPrevMonth === 'nextMonth') {
+      let res = {};
+      if (nexOrPrevMonthFlag === 'nextMonth') {
         month = month + 1 === 13 ? 1 : month + 1;
         year = month + 1 === 13 ? year + 1 : year;
-      } else if (nexOrPrevMonth === 'prevMonth') {
+      } else if (nexOrPrevMonthFlag === 'prevMonth') {
         month = month - 1 === 0 ? 12 : month - 1;
         year = month - 1 === 0 ? year - 1 : year;
       }
-      let res = null;
-      _.forEach(this.selectedDays, item => {
-        if (
-          item.date.day === date.day &&
-          item.date.month === month &&
-          item.date.year === year
-        ) {
-          res = item;
-          return false;
+
+      _.forIn(this.highlightedDates, (value, key) => {
+        if (key === `${year}-${month}-${date.day}`) {
+          res = value;
         }
-        return true;
       });
       return res;
-      // return _.some(this.selectedDays.map(item => item.date), {
-      //   day: date.day,
-      //   month,
-      //   year,
+
+      // _.forEach(this.highlightedDates, item => {
+      //   if(!item || !item.dates) return false;
+
+      //   if (_.isArray(item.dates) &&
+      //       item.dates.length > 0 &&
+      //       item.dates.filter(
+      //         ArrItem => ArrItem.day === date.day &&
+      //         ArrItem.month === month &&
+      //         ArrItem.year === year
+      //       ).length > 0) {
+      //         res = item;
+      //         return false;
+      //   }
+      //   if (
+      //     !_.isArray(item.dates) &&
+      //     item.dates &&
+      //     item.dates.day === date.day &&
+      //     item.dates.month === month &&
+      //     item.dates.year === year
+      //   ) {
+      //     res = item;
+      //     return false;
+      //   }
+      //   return true;
       // });
+      // return res;
     },
   },
   watch: {
-    interval(newInterval) {
-      this.$emit('input', newInterval);
+    interval: {
+      handler(newInterval) {
+        this.$emit('input', newInterval);
+      },
+      deep: true,
     },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 .wr-calendar {
   position: relative;
   width: 100%;
@@ -284,6 +517,10 @@ export default {
   border-radius: 5px;
 }
 
+.wr-calendar:not(.calendar_years) .calendar {
+   min-height: 820px;
+}
+
 .calendar__title {
   white-space: nowrap;
   width: 11px;
@@ -307,23 +544,85 @@ export default {
 }
 
 .calendar__item_event {
-  width: 50px;
-  display: inline-block;
-  line-height: 50px;
+  /* width: 50px; */
+  /* display: inline-block; */
+  /* line-height: 50px; */
+  position: relative;
   /* background-color: #42c3f8; */
   /* border-radius: 50%; */
   /* color: #fff; */
+  width: 100%;
+  display: block;
 }
 
-/* .calendar__item_event-recurring {
-  background-color: rgba(66, 195, 248, 0.4);
-  color: #0f232e;
-} */
+.calendar__events-names {
+  position: absolute;
+	color: #FFFFFF;
+	font-size: 10px;
+	line-height: 20px;
+  width: calc(100% - 10px);
+  left: 50%;
+  top: 35px;
+  transform: translateX(-50%);
+}
 
-.calendar__iselected-item {
-  background-color: #42c3f8;
-  border-radius: 50%;
-  color: #fff;
+.calendar__event {
+  display: block;
+  margin-bottom: 4px;
+  border-radius: 2px;
+  text-align: left;
+  padding: 0px 5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+
+  &_more {
+    color: #0F232E;
+    text-align: center;
+    margin-bottom: 0;
+    &:hover + .calendar__event-more-items {
+      opacity: 1;
+    }
+  }
+}
+
+.calendar__event-more-items {
+  opacity: 0;
+  padding-top: 4px;
+
+  &.calendar__event-more-items_year {
+    opacity: 1;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.calendar__event-background {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  z-index: -1;
+
+  &_more {
+    font-size: 10px;
+    line-height: 12px;
+    text-align: center;
+    background-color: #DFDFDF;
+  }
+}
+
+.calendar__day-num {
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - 15px);
+  margin: auto;
 }
 
 .calendar__items_title {
@@ -337,9 +636,10 @@ export default {
 }
 
 .calendar__item {
-  align-content: center;
+  /* align-content: center; */
   display: grid;
   cursor: pointer;
+  /* min-height: 120px; */
 }
 
 .calendar__item_not-curr {
@@ -349,4 +649,50 @@ export default {
 .calendar__item:not(:last-child) {
   border-right: 1px solid #dfdfdf;
 }
+
+.calendar_years {
+  .calendar__events-names {
+    width: 100px;
+    top: 34px;
+    display: none;
+    background: #fff;
+    padding: 4px 4px 0 4px;
+    z-index: 9999999;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
+  }
+
+  .calendar__item:hover {
+    .calendar__events-names {
+      display: block;
+    }
+  }
+
+  .stroke {
+    stroke-width: 3.5;
+    stroke-opacity: 1;
+    fill: transparent;
+    &__wr {
+      height: 30px;
+      width: 30px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+    margin-top: -17.5px;
+    margin-left: -17.75px;
+    }
+  }
+  .calendar__items {
+    // position: relative;
+  }
+
+  .calendar__day-num {
+    justify-content: flex-start;
+  }
+  
+  .calendar__day-num-text {
+    width: 100%;
+  }
+}
+
+
 </style>

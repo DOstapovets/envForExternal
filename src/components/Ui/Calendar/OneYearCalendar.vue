@@ -8,7 +8,7 @@
           :year="year"
           :month="month"
           :years-calendar="true"
-          :selected-days="selectedDays"
+          :highlighted-dates="highlightedDates"
           not-show-selected-on-prev-next-days
           class="calendar_years"
           @selected-date="selectDateHandler"
@@ -35,15 +35,12 @@ export default {
       type: Number,
       default: new Date().getFullYear(),
     },
-    selectedDays: {
-      type: Array,
+    highlightedDates: {
+      type: Object,
       default() {
-        return [];
+        return {};
       },
     },
-    // selectedDate: {
-    //   type: Object,
-    // },
   },
 
   methods: {
@@ -60,7 +57,7 @@ export default {
 .months {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  min-height: 1070px;
+  min-height: 1350px;
   grid-row-gap: 1px;
   grid-column-gap: 1px;
   background-color: #dfdfdf;

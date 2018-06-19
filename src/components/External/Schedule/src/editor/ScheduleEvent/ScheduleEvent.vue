@@ -1,19 +1,42 @@
 <template>
   <div class="schedule-event">
-    <label class="timezone">
-        <span class="timezone__label">Timezone</span>
-        <or-select :disabled="readonly" placeholder="Select a time zone" class="config-line__select" :has-search="true" :options="getRegions"
-            v-model="timeZoneComp">
-        </or-select>
-    </label>
-    <div class="date">
-      <span v-if="!copyScheduleEventData.startExpression.date">Choose date on calendar</span>
+    <!-- <div class="date">
+      <span v-if="!copyScheduleEventData.eventName">Choose date on calendar</span>
       <span v-else class="date__start-date">{{startDateUi}}</span>
+    </div> -->
+    <!-- <div class="date">
+      <span v-if="!copyScheduleEventData.eventName">Choose date on calendar</span>
+      <span v-else class="date__start-date">{{startDateUi}}</span>
+    </div> -->
+    <or-textbox
+      placeholder="Specify event name…"
+      class="textbox-without-border"
+      v-model="copyScheduleEventData.eventName"
+    ></or-textbox>
+    <div class="wr-tizezone-start-date">
+      <div class="wr-top-start-date">
+        <div class="schedule-event__label">Date</div>
+        <div class="recurring-controls__date">
+          <or-icon class="recurring-controls__custom-icon-date" icon="view_comfy"></or-icon>
+          <ui-datepicker :disabled="readonly" class="recurring-controls__calendar-picker-custom" iconPosition="right" placeholder="Select date"
+              :custom-formatter="formatDate" v-model="startDate">
+          </ui-datepicker>
+        </div>
+      </div>
+      <label class="timezone timezone_top">
+          <span class="schedule-event__label">Timezone</span>
+          <or-select :disabled="readonly" placeholder="Select a time zone" class="config-line__select" :has-search="true" :options="getRegions"
+              v-model="timeZoneComp">
+          </or-select>
+      </label>
     </div>
-    <time-period-list
-      :times.sync="copyScheduleEventData.times"
-      :readonly="readonly"
-    ></time-period-list>
+    <div class="wr-time-period-list">
+      <div class="schedule-event__label">Time</div>
+      <time-period-list
+        :times.sync="copyScheduleEventData.times"
+        :readonly="readonly"
+      ></time-period-list>
+    </div>
     <div class="recurring-controls">
         <or-checkbox v-model="copyScheduleEventData.isReccuring" :disabled="readonly">Recurring</or-checkbox>
         <span v-if="!copyScheduleEventData.isEndTime && copyScheduleEventData.isReccuring" class="recurring-controls__recuring-till">till</span>
@@ -35,7 +58,17 @@
             </div>
         </div>
     </div>
-    <accordion v-if="copyScheduleEventData.isReccuring">
+          <!-- :saved-accordion-slot-name="copyScheduleEventData.savedAccordionSlotName" -->
+          <!-- {{copyScheduleEventData.savedAccordionSlotName}}
+          {{savedAccordionNumItemComp}} -->
+    <accordion
+      :opened-item.sync="copyScheduleEventData.savedAccordionSlotName"
+      v-if="copyScheduleEventData.isReccuring"
+      :saved-accordion-num-item="scheduleEventData.savedAccordionSlotName"
+      @close-item="closeAccordionItem"
+      @opened-item="openedAccordionItem"
+      @do-editable="doEditable"
+    >
         <template  slot="item1">
             <div placeholderItem="Set recurring daily"  titleItem="Daily">
               <cron-generators-daily
@@ -44,6 +77,9 @@
                 :runAtTime="runAtTimeLocal"
                 :readonly="readonly"
                 v-model="copyScheduleEventData.daily.cronExpressions"
+                :index="0"
+                :data-state="dataStateComp"
+                :is-editable.sync="isEditable"
               ></cron-generators-daily>
             </div>
         </template>
@@ -55,6 +91,9 @@
                 :runAtTime="runAtTimeLocal"
                 :readonly="readonly"
                 v-model="copyScheduleEventData.weekly.cronExpressions"
+                :index="1"
+                :data-state="dataStateComp"
+                :is-editable.sync="isEditable"
               ></cron-generators-weekly>
             </div>
         </template>
@@ -69,6 +108,9 @@
                 :mode.sync="copyScheduleEventData.monthly.mode"
                 :period.sync="copyScheduleEventData.monthly.period"
                 v-model="copyScheduleEventData.monthly.cronExpressions"
+                :index="2"
+                :data-state="dataStateComp"
+                :is-editable.sync="isEditable"
               ></cron-generators-monthly>
             </div>
         </template> 
@@ -82,6 +124,9 @@
                 :selected-months.sync="copyScheduleEventData.yearly.selectedMonths"
                 :days-period.sync="copyScheduleEventData.yearly.daysPeriod"
                 :on-the.sync="copyScheduleEventData.yearly.onThe"
+                :index="3"
+                :data-state="dataStateComp"
+                :is-editable.sync="isEditable"
               ></cron-generators-yearly>
             </div>
         </template>
@@ -97,7 +142,7 @@
       </or-button>
       <or-button 
         :loading="loadingApply"
-        :disabled="dataState === 'saved' || dataState === 'canceled'"
+        :disabled="dataStateComp === 'saved' || dataStateComp === 'canceled'"
         @click="apply"
         class="schedule-event__bottom-button" 
         color="primary"
@@ -120,6 +165,7 @@ import CronGeneratorsDaily from '../CronGenerators/Daily.vue';
 import CronGeneratorsWeekly from '../CronGenerators/Weekly.vue';
 import CronGeneratorsMonthly from '../CronGenerators/Monthly.vue';
 import CronGeneratorsYearly from '../CronGenerators/Yearly.vue';
+import defaultValues from '../Constants/DefaultValues';
 /* eslint-enable */
 
 export default {
@@ -127,7 +173,12 @@ export default {
     readonly: {
       type: Boolean,
       default: false,
+      isEditable: false
     },
+    // dataStateGlobal: {
+    //   type: Object,
+    //   default: () => ({}),
+    // },
     steps: null,
     stepId: null,
     $v: null,
@@ -147,12 +198,20 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    dataState: {
+      type: String,
+      default: 'saved'
+    },
+    // id: {
+    //   type: String,
+    //   default: null,
+    // }
   },
   data() {
     return {
       runAtTimeLocal: [],
       loadingApply: false,
-      dataState: 'saved',
+      isEditable: false
     };
   },
   computed: {
@@ -190,14 +249,14 @@ export default {
         }
       },
     },
-    startDateUi() {
-      return moment(this.copyScheduleEventData.startExpression.date).format('LL');
-    },
+    // startDateUi() {
+    //   return moment(this.copyScheduleEventData.startExpression.date).format('LL');
+    // },
     // copyData.isReccuringLocal: {
     //   get() {
     //     return this.isReccuring;
     //   },
-    //   set(newValue) {
+    //   secopyScheduleEventData(newValue) {
     //     this.$emit('update:isReccuring', this.copyData.isReccuringLocal);
     //     // delete all setting if checkbox uncheked
     //     // if (!newValue) {
@@ -234,10 +293,34 @@ export default {
         // this.generateCronExpression(); // update crons when data changed
       },
     },
+    startDate: {
+      get() {
+        const date = _.get(this.copyScheduleEventData.startExpression, 'date');
+        return date ? new Date(date) : null;
+      },
+      set(newValue) {
+        const date = new Date(newValue);
+        this.copyScheduleEventData.startExpression.date = moment(date).format('YYYY-MM-DD');
+        // this.generateCronExpression(); // update crons when data changed
+      },
+    },
+    dataStateComp: {
+      get(){
+        return this.dataState || 'saved';
+      },
+      set(newValue){
+        // console.log('here', newValue);
+        this.$emit('update:dataState', newValue)
+      }
+    },
+    savedAccordionNumItemComp() {
+        return this.copyScheduleEventData.savedAccordionSlotName ?
+          parseInt(this.copyScheduleEventData.savedAccordionSlotName.split('').reverse().join(), 10) : -1;
+    }
   },
   methods: {
     apply() {
-      if (this.dataState !== 'canceled' && this.dataState !== 'saved') {
+      if (this.dataStateComp !== 'canceled' && this.dataStateComp !== 'saved') {
         this.$emit('apply-changes');
 
         this.loadingApply = true;
@@ -245,14 +328,14 @@ export default {
           this.loadingApply = false;
         }, 200);
 
-        this.dataState = 'saved';
+        this.dataStateComp = 'saved';
       }
     },
 
     cancel() {
-      if (this.dataState !== 'canceled' && this.dataState !== 'saved') {
+      if (this.dataStateComp !== 'canceled' && this.dataStateComp !== 'saved') {
         this.$emit('cancel-changes');
-        this.dataState = 'canceled';
+        this.dataStateComp = 'canceled';
       }
     },
 
@@ -343,7 +426,41 @@ export default {
         this.copyScheduleEventData.monthly.cronExpressions,
         this.copyScheduleEventData.yearly.cronExpressions,
       );
-    }
+    },
+    changeSavedAccordionSlotName(number) {
+      // console.log(number);
+      this.copyScheduleEventData.savedAccordionSlotName = number;
+    },
+    closeAccordionItem(item) {
+
+      switch (item) {
+        case 'item1':
+            this.copyScheduleEventData.daily = _.cloneDeep(defaultValues.daily);
+          break;
+        case 'item2':
+            this.copyScheduleEventData.weekly = _.cloneDeep(defaultValues.weekly);
+          break;
+        case 'item3':
+            this.copyScheduleEventData.monthly = _.cloneDeep(defaultValues.monthly);
+          break;
+        case 'item4':
+            this.copyScheduleEventData.yearly = _.cloneDeep(defaultValues.yearly);
+          break;
+        default:
+            throw new Error('incorrect number of accordion item');
+      }
+      console.log(item);
+      // this.copyScheduleEventData.savedAccordionSlotName = null;
+    },
+    openedAccordionItem(itemNum) {
+      console.log(itemNum);
+      // this.copyScheduleEventData.savedAccordionSlotName = itemNum;
+    },
+    doEditable(index) {
+      if (this.copyScheduleEventData.savedAccordionSlotName === index || this.savedAccordionNumItemComp === -1) {
+        this.isEditable = true;
+      }
+    },
   },
   watch: {
     'copyScheduleEventData.times': {
@@ -385,10 +502,14 @@ export default {
     },
 
     copyScheduleEventData: {
-      handler() {
-        if (!_.isEqual(this.copyScheduleEventData, this.scheduleEventData)) {
-          this.dataState = 'changed';
-          // console.log('changed');
+      handler(newValue, oldValue) {
+        // console.log(newValue.id)
+        if (!_.isEqual(newValue, this.scheduleEventData) && newValue.id === oldValue.id) {
+          this.dataStateComp = 'changed';
+          // console.log(JSON.stringify(newValue));
+          // console.log(JSON.stringify(this.scheduleEventData));
+        } else {
+          this.dataStateComp = 'canceled';
         }
       },
       deep: true,
@@ -420,7 +541,16 @@ export default {
         this.doExpressions();
       },
       deep: true,
-    }
+    },
+    // dataState(newValue) {
+    //   this.$emit('data-state', newValue);
+    // },
+    // dataStateGlobal(newValue) {
+    //   console.log(this.index);
+    //   if(newValue.index === this.index) {
+    //     this.dataState = 'saved';
+    //   }
+    // }
   },
   components: {
     Accordion,
@@ -442,8 +572,51 @@ export default {
     justify-content: flex-end;
     margin-bottom: 30px;
   }
+
+  &__label {
+    color: #91969D;
+    font-size: 12px;
+    line-height: 16px;
+    padding-bottom: 8px;
+  }
+
   &__bottom-button:not(:last-child) {
     margin-right: 12px;
+  }
+
+  .wr-tizezone-start-date {
+    display: flex;
+  }
+
+  .wr-top-start-date {
+    padding-right: 30px;
+  }
+
+  .ui-select .ui-select__content 
+  .ui-select__label .ui-select__display {
+    min-height: 32px;
+  }
+
+  .wr-time-period-list {
+    padding-top: 16px;
+  }
+
+  .textbox-without-border {
+    .ui-textbox__input {
+      border: none;
+      background: #fff;
+      color: #0F232E;
+      font-size: 17px;
+      font-weight: bold;
+      line-height: 23px;
+      padding: 0;
+      &::placeholder {
+        font-size: 17px !important;
+      }
+    }
+    &.ui-textbox {
+      margin-bottom: 25px;
+    }
   }
 }
 
@@ -496,6 +669,12 @@ export default {
 .timezone {
   display: flex;
   align-items: baseline;
+  flex-direction: column;
+  &_top {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
   &__label {
     padding-right: 25px;
     color: #91969d;

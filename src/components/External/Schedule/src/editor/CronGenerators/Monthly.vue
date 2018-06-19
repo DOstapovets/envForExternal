@@ -1,54 +1,59 @@
 <template>
 <div class="monthly">
   {{value}}
-    <div class="monthly__month-picker">
-        <month-picker v-model="selectedMonthsComp" :disabled="readonly"></month-picker>
+    <div v-if="isEditable">
+      <div class="monthly__month-picker">
+          <month-picker v-model="selectedMonthsComp" :disabled="readonly"></month-picker>
+      </div>
+      <div class="recuring-configs__monthly-day_configs">
+          <div class="config-line monthly__each" v-if="selectedMonths.length">
+              <or-radio 
+                v-model="modeComp"
+                true-value="each"
+                :disabled="!selectedMonthsComp.length 
+                  || readonly" 
+                  class="config-line__radio"
+                >
+                  each
+              </or-radio>
+              <days-picker
+                :months="selectedMonthsComp"
+                :selected-days.sync="selectedDaysComp"
+                :readonly="readonly || modeComp === 'onThe'"
+              ></days-picker>
+          </div>
+          <div class="config-line" v-if="selectedMonths.length">
+              <or-radio
+              v-model="modeComp" 
+              true-value="onThe" 
+              :disabled="!selectedMonthsComp.length || readonly" 
+              class="config-line__radio">
+              on the
+              </or-radio>
+              <div class="monthly-periods">
+                  <or-select
+                      :disabled="readonly || modeComp === 'each'" 
+                      :class="['config-line__select', /*{'select-box-error': !daysPeriodComp.period}*/]"
+                      label="" placeholder="" 
+                      @change="/*monthlyDaysPeriodChange*/"
+                      v-model="daysPeriodComp.period"
+                      :options="getDaysPeriod">
+                  </or-select>
+                  <or-select
+                      :disabled="readonly || modeComp === 'each'" 
+                      :class="['config-line__select', /*{'select-box-error': !daysPeriodComp.day}*/]" 
+                      label=""
+                      placeholder="" 
+                      @change="/*monthlyDaysPeriodChange*/"
+                      v-model="daysPeriodComp.day"
+                      :options="getWeekDays">
+                  </or-select>
+              </div>
+          </div>
+      </div>
     </div>
-    <div class="recuring-configs__monthly-day_configs">
-        <div class="config-line monthly__each" v-if="selectedMonths.length">
-            <or-radio 
-              v-model="modeComp"
-              true-value="each"
-              :disabled="!selectedMonthsComp.length 
-                || readonly" 
-                class="config-line__radio"
-              >
-                each
-            </or-radio>
-            <days-picker
-              :months="selectedMonthsComp"
-              :selected-days.sync="selectedDaysComp"
-              :readonly="readonly || modeComp === 'onThe'"
-            ></days-picker>
-        </div>
-        <div class="config-line" v-if="selectedMonths.length">
-            <or-radio
-             v-model="modeComp" 
-             true-value="onThe" 
-             :disabled="!selectedMonthsComp.length || readonly" 
-             class="config-line__radio">
-             on the
-            </or-radio>
-            <div class="monthly-periods">
-                <or-select
-                    :disabled="readonly || modeComp === 'each'" 
-                    :class="['config-line__select', {'select-box-error': !daysPeriodComp.period}]"
-                    label="" placeholder="" 
-                    @change="/*monthlyDaysPeriodChange*/"
-                     v-model="daysPeriodComp.period"
-                    :options="getDaysPeriod">
-                </or-select>
-                <or-select
-                    :disabled="readonly || modeComp === 'each'" 
-                    :class="['config-line__select', {'select-box-error': !daysPeriodComp.day}]" 
-                    label=""
-                    placeholder="" 
-                    @change="/*monthlyDaysPeriodChange*/"
-                     v-model="daysPeriodComp.day"
-                    :options="getWeekDays">
-                </or-select>
-            </div>
-        </div>
+    <div v-else>
+      <span v-html="textWhenScheduled"></span>
     </div>
 </div>
 </template>
@@ -59,9 +64,13 @@ import _ from 'lodash';
 import MonthPicker from '../MonthPicker/MonthPicker.vue';
 import DaysPicker from '../DaysPicker/DaysPicker.vue';
 import moment from 'moment-timezone';
+import savedState from './savedState';
 /* eslint-enable */
 
 export default {
+  created() {
+    this.$emit('input', this.cronExpression());
+  },
   props: {
     readonly: {
       type: Boolean,
@@ -108,10 +117,15 @@ export default {
         return [];
       },
     },
+    index: {
+      type: Number,
+      default: -1,
+    },
   },
   data() {
     return {
       getDaysPeriod: [
+        { label: 'every', value: '' },
         { label: 'first', value: '#1' },
         { label: 'second', value: '#2' },
         { label: 'third', value: '#3' },
@@ -166,6 +180,29 @@ export default {
         this.$emit('update:period', newValue);
       },
     },
+    textWhenScheduled() {
+      let text = `Every `;
+      this.selectedMonthsComp.forEach((item, index) => {
+        text += `<span class="bold-text">${moment(item, 'MM').format('MMMM')}</span>`;
+        if(this.selectedMonthsComp.length - 1 !== index) {
+          text += ', ';
+        }
+      });
+      text += ' on ';
+      if (this.modeComp === 'each') {
+        _.sortBy(this.selectedDaysComp).forEach((item, index) => {
+          text += `<span class="bold-text">${item}</span>`;
+          if(this.selectedDaysComp.length - 1 !== index) {
+            text += ', ';
+          }
+        });
+        text +=  ` day${this.selectedDaysComp.length > 1 ? 's' : ''}`;
+      } else if (this.modeComp === 'onThe') {
+        text += `the <span class="bold-text">${_.find(this.getDaysPeriod, item => item.value === this.daysPeriodComp.period).label}</span> 
+        <span class="bold-text">${_.find(this.getWeekDays, item => item.value === this.daysPeriodComp.day).label}</span>`;
+      }
+      return text;
+    }
   },
   watch: {
     modeComp(newValue) {
@@ -177,16 +214,20 @@ export default {
     },
     selectedDays() {
       this.$emit('input', this.cronExpression());
+      this.$emit('change-saved-accordion-num-item', this.index);
     },
     selectedMonths() {
       this.$emit('input', this.cronExpression());
+      this.$emit('change-saved-accordion-num-item', this.index);
     },
     mode() {
       this.$emit('input', this.cronExpression());
+      this.$emit('change-saved-accordion-num-item', this.index);
     },
     daysPeriodComp: {
       handler() {
         this.$emit('input', this.cronExpression());
+        this.$emit('change-saved-accordion-num-item', this.index);
       },
       deep: true,
     },
@@ -216,6 +257,7 @@ export default {
     },
   },
   components: { MonthPicker, DaysPicker },
+  mixins: [savedState],
 };
 </script>
 
@@ -247,6 +289,15 @@ export default {
     max-width: 60px;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .bold-text {
+    	color: #0F232E;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 21px;
+  }
+  .ui-radio .ui-radio__label-text {
+    white-space: nowrap;
   }
 }
 </style>

@@ -1,10 +1,15 @@
 
 <template>
   <div>
+    <!-- {{highlightedDates}}
+    <br>
+    <br>
+    <br>
+    {{selectedDays}} -->
     <div class="nav">
         <div>
             <span class="nav__interval">
-                {{state === 'month' ? interval : year}}
+                {{state === 'month' ?  `${interval.start} - ${interval.end}, ${interval.year}` : year}}
             </span>
         </div>
         <div class="nav__wr-right">
@@ -52,14 +57,14 @@
         v-model="interval"
         v-show="state === 'month'"
         @selected-date="selectDateHandler"
-        :selected-days="selectedDays"
+        :highlighted-dates="highlightedDates"
     >
     </one-month-calendar>
     <one-year-calendar
         :year="year"
         v-show="state === 'year'"
         @selected-date="selectDateHandler"
-        :selected-days="selectedDays"
+        :highlighted-dates="highlightedDates"
     >
     </one-year-calendar>
   </div>
@@ -70,6 +75,7 @@
 import OneMonthCalendar from './OneMonthCalendar.vue';
 import OneYearCalendar from './OneYearCalendar.vue';
 /* eslint-enable */
+import getScheduledDays from './getScheduledDaysMixin';
 
 export default {
   // mounted() {
@@ -80,7 +86,7 @@ export default {
   // },
   data() {
     return {
-      interval: '',
+      interval: {},
       state: 'month',
       year: parseInt(this.startYear, 10),
       month: parseInt(this.startMonth, 10),
@@ -160,6 +166,8 @@ export default {
       this.$emit('selected-date', day, month, year);
     },
   },
+
+  mixins: [getScheduledDays],
 };
 </script>
 

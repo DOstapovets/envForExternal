@@ -1,32 +1,41 @@
 <template>
 <div class="weekly">
     {{value}}
-    <div class="radio-custom__wr">
-        <or-radio v-model="periodMode" true-value="everyWeek" :disabled="readonly">
-            Every:
-        </or-radio>
-        <or-textbox :disabled="readonly" :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
-            label="" v-model="periodLocal" placeholder="">
-        </or-textbox>
-        <div class="">week(s) on:</div>
+    <div v-if="isEditable">
+      <div class="radio-custom__wr">
+          <or-radio v-model="periodMode" true-value="everyWeek" :disabled="readonly">
+              Every:
+          </or-radio>
+          <or-textbox :disabled="readonly" :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
+              label="" v-model="periodLocal" placeholder="">
+          </or-textbox>
+          <div class="">week(s) on:</div>
+      </div>
+      <div class="weekly-days">
+          <button 
+              :class="['btn-group', {'is-active': isWeekBtnActive(day), 'is-disabled': readonly }]" 
+              v-for="day in getWeekDays"
+              :key="day.value"
+              :disabled="readonly" 
+              @click="toggleWeeklyDays(day)">
+              {{day.label}}
+          </button>
+      </div>
     </div>
-    <div class="weekly-days">
-        <button 
-            :class="['btn-group', {'is-active': isWeekBtnActive(day), 'is-disabled': readonly }]" 
-            v-for="day in getWeekDays"
-            :key="day.value"
-            :disabled="readonly" 
-            @click="toggleWeeklyDays(day)">
-            {{day.label}}
-        </button>
+    <div v-else>
+      <span v-html="textWhenScheduled"></span>
     </div>
 </div>
 </template>
 
 <script>
 import _ from 'lodash';
+import savedState from './savedState';
 
 export default {
+  created() {
+    this.$emit('input', this.cronExpression());
+  },
   data() {
     return {
       periodMode: 'everyWeek',
@@ -69,6 +78,10 @@ export default {
       default() {
         return [];
       },
+    },
+    index: {
+      type: Number,
+      default: -1,
     },
   },
   methods: {
@@ -124,6 +137,16 @@ export default {
         this.$emit('update:period', newPeriod);
       },
     },
+    textWhenScheduled() {
+        let text = `Every <span class="bold-text">${this.periodLocal}</span> week on `;
+        this.weekDaysLocal.forEach((item, index) => {
+          text += `<span class="bold-text">${item.label}</span>`;
+          if(this.weekDaysLocal.length - 1 !== index) {
+            text += ', ';
+          }
+        });
+        return text;
+      }
   },
   watch: {
     runAtTime() {
@@ -131,11 +154,14 @@ export default {
     },
     weekDaysLocal() {
       this.$emit('input', this.cronExpression());
+      this.$emit('change-saved-accordion-num-item', this.index);
     },
     periodLocal() {
       this.$emit('input', this.cronExpression());
+      this.$emit('change-saved-accordion-num-item', this.index);
     },
   },
+  mixins: [savedState],
 };
 </script>
 
@@ -201,6 +227,12 @@ export default {
         color: #ffffff;
       }
     }
+  }
+  .bold-text {
+    	color: #0F232E;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 21px;
   }
 }
 </style>

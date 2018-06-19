@@ -4,22 +4,29 @@
             <ul class="accordion" >
                 <li class="accordion__item"  :key="index" v-for="(slot, index) in slots">
                     <div class="accordion__wr-content" @click="openItem(index)">
-                        <span class="accordion__title" :class="{'active' : openedItem === index, 'disabled': openedItem && openedItem !== index}">
+                        <span class="accordion__title" :class="{'active' : openedItemComp === index, 'disabled': openedItemComp && openedItemComp !== index}">
                             {{slot[0].data.attrs.titleItem}}
                         </span>
-                        <div v-if="openedItem === index" class="accordion__slot">
+                        <div v-if="openedItemComp === index" class="accordion__slot">
                             <slot :name="index"></slot>
                         </div>
-                        <span v-if="!openedItem" class="accordion__placeholder">
+                        <span v-if="!openedItemComp" class="accordion__placeholder">
                             {{slot[0].data.attrs.placeholderItem}}
                         </span>
                     </div>
-                    <div v-if="openedItem === index" class="accordion__close-item" @click="deleteItem">
+                    <div v-if="openedItemComp === index" class="accordion__close-item" @click="deleteItem">
                         <or-icon  icon="clear"></or-icon>
                     </div>
                 </li>
             </ul>
         </div>
+        <or-modal  :contain-focus="false" ref="deleteSettingsInAccordionItemConfirmation" title="Delete settings">
+          Do you really want to delete the settings?
+          <div slot="footer">
+              <or-button color="red" @click="deleteSettingsInAccordionItem">Delete</or-button>
+              <or-button color="primary" type="secondary" @click="closeModal('deleteSettingsInAccordionItemConfirmation')">Cancel</or-button>
+          </div>
+        </or-modal>
     </div>
 </template>
 
@@ -31,22 +38,56 @@ export default {
   data() {
     return {
       slots: this.$slots,
-      openedItem: null,
     };
   },
-  props: {},
+  props: {
+    openedItem: null,
+    savedAccordionNumItem: {
+      type: String,
+      default: null,
+    } 
+  },
   methods: {
+    openModal(ref) {
+      this.$refs[ref].open();
+    },
+    closeModal(ref) {
+      this.$refs[ref].close();
+    },
     deleteItem() {
-      this.openedItem = null;
+      if (this.savedAccordionNumItem) {
+        this.openModal('deleteSettingsInAccordionItemConfirmation');
+      } else {
+        this.$emit('close-item', this.openedItemComp);
+        this.openedItemComp = null;
+      }
+
     },
     openItem(index) {
-      if (this.openedItem) return;
-      this.openedItem = index;
+      this.$emit('do-editable', index);
+      if (this.openedItemComp) return;
+      this.$emit('opened-item', index);
+      this.openedItemComp = index;
     },
+    deleteSettingsInAccordionItem() {
+      this.$emit('close-item', this.openedItemComp);
+      this.openedItemComp = null;
+      this.closeModal('deleteSettingsInAccordionItemConfirmation');
+    }
   },
-  created() {
-    console.log(this.slots);
-  },
+  computed: {
+    openedItemComp: {
+      get() {
+        return this.openedItem;
+      },
+      set(newValue) {
+        this.$emit('update:openedItem', newValue);
+      }
+    }
+  }
+  // created() {
+  //   console.log(this.slots);
+  // },
 };
 </script>
 
@@ -76,6 +117,7 @@ ul {
 
 .accordion__slot {
   display: inline-block;
+  max-width: 290px;
 }
 
 .accordion__title {

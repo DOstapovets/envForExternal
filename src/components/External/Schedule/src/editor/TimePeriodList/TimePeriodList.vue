@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="time-period-list">
     <or-list 
-      class="list-time" 
+      class="list-time"
       drag-handle-right 
       v-model="times" 
       add-button-label="Add Time" 
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import uuidv4 from 'uuid/v4';
 /* eslint-disable */
 import TimePeriodItem from '../TimePeriodItem/TimePeriodItem.vue';
 /* eslint-enable */
@@ -55,6 +56,7 @@ export default {
           units: 'mm',
         },
         endTime: false,
+        vforkey: uuidv4(),
       };
     },
   },
@@ -65,4 +67,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.time-period-list {
+ margin-top: -12px; 
+}
 </style>
