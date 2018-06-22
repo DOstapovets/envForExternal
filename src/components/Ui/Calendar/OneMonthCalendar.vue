@@ -667,6 +667,9 @@ export default {
   opacity: 0;
   padding-top: 4px;
   background: #fff;
+  padding-bottom: 4px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
+
 
   &.calendar__event-more-items_year {
     opacity: 1;
@@ -774,6 +777,8 @@ export default {
 
   .calendar__event-more-items {
     padding-top: 0;
+    padding-bottom: 0;
+    box-shadow: none;
   }
 }
 

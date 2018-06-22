@@ -103,7 +103,7 @@
 <script>
 import _ from 'lodash';
 import moment from 'moment';
-import uuidv4 from 'uuid/v4';
+// import uuidv4 from 'uuid/v4';
 import randomMC from 'random-material-color';
 /* eslint-disable */
 import defaultValues from '../Constants/DefaultValues.js';
@@ -201,7 +201,7 @@ export default {
     listNewItemMethod() {
       return {
         scheduleEventData: {
-          id: uuidv4(),
+          id: uuid.v4(),
           startExpression: {
             time: '00:00',
             date: '',
@@ -239,7 +239,7 @@ export default {
                 units: 'mm',
               },
               endTime: false,
-              vforkey: uuidv4(),
+              vforkey: uuid.v4(),
             },
           ],
           color: randomColor(),

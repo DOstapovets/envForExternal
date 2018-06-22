@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import uuidv4 from 'uuid/v4';
+// import uuidv4 from 'uuid/v4';
 /* eslint-disable */
 import TimePeriodItem from '../TimePeriodItem/TimePeriodItem.vue';
 /* eslint-enable */
@@ -56,7 +56,7 @@ export default {
           units: 'mm',
         },
         endTime: false,
-        vforkey: uuidv4(),
+        vforkey: uuid.v4(),
       };
     },
   },
