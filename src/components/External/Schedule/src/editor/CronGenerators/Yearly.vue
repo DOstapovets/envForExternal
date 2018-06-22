@@ -44,9 +44,10 @@
 <script>
 import _ from 'lodash';
 import moment from 'moment-timezone';
-import savedState from './savedState';
+
 /* eslint-disable */
 import MonthPicker from '../MonthPicker/MonthPicker.vue';
+import savedState from './savedState.js';
 /* eslint-enable */
 
 export default {

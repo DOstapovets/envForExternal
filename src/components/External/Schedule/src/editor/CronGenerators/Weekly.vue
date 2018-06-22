@@ -30,7 +30,9 @@
 
 <script>
 import _ from 'lodash';
-import savedState from './savedState';
+/* eslint-disable */
+import savedState from './savedState.js';
+/* eslint-enable */
 
 export default {
   created() {
