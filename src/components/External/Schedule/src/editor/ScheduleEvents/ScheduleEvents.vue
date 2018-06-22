@@ -103,7 +103,7 @@
 <script>
 import _ from 'lodash';
 import moment from 'moment';
-// import uuidv4 from 'uuid/v4';
+import uuid from 'uuid';
 import randomMC from 'random-material-color';
 /* eslint-disable */
 import defaultValues from '../Constants/DefaultValues.js';
