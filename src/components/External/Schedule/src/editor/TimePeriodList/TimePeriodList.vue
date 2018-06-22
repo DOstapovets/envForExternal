@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import uuid from 'uuid;
+import uuid from 'uuid';
+
 /* eslint-disable */
 import TimePeriodItem from '../TimePeriodItem/TimePeriodItem.vue';
 /* eslint-enable */
