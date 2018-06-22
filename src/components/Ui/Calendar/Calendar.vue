@@ -75,8 +75,8 @@
 /* eslint-disable */
 import OneMonthCalendar from './OneMonthCalendar.vue';
 import OneYearCalendar from './OneYearCalendar.vue';
+import getScheduledDays from './getScheduledDaysMixin.js';
 /* eslint-enable */
-import getScheduledDays from './getScheduledDaysMixin';
 
 export default {
   // mounted() {
