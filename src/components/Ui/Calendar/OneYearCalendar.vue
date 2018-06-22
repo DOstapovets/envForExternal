@@ -70,7 +70,6 @@ export default {
 }
 
 .calendar_years .calendar__item_event {
-  width: 30px;
   line-height: 30px;
 }
 
