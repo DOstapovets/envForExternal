@@ -1,6 +1,12 @@
 <template>
   <div class="wr-calendar">
+    <!-- {{isHighlightedItem({day: 31, month: 2, year: 2018}, 'prevMonth')}} -->
     <div class="calendar">
+      <!-- {{currDays}}<br>
+      {{highlightedCurrDays}}<br>
+      12131231
+      {{highlightedPreviousMonthDays}}<br> -->
+      <!-- {{highlightedDNextDays}} -->
       <div class="calendar__items" v-if="yearsCalendar">
         <div class="calendar__item">
           <div><span class="calendar__title">{{monthNames[month - 1]}} {{year}}</span></div>
@@ -17,16 +23,16 @@
         </div>
         <div
           class="calendar__items"
-          v-for="(monthDays, index) in currDays"
-          :key="monthDays.toString()"
+          v-for="(monthDays, index) in highlightedCurrDays"
+          :key="index"
           v-if="dPrevDays.length || monthDays.length || dNextDays.length"
         >
           <div
               class="calendar__item calendar__item_not-curr"
               v-if="!index"
-              v-for="previousMonthDays in dPrevDays"
-              :key="previousMonthDays.toString()"
-              @click="sendChosenDate(previousMonthDays, month - 1, year)"
+              v-for="(previousMonthDaysValue, previousMonthDaysKey) in highlightedPreviousMonthDays"
+              :key="previousMonthDaysKey"
+              @click="sendChosenDate(previousMonthDaysKey, month - 1, year)"
           >
               <div>
                 <span 
@@ -38,7 +44,7 @@
                         class="calendar__event"
                         :key="key"
                         v-if="key < 3"
-                        v-for="(value, key) in isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth')"
+                        v-for="(value, key) in previousMonthDaysValue"
                         :style="{color : value.lighter ? '#0F232E' : ''}"
                       >
                         <span 
@@ -50,7 +56,7 @@
                     </div>
                     <span
                       class="calendar__event calendar__event_more"
-                      v-if="isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length > 3 && !yearsCalendar"
+                      v-if="!yearsCalendar && previousMonthDaysValue.length > 3"
                     >
                       <span 
                         class="calendar__event-background calendar__event-background_more"
@@ -65,7 +71,7 @@
                         class="calendar__event"
                         :key="key"
                         v-if="key >= 3"
-                        v-for="(value, key) in isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth')"
+                        v-for="(value, key) in previousMonthDaysValue"
                         :style="{color : value.lighter ? '#0F232E' : ''}"
                       >
                         <span 
@@ -80,15 +86,15 @@
                     <span></span>
                     <div
                       class="stroke__wr"
-                      v-if="isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length > 0 && yearsCalendar" 
+                      v-if="yearsCalendar && previousMonthDaysValue.length > 0" 
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" height="34" width="34">
                         <circle 
-                          v-for="(value, key) in isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth')"
+                          v-for="(value, key) in previousMonthDaysValue"
                           :key="key"
                           :style="{stroke: value.color, 'stroke-dasharray': key !== 0 ? 
-                          `${(isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length - parseInt(key)) * 2 * 15 * Math.PI / isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length},
-                          ${2 * 15 * Math.PI / isHighlightedItem({day: previousMonthDays, month, year}, 'prevMonth').length * parseInt(key)}`
+                          `${(previousMonthDaysValue.length - parseInt(key)) * 2 * 15 * Math.PI / previousMonthDaysValue.length},
+                          ${2 * 15 * Math.PI / previousMonthDaysValue.length * parseInt(key)}`
                           : ''}"
                           class="stroke" 
                           cy="17" cx="17" 
@@ -97,7 +103,7 @@
                       </svg>
                     </div>
                     <div class="calendar__day-num-text">
-                      {{previousMonthDays}}
+                      {{previousMonthDaysKey}}
                     </div>
                   </div>
                 </span>
@@ -105,9 +111,9 @@
           </div>
           <div
               class="calendar__item"
-              v-for="day in monthDays"
-              :key="day.toString()"
-              @click="sendChosenDate(day, month, year)"
+              v-for="(dayValue, dayKey) in monthDays"
+              :key="dayKey"
+              @click="sendChosenDate(dayKey, month, year)"
           >
               <div>
                 <span 
@@ -119,7 +125,7 @@
                         class="calendar__event"
                         :key="key"
                         v-if="key < 3"
-                        v-for="(value, key) in isHighlightedItem({day, month, year})"
+                        v-for="(value, key) in dayValue"
                         :style="{color : value.lighter ? '#0F232E' : ''}"
                       >
                         <span 
@@ -131,7 +137,7 @@
                     </div>
                     <span
                       class="calendar__event calendar__event_more"
-                      v-if="isHighlightedItem({day, month, year}).length > 3 && !yearsCalendar"
+                      v-if="!yearsCalendar && dayValue.length > 3"
                     >
                       <span 
                         class="calendar__event-background calendar__event-background_more"
@@ -146,7 +152,7 @@
                         class="calendar__event"
                         :key="key"
                         v-if="key >= 3"
-                        v-for="(value, key) in isHighlightedItem({day, month, year})"
+                        v-for="(value, key) in dayValue"
                         :style="{color : value.lighter ? '#0F232E' : ''}"
                       >
                         <span 
@@ -161,15 +167,15 @@
                     <span></span>
                     <div
                       class="stroke__wr"
-                      v-if="isHighlightedItem({day, month, year}).length > 0 && yearsCalendar" 
+                      v-if="yearsCalendar && dayValue.length > 0" 
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" height="34" width="34">
                         <circle 
-                          v-for="(value, key) in isHighlightedItem({day, month, year})"
+                          v-for="(value, key) in dayValue"
                           :key="key"
                           :style="{stroke: value.color, 'stroke-dasharray': key !== 0 ? 
-                          `${(isHighlightedItem({day, month, year}).length - parseInt(key)) * 2 * 15 * Math.PI / isHighlightedItem({day, month, year}).length},
-                          ${2 * 15 * Math.PI / isHighlightedItem({day, month, year}).length * parseInt(key)}`
+                          `${(dayValue.length - parseInt(key)) * 2 * 15 * Math.PI / dayValue.length},
+                          ${2 * 15 * Math.PI / dayValue.length * parseInt(key)}`
                           : ''}"
                           class="stroke" 
                           cy="17" cx="17" 
@@ -177,7 +183,7 @@
                         ></circle>
                       </svg>
                     </div>
-                    <div class="calendar__day-num-text">{{day}}</div>
+                    <div class="calendar__day-num-text">{{dayKey}}</div>
                   </div>
                 </span>
                </div>
@@ -185,9 +191,9 @@
           <div
               class="calendar__item calendar__item_not-curr"
               v-if="index === currDays.length - 1"
-              v-for="nextMonthDays in dNextDays"
-              :key="nextMonthDays.toString()"
-              @click="sendChosenDate(nextMonthDays, month + 1, year)"
+              v-for="(nextMonthDayValue, nextMonthDayKey) in highlightedDNextDays"
+              :key="nextMonthDayKey"
+              @click="sendChosenDate(nextMonthDayKey, month + 1, year)"
           >
             <div>
               <span 
@@ -199,7 +205,7 @@
                     class="calendar__event"
                     :key="key"
                     v-if="key < 3"
-                    v-for="(value, key) in isHighlightedItem({day: nextMonthDays, month, year}, 'nextMonth')"
+                    v-for="(value, key) in nextMonthDayValue"
                     :style="{color : value.lighter ? '#0F232E' : ''}"
                   >
                     <span 
@@ -211,7 +217,7 @@
                 </div>
                 <span
                   class="calendar__event calendar__event_more"
-                  v-if="isHighlightedItem({day: nextMonthDays, month, year}, 'nextMonth').length > 3 && !yearsCalendar"
+                  v-if="nextMonthDayValue.length > 3 && !yearsCalendar"
                 >
                   <span 
                     class="calendar__event-background calendar__event-background_more"
@@ -226,7 +232,7 @@
                     class="calendar__event"
                     v-if="key >= 3"
                     :key="key"
-                    v-for="(value, key) in isHighlightedItem({day: nextMonthDays, month, year}, 'nextMonth')"
+                    v-for="(value, key) in nextMonthDayValue"
                     :style="{color : value.lighter ? '#0F232E' : ''}"
                   >
                     <span 
@@ -239,7 +245,25 @@
               </div>
               <div class="calendar__day-num">
                 <span></span>
-                <span class="calendar__day-num-text">{{nextMonthDays}}</span>
+                <div
+                  class="stroke__wr"
+                  v-if="nextMonthDayValue.length > 0 && yearsCalendar" 
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" height="34" width="34">
+                    <circle 
+                      v-for="(value, key) in nextMonthDayValue"
+                      :key="key"
+                      :style="{stroke: value.color, 'stroke-dasharray': key !== 0 ? 
+                      `${(nextMonthDayValue.length - parseInt(key)) * 2 * 15 * Math.PI / nextMonthDayValue.length},
+                      ${2 * 15 * Math.PI / nextMonthDayValue.length * parseInt(key)}`
+                      : ''}"
+                      class="stroke" 
+                      cy="17" cx="17" 
+                      r="15"
+                    ></circle>
+                  </svg>
+                </div>
+                <span class="calendar__day-num-text">{{nextMonthDayKey}}</span>
               </div>
               </span>
             </div>
@@ -252,6 +276,7 @@
 <script>
 // import _  'lodash';
 import _ from 'lodash';
+import moment from 'moment';
 
 // console.log('____', _);
 
@@ -371,6 +396,36 @@ export default {
         year: this.year,
       };
     },
+    highlightedPreviousMonthDays() {
+      if (this.dPrevDays) {
+        return this.dPrevDays.reduce((accumulator, currentValue) => {
+          const resLocal = accumulator;
+          resLocal[currentValue] = this.isHighlightedItem({day: currentValue, month: this.month, year: this.year}, 'prevMonth');
+          return resLocal;
+        }, {});
+      }
+      return null;
+    },
+    highlightedCurrDays() {
+      if (this.currDays) {
+        return this.currDays.map(item => item.reduce((accumulator, currentValue) => {
+          const resLocal = accumulator;
+          resLocal[currentValue] = this.isHighlightedItem({day: currentValue, month: this.month, year: this.year});
+          return resLocal;
+        }, {}));
+      }
+      return null;
+    },
+    highlightedDNextDays() {
+      if (this.dNextDays) {
+        return this.dNextDays.reduce((accumulator, currentValue) => {
+          const resLocal = accumulator;
+          resLocal[currentValue] = this.isHighlightedItem({day: currentValue, month: this.month, year: this.year}, 'nextMonth');
+          return resLocal;
+        }, {});
+      }
+      return null;
+    }
   },
   methods: {
     getDay(date) {
@@ -434,19 +489,35 @@ export default {
     // },
     isHighlightedItem(date, nexOrPrevMonthFlag) {
       let month = date.month;
-      let year = date.year;
+      let year = date.year
+      // let ItemDate = moment(`${date.year}-${date.month}-${date.day}`);
       let res = {};
-      if (nexOrPrevMonthFlag === 'nextMonth') {
-        month = month + 1 === 13 ? 1 : month + 1;
-        year = month + 1 === 13 ? year + 1 : year;
-      } else if (nexOrPrevMonthFlag === 'prevMonth') {
-        month = month - 1 === 0 ? 12 : month - 1;
-        year = month - 1 === 0 ? year - 1 : year;
-      }
+    // if (`${year}-${month}-${date.day}` === '2018-2-31')
+        // // console.log(`${year}-${month}-${date.day}`);
 
+      if (nexOrPrevMonthFlag === 'nextMonth') {
+        month += 1;
+        if (month  === 13) {
+          month = 1;
+          year += 1;
+        }
+
+      } else if (nexOrPrevMonthFlag === 'prevMonth') {
+        month -= 1;
+        if (month  === 0) {
+          month = 12;
+          year -= 1;
+        }
+      }
+      // ItemDate = ItemDate.format('YYYY-MM-DD');
+
+      // console.log('this.highlightedDates',this.highlightedDates);
+      // if (`${year}-${month}-${date.day}` === '2018-1-31')
+        // console.log(`${year}-${month}-${date.day}`);
       _.forIn(this.highlightedDates, (value, key) => {
         if (key === `${year}-${month}-${date.day}`) {
           res = value;
+          // return false;
         }
       });
       return res;
@@ -564,6 +635,10 @@ export default {
   left: 50%;
   top: 35px;
   transform: translateX(-50%);
+
+  &:hover {
+    z-index: 1;
+  }
 }
 
 .calendar__event {
@@ -591,6 +666,7 @@ export default {
 .calendar__event-more-items {
   opacity: 0;
   padding-top: 4px;
+  background: #fff;
 
   &.calendar__event-more-items_year {
     opacity: 1;
@@ -671,6 +747,9 @@ export default {
     stroke-width: 3.5;
     stroke-opacity: 1;
     fill: transparent;
+    stroke: #fff;
+    // transition: stroke 1s ease-in-out;
+
     &__wr {
       height: 30px;
       width: 30px;
@@ -691,6 +770,10 @@ export default {
   
   .calendar__day-num-text {
     width: 100%;
+  }
+
+  .calendar__event-more-items {
+    padding-top: 0;
   }
 }
 

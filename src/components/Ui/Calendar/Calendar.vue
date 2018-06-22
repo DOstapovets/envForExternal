@@ -1,6 +1,7 @@
 
 <template>
   <div>
+    <!-- {{highlightedDates}} -->
     <!-- {{highlightedDates}}
     <br>
     <br>

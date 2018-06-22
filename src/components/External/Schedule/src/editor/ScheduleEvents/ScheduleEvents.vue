@@ -14,6 +14,7 @@
         <div class="schedule__wr-event-preview" @click="openModal('modal'), doEditable(item.index)">
           <schedule-event-preview
             :color="item.item.scheduleEventData.color"
+            :event-name="item.item.scheduleEventData.eventName"
           >
           </schedule-event-preview>
         </div>
@@ -79,8 +80,9 @@
               <schedule-event-preview
                 v-if="editableEventNum !== item.index"
                 :color="item.item.scheduleEventData.color"
-                @do-editable="doEditable"
                 :index="item.index"
+                :event-name="item.item.scheduleEventData.eventName"
+                @do-editable="doEditable"
               >
               </schedule-event-preview>
             </template>

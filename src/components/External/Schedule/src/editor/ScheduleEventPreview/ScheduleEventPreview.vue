@@ -5,7 +5,7 @@
       :style="{background: color}"
     ></span>
     <div class="schedule-event-preview__content">
-      preview
+      {{eventName}}
     </div>
   </div>
 </template>
@@ -20,6 +20,10 @@ export default {
       type: String,
       default: null,
     },
+    eventName: {
+      type: String,
+      default: null
+    }
   },
   methods: {
     doEditable() {
