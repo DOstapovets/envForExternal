@@ -105,7 +105,9 @@ import _ from 'lodash';
 import moment from 'moment';
 import uuidv4 from 'uuid/v4';
 import randomMC from 'random-material-color';
-import defaultValues from '../Constants/DefaultValues';
+/* eslint-disable */
+import defaultValues from '../Constants/DefaultValues.js';
+/* eslint-enable */
 
 // import * as _ from 'lodash';
 // import { validators } from '_validators';

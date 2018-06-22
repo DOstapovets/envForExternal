@@ -165,7 +165,7 @@ import CronGeneratorsDaily from '../CronGenerators/Daily.vue';
 import CronGeneratorsWeekly from '../CronGenerators/Weekly.vue';
 import CronGeneratorsMonthly from '../CronGenerators/Monthly.vue';
 import CronGeneratorsYearly from '../CronGenerators/Yearly.vue';
-import defaultValues from '../Constants/DefaultValues';
+import defaultValues from '../Constants/DefaultValues.js';
 /* eslint-enable */
 
 export default {
