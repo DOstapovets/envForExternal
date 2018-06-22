@@ -1,6 +1,6 @@
 <template>
   <div class="daily">
-      {{value}}
+      <!-- {{value}} -->
       <div v-if="isEditable">
         <div class="radio-custom__wr">
               <or-radio v-model="periodModeLocal" true-value="everyDay" class="" :disabled="readonly">

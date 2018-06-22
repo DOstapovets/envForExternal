@@ -1,6 +1,6 @@
 <template>
 <div class="monthly">
-  {{value}}
+  <!-- {{value}} -->
     <div v-if="isEditable">
       <div class="monthly__month-picker">
           <month-picker v-model="selectedMonthsComp" :disabled="readonly"></month-picker>

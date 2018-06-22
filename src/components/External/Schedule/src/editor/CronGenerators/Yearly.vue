@@ -1,6 +1,6 @@
 <template>
   <div class="recuring-configs__monthly-day_configs yearly">
-    {{value}}
+    <!-- {{value}} -->
     <div v-if="isEditable">
       <div class="radio-custom__wr">
           Every
