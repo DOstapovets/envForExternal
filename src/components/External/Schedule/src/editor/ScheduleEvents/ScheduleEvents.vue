@@ -1,5 +1,6 @@
 <template>
   <div class="schedule-events">
+    <!-- {{scheduleEvents}} -->
     <!-- {{scheduleEvents[0].daily}} -->
     <or-list
       label="Basic List" 
@@ -15,6 +16,12 @@
           <schedule-event-preview
             :color="item.item.scheduleEventData.color"
             :event-name="item.item.scheduleEventData.eventName"
+            :preview-texts="item.item.previewTexts"
+            :is-reccuring="item.item.scheduleEventData.isReccuring"
+            :startTimes="item.item.scheduleEventData.times"
+            :end-date="{ noEnd: item.item.scheduleEventData.isEndTime, date: item.item.scheduleEventData.endExpression.date}"
+            :start-date="item.item.scheduleEventData.startExpression.date"
+            :expressions="item.item.scheduleEventData.expressions"
           >
           </schedule-event-preview>
         </div>
@@ -69,12 +76,12 @@
                 :step-id="stepId"
                 :steps="steps"
                 :data-state.sync="dataStates[item.index]"
+                :preview-texts="item.item.previewTexts"
                 @save-copy="/*saveCopy*/"
                 @return-state="/*returnState*/"
                 @apply-changes="applyChanges"
                 @cancel-changes="cancelChanges"
                 @data-state="/*changeDataState*/"
-                
               >
               </schedule-event>
               <schedule-event-preview
@@ -83,6 +90,12 @@
                 :index="item.index"
                 :event-name="item.item.scheduleEventData.eventName"
                 @do-editable="doEditable"
+                :preview-texts="item.item.previewTexts"
+                :is-reccuring="item.item.scheduleEventData.isReccuring"
+                :startTimes="item.item.scheduleEventData.times"
+                :end-date="{ noEnd: item.item.scheduleEventData.isEndTime, date: item.item.scheduleEventData.endExpression.date}"
+                :start-date="item.item.scheduleEventData.startExpression.date"
+                :expressions="item.item.scheduleEventData.expressions"
               >
               </schedule-event-preview>
             </template>
@@ -243,8 +256,11 @@ export default {
             },
           ],
           color: randomColor(),
-          savedAccordionSlotName: null
+          savedAccordionSlotName: null,
         },
+        previewTexts: {
+          reccuring: ''
+        }
       };
     },
     openModal(ref) {
@@ -321,6 +337,13 @@ export default {
     &__wr-event-preview {
       width: 100%;
     }
+  }
+
+  .bold-text {
+    color: #0F232E;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 21px;
   }
 }
 </style>

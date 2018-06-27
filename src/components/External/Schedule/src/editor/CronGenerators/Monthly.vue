@@ -121,6 +121,10 @@ export default {
       type: Number,
       default: -1,
     },
+    previewTexts: {
+      type: Object,
+      default: null,
+    }
   },
   data() {
     return {
@@ -201,6 +205,7 @@ export default {
         text += `the <span class="bold-text">${_.find(this.getDaysPeriod, item => item.value === this.daysPeriodComp.period).label}</span> 
         <span class="bold-text">${_.find(this.getWeekDays, item => item.value === this.daysPeriodComp.day).label}</span>`;
       }
+      this.previewTexts.reccuring = text;
       return text;
     }
   },
@@ -289,12 +294,6 @@ export default {
     max-width: 60px;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  .bold-text {
-    	color: #0F232E;
-      font-size: 14px;
-      font-weight: bold;
-      line-height: 21px;
   }
   .ui-radio .ui-radio__label-text {
     white-space: nowrap;

@@ -85,6 +85,10 @@ export default {
       type: Number,
       default: -1,
     },
+    previewTexts: {
+      type: Object,
+      default: null,
+    },
   },
   methods: {
     isWeekBtnActive(day) {
@@ -147,6 +151,7 @@ export default {
             text += ', ';
           }
         });
+        this.previewTexts.reccuring = text;
         return text;
       }
   },
@@ -229,12 +234,6 @@ export default {
         color: #ffffff;
       }
     }
-  }
-  .bold-text {
-    	color: #0F232E;
-      font-size: 14px;
-      font-weight: bold;
-      line-height: 21px;
   }
 }
 </style>

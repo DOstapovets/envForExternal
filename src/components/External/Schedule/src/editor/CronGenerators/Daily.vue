@@ -73,6 +73,10 @@ export default {
       type: Number,
       default: -1,
     },
+    previewTexts: {
+      type: Object,
+      default: null,
+    }
   },
   computed: {
     periodLocal: {
@@ -119,6 +123,7 @@ export default {
           text =  '';
           break;
       }
+      this.previewTexts.reccuring = text;
       return text;
     }
   },
@@ -128,7 +133,7 @@ export default {
         this.runAtTime,
         item => `${item.mm} ${item.HH} ${this.dailyValue}  * ? *`,
       );
-    },
+    }
   },
   watch: {
     runAtTime() {
@@ -173,12 +178,6 @@ export default {
       align-items: center;
       padding-right: 16px;
     }
-  }
-  .bold-text {
-    	color: #0F232E;
-      font-size: 14px;
-      font-weight: bold;
-      line-height: 21px;
   }
 }
 </style>

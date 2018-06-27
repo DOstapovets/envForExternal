@@ -80,6 +80,8 @@
                 :index="0"
                 :data-state="dataStateComp"
                 :is-editable.sync="isEditable"
+                :preview-texts.sync="previewTexts"
+                @text-when-scheduled="/*textWhenScheduled*/"
               ></cron-generators-daily>
             </div>
         </template>
@@ -94,6 +96,7 @@
                 :index="1"
                 :data-state="dataStateComp"
                 :is-editable.sync="isEditable"
+                :preview-texts.sync="previewTexts"
               ></cron-generators-weekly>
             </div>
         </template>
@@ -111,6 +114,7 @@
                 :index="2"
                 :data-state="dataStateComp"
                 :is-editable.sync="isEditable"
+                :preview-texts.sync="previewTexts"
               ></cron-generators-monthly>
             </div>
         </template> 
@@ -127,6 +131,7 @@
                 :index="3"
                 :data-state="dataStateComp"
                 :is-editable.sync="isEditable"
+                :preview-texts.sync="previewTexts"
               ></cron-generators-yearly>
             </div>
         </template>
@@ -202,10 +207,10 @@ export default {
       type: String,
       default: 'saved'
     },
-    // id: {
-    //   type: String,
-    //   default: null,
-    // }
+    previewTexts: {
+      type: Object,
+      default: null,
+    }
   },
   data() {
     return {
@@ -461,6 +466,11 @@ export default {
         this.isEditable = true;
       }
     },
+    //TODO
+    // textWhenScheduled(text) {
+    //   console.log('textWhenScheduled', text);
+    //   this.copyScheduleEventData.previewTexts.reccuring = text;
+    // }
   },
   watch: {
     'copyScheduleEventData.times': {
