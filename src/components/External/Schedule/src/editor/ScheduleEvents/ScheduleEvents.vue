@@ -10,9 +10,10 @@
       add-button-label="Add Event"
       :new-item-method="listNewItemMethod"
       :drag-handle-right="true"
+      @item-added="eventAdded"
     >
       <template scope="item">
-        <div class="schedule__wr-event-preview" @click="openModal('modal'), doEditable(item.index)">
+        <div class="schedule__wr-event-preview" @click="doEditable(item.index)">
           <schedule-event-preview
             :color="item.item.scheduleEventData.color"
             :event-name="item.item.scheduleEventData.eventName"
@@ -22,6 +23,10 @@
             :end-date="{ noEnd: item.item.scheduleEventData.isEndTime, date: item.item.scheduleEventData.endExpression.date}"
             :start-date="item.item.scheduleEventData.startExpression.date"
             :expressions="item.item.scheduleEventData.expressions"
+            :index="item.index"
+            @do-editable="doEditable"
+            @copy-event="copyEvent"
+            @delete-event="deleteEvent"
           >
           </schedule-event-preview>
         </div>
@@ -52,20 +57,9 @@
             add-button-label="Add Event"
             :new-item-method="listNewItemMethod"
             :drag-handle-right="true"
+            @item-added="eventAdded"
           >
             <template scope="item">
-              <!-- <schedule-event
-                v-if="editableEventNum == item.index"
-                :schedule-event-data.sync="item.item.scheduleEventData"
-                :selected-date="selectedDateLocal"
-                :$v="$v"
-                :readonly="readonly"  
-                :step-id="stepId"
-                :steps="steps"
-                @save-copy="/*saveCopy*/"
-                @return-state="/*returnState*/"
-              >
-              </schedule-event> -->
               <schedule-event
                 v-if="editableEventNum == item.index && copyScheduleEventData"
                 :index="item.index"
@@ -89,13 +83,15 @@
                 :color="item.item.scheduleEventData.color"
                 :index="item.index"
                 :event-name="item.item.scheduleEventData.eventName"
-                @do-editable="doEditable"
                 :preview-texts="item.item.previewTexts"
                 :is-reccuring="item.item.scheduleEventData.isReccuring"
                 :startTimes="item.item.scheduleEventData.times"
                 :end-date="{ noEnd: item.item.scheduleEventData.isEndTime, date: item.item.scheduleEventData.endExpression.date}"
                 :start-date="item.item.scheduleEventData.startExpression.date"
                 :expressions="item.item.scheduleEventData.expressions"
+                @do-editable="doEditable"
+                @copy-event="copyEvent"
+                @delete-event="deleteEvent"
               >
               </schedule-event-preview>
             </template>
@@ -224,7 +220,7 @@ export default {
           isReccuring: false,
           expressions: [],
           isEndTime: false,
-          eventName: 'Specify event name…',
+          eventName: '',
           endExpression: {
             time: '00:00',
             date: '',
@@ -240,12 +236,12 @@ export default {
           times: [
             {
               start: {
-                HH: '',
-                mm: '',
+                HH: '00',
+                mm: '00',
               },
               end: {
-                HH: '',
-                mm: '',
+                HH: '00',
+                mm: '00',
               },
               every: {
                 val: 10,
@@ -281,6 +277,9 @@ export default {
       // this.selectedDateLocal = `${year}-${month}-${day}`;
     },
     doEditable(index) {
+      if (!this.$refs.modal.isOpen) {
+        this.openModal('modal');
+      }
       this.editableEventNum = index;
       // this.copyScheduleEventData = _.cloneDeep(this.scheduleEvents[index].scheduleEventData);
       this.$set(this, 'copyScheduleEventData',  _.cloneDeep(this.scheduleEvents[index].scheduleEventData));
@@ -309,8 +308,31 @@ export default {
       this.$set(this.dataStates, this.changedNumber, 'canceled');
       this.closeModal('dataNotSave');
       this.closeModal('modal');
-    }
+    },
+    copyEvent(index) {
+      const  copyOfEvent = _.cloneDeep(this.scheduleEvents[index]);
+      copyOfEvent.vforkey = uuid.v4();
+      copyOfEvent.scheduleEventData.id = uuid.v4();
+      copyOfEvent.scheduleEventData.eventName = `Copy of ${copyOfEvent.scheduleEventData.eventName}`;
+      copyOfEvent.scheduleEventData.color = randomColor();
+      this.scheduleEvents.push(copyOfEvent);
+    },
+    deleteEvent(index) {
+      this.scheduleEvents.splice(index, 1);
+    },
+    eventAdded() {
+      this.$set(this.dataStates, this.scheduleEvents.length - 1, 'new');
+      this.doEditable(this.scheduleEvents.length - 1);
+    },
   },
+  watch: {
+    copyScheduleEventData: {
+      handler(newValue) {
+        this.$emit('new-copy-schedule-event-data', newValue);
+      },
+      deep: true
+    }
+  }
 };
 
 </script>

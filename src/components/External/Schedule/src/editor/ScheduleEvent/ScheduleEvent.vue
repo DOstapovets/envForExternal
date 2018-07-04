@@ -1,5 +1,6 @@
 <template>
   <div class="schedule-event">
+    <!-- {{$v.schemaValidation.scheduleEvents.$each.$iter[index].scheduleEventData.startExpression.date}} -->
     <!-- <div class="date">
       <span v-if="!copyScheduleEventData.eventName">Choose date on calendar</span>
       <span v-else class="date__start-date">{{startDateUi}}</span>
@@ -8,25 +9,39 @@
       <span v-if="!copyScheduleEventData.eventName">Choose date on calendar</span>
       <span v-else class="date__start-date">{{startDateUi}}</span>
     </div> -->
-    <or-textbox
-      placeholder="Specify event name…"
-      class="textbox-without-border"
-      v-model="copyScheduleEventData.eventName"
-    ></or-textbox>
+    <div class="schedule-event__title">
+      <div 
+        :style="{background: copyScheduleEventData.color}"
+        class="schedule-event__circle"
+      ></div>
+      <or-textbox
+        placeholder="Specify event name…"
+        class="textbox-without-border"
+        v-model="copyScheduleEventData.eventName"
+      ></or-textbox>
+    </div>
     <div class="wr-tizezone-start-date">
       <div class="wr-top-start-date">
         <div class="schedule-event__label">Date</div>
         <div class="recurring-controls__date">
           <or-icon class="recurring-controls__custom-icon-date" icon="view_comfy"></or-icon>
           <ui-datepicker :disabled="readonly" class="recurring-controls__calendar-picker-custom" iconPosition="right" placeholder="Select date"
-              :custom-formatter="formatDate" v-model="startDate">
+              :custom-formatter="formatDate" v-model="startDate"
+              :invalid="/*$v.schemaValidation.scheduleEvents.$each.$iter[index].scheduleEventData.startExpression.date.$invalid ||*/ $v.validationCopyScheduleEventData.startExpression.date.$invalid">
           </ui-datepicker>
         </div>
       </div>
       <label class="timezone timezone_top">
           <span class="schedule-event__label">Timezone</span>
-          <or-select :disabled="readonly" placeholder="Select a time zone" class="config-line__select" :has-search="true" :options="getRegions"
-              v-model="timeZoneComp">
+          <or-select 
+            :disabled="readonly" 
+            placeholder="Select a time zone" 
+            class="config-line__select" 
+            :has-search="true" 
+            :options="getRegions"
+            v-model="timeZoneComp"
+            :invalid="$v.validationCopyScheduleEventData.timeZone.value.$invalid"
+          >
           </or-select>
       </label>
     </div>
@@ -35,7 +50,8 @@
       <time-period-list
         :times.sync="copyScheduleEventData.times"
         :readonly="readonly"
-      ></time-period-list>
+      >
+      </time-period-list>
     </div>
     <div class="recurring-controls">
         <or-checkbox v-model="copyScheduleEventData.isReccuring" :disabled="readonly">Recurring</or-checkbox>
@@ -46,8 +62,14 @@
                     <div class="">
                       <div class="recurring-controls__date">
                         <or-icon class="recurring-controls__custom-icon-date" icon="view_comfy"></or-icon>
-                        <ui-datepicker :disabled="readonly" class="recurring-controls__calendar-picker-custom" iconPosition="right" placeholder="Select date"
-                            :custom-formatter="formatDate" v-model="endDate">
+                        <ui-datepicker 
+                          :disabled="readonly"
+                          class="recurring-controls__calendar-picker-custom"
+                          iconPosition="right" placeholder="Select date"
+                          :custom-formatter="formatDate" 
+                          v-model="endDate"
+                          :invalid="$v.validationCopyScheduleEventData.endExpression.date.$invalid"
+                        >
                         </ui-datepicker>
                       </div>
                     </div>
@@ -178,7 +200,8 @@ export default {
     readonly: {
       type: Boolean,
       default: false,
-      isEditable: false
+      isEditable: false,
+      // isValid: false
     },
     // dataStateGlobal: {
     //   type: Object,
@@ -315,7 +338,7 @@ export default {
       },
       set(newValue){
         // console.log('here', newValue);
-        this.$emit('update:dataState', newValue)
+        this.$emit('update:dataState', newValue);
       }
     },
     savedAccordionNumItemComp() {
@@ -518,7 +541,7 @@ export default {
           this.dataStateComp = 'changed';
           // console.log(JSON.stringify(newValue));
           // console.log(JSON.stringify(this.scheduleEventData));
-        } else {
+        } else if (this.dataStateComp !== 'new') {
           this.dataStateComp = 'canceled';
         }
       },
@@ -576,11 +599,27 @@ export default {
 <style lang="scss">
 .schedule-event {
   min-width: 410px;
+  padding-left: 16px;
   &__wr-buttons {
     padding-top: 25px;
     display: flex;
     justify-content: flex-end;
     margin-bottom: 30px;
+  }
+
+  &__circle {
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-bottom: 25px;
+    margin-right: 16px;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
   }
 
   &__label {

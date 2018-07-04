@@ -29,7 +29,8 @@
     "vue-click-outside": "^1.0.7",
     "vue-localstorage": "^0.6.2",
     "vue-router": "^3.0.1",
-    "vue2-simple-calendar": "^1.0.6"
+    "vue2-simple-calendar": "^1.0.6",
+    "vuelidate": "^0.7.4"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.15",

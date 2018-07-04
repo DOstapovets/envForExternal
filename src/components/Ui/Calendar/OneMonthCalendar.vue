@@ -652,7 +652,8 @@ export default {
   position: relative;
   z-index: 1;
   white-space: nowrap;
-
+  min-height: 20px;
+  
   &_more {
     color: #0F232E;
     text-align: center;
