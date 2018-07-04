@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as vuelidators from 'vuelidate/lib/validators';
-import jsParser from './helpers/js_parser';
+import jsParser from './helpers/js_parser.js';
 import {Util} from 'or-ui';
 
 /* eslint-disable */
