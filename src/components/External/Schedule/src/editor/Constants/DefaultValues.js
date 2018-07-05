@@ -14,7 +14,7 @@ export default  {
         selectedDays: [],
         mode: 'each',
         daysPeriod: { day: 'SUN', period: '' },
-        period: '1',
+        // period: '1',
         cronExpressions: [],
     },
     yearly: {
@@ -23,6 +23,7 @@ export default  {
         cronExpressions: [],
         selectedDays: [],
         daysPeriod: { day: 'SUN', period: '' },
-        onThe: false,
+        startYear: new Date().getFullYear()
+        // onThe: false,
     },
 }

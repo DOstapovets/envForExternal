@@ -117,7 +117,7 @@ ul {
 
 .accordion__slot {
   display: inline-block;
-  max-width: 290px;
+  max-width: 276px;
 }
 
 .accordion__title {

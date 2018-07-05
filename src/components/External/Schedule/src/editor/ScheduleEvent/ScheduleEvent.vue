@@ -50,6 +50,7 @@
       <time-period-list
         :times.sync="copyScheduleEventData.times"
         :readonly="readonly"
+        :$v="$v"
       >
       </time-period-list>
     </div>
@@ -104,6 +105,7 @@
                 :is-editable.sync="isEditable"
                 :preview-texts.sync="previewTexts"
                 @text-when-scheduled="/*textWhenScheduled*/"
+                :$v="$v"
               ></cron-generators-daily>
             </div>
         </template>
@@ -119,6 +121,7 @@
                 :data-state="dataStateComp"
                 :is-editable.sync="isEditable"
                 :preview-texts.sync="previewTexts"
+                :$v="$v"
               ></cron-generators-weekly>
             </div>
         </template>
@@ -137,6 +140,7 @@
                 :data-state="dataStateComp"
                 :is-editable.sync="isEditable"
                 :preview-texts.sync="previewTexts"
+                :$v="$v"
               ></cron-generators-monthly>
             </div>
         </template> 
@@ -147,13 +151,14 @@
                 :readonly="readonly"
                 v-model="copyScheduleEventData.yearly.cronExpressions"
                 :period.sync="copyScheduleEventData.yearly.period"
+                :start-year.sync="copyScheduleEventData.yearly.startYear"
                 :selected-months.sync="copyScheduleEventData.yearly.selectedMonths"
                 :days-period.sync="copyScheduleEventData.yearly.daysPeriod"
-                :on-the.sync="copyScheduleEventData.yearly.onThe"
                 :index="3"
                 :data-state="dataStateComp"
                 :is-editable.sync="isEditable"
                 :preview-texts.sync="previewTexts"
+                :$v="$v"
               ></cron-generators-yearly>
             </div>
         </template>
@@ -501,7 +506,7 @@ export default {
         // this.$emit('update:times', newVal);
         this.runAtTimeLocal = [];
         _.forEach(newVal, item => {
-          if (item.start.HH && item.start.mm) {
+          if (item.start.HH && item.start.mm && parseInt(item.every.val, 10)) {
             const units = item.every.units === 'hh' ? 'hours' : 'minutes';
 
             let nextRunAtTime = moment(`${item.start.HH}:${item.start.mm}`, [

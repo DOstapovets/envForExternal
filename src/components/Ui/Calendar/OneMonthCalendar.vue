@@ -66,6 +66,7 @@
                     <div 
                       class="calendar__event-more-items"
                       :class="{'calendar__event-more-items_year': yearsCalendar}"
+                      v-if="Object.keys(previousMonthDaysValue).length > 3"
                     >
                       <span
                         class="calendar__event"
@@ -147,6 +148,7 @@
                     <div 
                       class="calendar__event-more-items"
                       :class="{'calendar__event-more-items_year': yearsCalendar}"
+                      v-if="Object.keys(dayValue).length > 3"
                     >
                       <span
                         class="calendar__event"
@@ -227,6 +229,7 @@
                 <div
                   class="calendar__event-more-items"
                   :class="{'calendar__event-more-items_year': yearsCalendar}"
+                  v-if="Object.keys(nextMonthDayValue).length > 3"
                 >
                   <span
                     class="calendar__event"

@@ -6,7 +6,7 @@
      <br/> -->
      <!-- {{schemaValidation}} -->
      <!-- {{validationCopyScheduleEventData}} -->
-      <schedule-events 
+      <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
         :stepId="stepId"
@@ -23,7 +23,7 @@
     import {validators} from '../../../../../validators.js';
     /* eslint-enable */
     
-    const {required, jsExpressionNonEmptyString, generateValidators, minLength} = validators;
+    const {required, jsExpressionNonEmptyString, generateValidators, minValue, minLength} = validators;
 
     // export const validator = (template) => {
     //   return {
@@ -47,10 +47,30 @@
                 },
                 endExpression: {
                   required,
-                  date: generateValidators('template.validateRequired', { required })
+                  date: { required }
+                  // date: (state) => {
+                  //   console.log('state', state)
+                  //   return false;
+                  // }  
                 },
                 timeZone: {
                   value: { required }
+                },
+                times: {
+                  $each: {
+                      start: {
+                        HH: { required },
+                        mm: { required },
+                      },
+                      end: {
+                        HH: { required },
+                        mm: { required },
+                      },
+                      every: {
+                        val: { required, minValue: minValue(1) },
+                        units: { required },
+                      },
+                    },
                 }
               }
             }
@@ -64,10 +84,45 @@
             },
             endExpression: {
               required,
-              date: generateValidators('template.validateRequired', { required })
+              date: { required }
+              // date: (state, sdf) => {
+              //   console.log('state', state, sdf.isEndTime)
+              //   return false;
+              // }  
             },
             timeZone: {
               value: { required }
+            },
+            times: {
+              $each: {
+                  start: {
+                    HH: { required },
+                    mm: { required },
+                  },
+                  end: {
+                    HH: { required },
+                    mm: { required },
+                  },
+                  every: {
+                    val: { required, minValue: minValue(1) },
+                    units: { required },
+                  },
+                },
+            },
+            daily: {
+              period: { required, minValue: minValue(1) }
+            },
+            weekly: {
+              period: { required, minValue: minValue(1) },
+              weekDays: { required }
+            },
+            monthly: {
+                selectedMonths: { required },
+                selectedDays: { required },
+            },
+            yearly: {
+              period: { required, minValue: minValue(1) },
+              selectedMonths: { required },
             }
         }
       };

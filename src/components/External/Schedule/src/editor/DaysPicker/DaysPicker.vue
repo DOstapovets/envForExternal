@@ -1,24 +1,23 @@
 <template>
-<div 
-    class="recuring-configs__monthly-day_configs-calendar"
-    v-if="months.length"
->
-    <div :class="['month-calendar', {'month-calendar-invalid' : !selectedDaysComp.length}]">
-        <div 
-            v-for="day in getMonthDays"
-            :key="day"
-            class="month-calendar__day"
-        >
-        <button
-            :class="['month-calendar__day-value', {'is-active': isMonthBtnActive(day)}]" :disabled="readonly"
-            @click="toggleMonthDays(day)">
-            {{day}}
-        </button>
-        </div>
-    </div>
-</div>
+  <div 
+      class="recuring-configs__monthly-day_configs-calendar"
+      v-if="months.length"
+  >
+      <div :class="['month-calendar', {'month-calendar-invalid' : invalid}]">
+          <div 
+              v-for="day in getMonthDays"
+              :key="day"
+              class="month-calendar__day"
+          >
+          <button
+              :class="['month-calendar__day-value', {'is-active': isMonthBtnActive(day)}]" :disabled="readonly"
+              @click="toggleMonthDays(day)">
+              {{day}}
+          </button>
+          </div>
+      </div>
+  </div>
 </template>
-
 
 <script>
 import _ from 'lodash';
@@ -42,6 +41,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    invalid: {
+      type: Boolean,
+      default: false
+    },
+    $v: null
   },
   computed: {
     selectedDaysComp: {
@@ -109,11 +113,11 @@ export default {
         display: flex;
         flex-wrap: wrap;
         width: 177px;
-        background-color: #fafafa;
+        // background-color: #fafafa;
         border-left: solid 1px #e3e3e3;
         border-top: solid 1px #e3e3e3;
         &-invalid {
-          border: 1px solid rgba(244, 67, 5, 0.46);
+          border: 1px solid #f95d5d;
         }
         .month-calendar__day {
           .month-calendar__day-value {

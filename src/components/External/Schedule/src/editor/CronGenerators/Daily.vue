@@ -6,20 +6,27 @@
               <or-radio v-model="periodModeLocal" true-value="everyDay" class="" :disabled="readonly">
                   Every:
               </or-radio>
-              <or-textbox :disabled="readonly || periodModeLocal !== 'everyDay'" :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
-                  label="" v-model="periodLocal" placeholder="">
+              <or-textbox 
+                :disabled="readonly || periodModeLocal !== 'everyDay'" 
+                :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
+                label=""
+                v-model="periodLocal"
+                placeholder=""
+                mask="##########"
+                :invalid="$v.validationCopyScheduleEventData.daily.period.$invalid"
+              >
               </or-textbox>
               <div class="">day(s)</div>
           </div>
           <div class="radio-custom__wr">
               <or-radio v-model="periodModeLocal" true-value="evenDay" class="" :disabled="readonly">
-                  Every:
+                  Every
               </or-radio>
               <div class="">even day</div>
           </div>
           <div class="radio-custom__wr">
               <or-radio v-model="periodModeLocal" true-value="oddDay" class="" :disabled="readonly">
-                  Every:
+                  Every
               </or-radio>
               <div class="">odd day</div>
           </div>
@@ -76,7 +83,8 @@ export default {
     previewTexts: {
       type: Object,
       default: null,
-    }
+    },
+    $v: null,
   },
   computed: {
     periodLocal: {

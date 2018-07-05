@@ -1,19 +1,35 @@
 <template>
 <div class="weekly">
-    <!-- {{value}} -->
     <div v-if="isEditable">
       <div class="radio-custom__wr">
           <or-radio v-model="periodMode" true-value="everyWeek" :disabled="readonly">
               Every:
           </or-radio>
-          <or-textbox :disabled="readonly" :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
-              label="" v-model="periodLocal" placeholder="">
+          <or-textbox
+            :disabled="readonly"
+            :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
+              label=""
+              v-model="periodLocal"
+              placeholder=""
+              mask="##########"
+              :invalid="$v.validationCopyScheduleEventData.weekly.period.$invalid"
+            >
           </or-textbox>
           <div class="">week(s) on:</div>
       </div>
-      <div class="weekly-days">
+      <div 
+        :class="[
+          'weekly-days',
+          {'weekly-days_error': $v.validationCopyScheduleEventData.weekly.weekDays.$invalid}
+        ]"
+      >
           <button 
-              :class="['btn-group', {'is-active': isWeekBtnActive(day), 'is-disabled': readonly }]" 
+              :class="[
+              'btn-group',
+              {
+                'is-active': isWeekBtnActive(day),
+                'is-disabled': readonly,
+              }]" 
               v-for="day in getWeekDays"
               :key="day.value"
               :disabled="readonly" 
@@ -89,6 +105,7 @@ export default {
       type: Object,
       default: null,
     },
+    $v: null,
   },
   methods: {
     isWeekBtnActive(day) {
@@ -206,6 +223,11 @@ export default {
 
   .weekly-days {
     margin: 10px 0 0 30px;
+
+    &_error {
+      border: #f95d5d 1px solid;
+    }
+
     .btn-group {
       font-size: 14px;
       color: #0f232e;

@@ -9,7 +9,8 @@ export default {
     computed: {
         highlightedDates() {
             const resultArr = {};
-            [].concat(this.selectedDays.map(item => {
+            [].concat(
+                this.selectedDays.map(item => {
                 let startInterval;
                 let endInterval
                 const endDate = !item.isEndTime ? item.endExpression.date : undefined;
@@ -47,14 +48,31 @@ export default {
                     // console.log('startInterval', startInterval);
                     if (item.isReccuring && item.expressions.length > 0) {
                         atDates = item.expressions.map(expItem => later.schedule(later.parse.cron(expItem)).next(Infinity, new Date(start), new Date(end)));
+                        // console.log('atDatesatDates', atDates);
                         // console.log('atDates', atDates);
                         returnValue =  {
-                            dates: [].concat(...atDates.map(itemExprs => itemExprs ? itemExprs.map(itemExpr => {
-                                const itemExprSplit = moment(itemExpr).format('YYYY-MM-DD').split('-');
+                            dates: [].concat(...atDates.map(itemExprs => 
+                            //     {
+                            //     const itemExprSplit = moment(itemExprs[0]).format('YYYY-MM-DD').split('-');
+                            //     return {
+                            //         year: parseInt(itemExprSplit[0], 10),
+                            //         month: parseInt(itemExprSplit[1], 10),
+                            //         day: parseInt(itemExprSplit[2], 10), 
+                            //     }
+                            // })),
+
+                            itemExprs 
+                            ?
+                            itemExprs.map(itemExpr => {
+                                const date = moment(itemExpr);
+                                
                                 return {
-                                    year: parseInt(itemExprSplit[0], 10),
-                                    month: parseInt(itemExprSplit[1], 10),
-                                    day: parseInt(itemExprSplit[2], 10), 
+                                    date : {
+                                        year: parseInt(date.format('YYYY'), 10),
+                                        month: parseInt(date.format('MM'), 10),
+                                        day: parseInt(date.format('DD'), 10),
+                                    },
+                                    time: date.format('HH:mm'),
                                 }
                             })
                             : 
@@ -62,12 +80,29 @@ export default {
                                 year: null,
                                 month: null,
                                 day: null,
-                            })),
+                            }))
+                            .reduce((res, cur) => {
+                                const index = _.findIndex(res, itemFilter => itemFilter.date.year === cur.date.year && itemFilter.date.month === cur.date.month && itemFilter.date.day === cur.date.day);
+                                if (index === -1) {
+                                    res.push({
+                                        date: {
+                                            year: cur.date.year,
+                                            month: cur.date.month,
+                                            day: cur.date.day
+                                        },
+                                        time: [cur.time],
+                                    });
+                                } else {
+                                    res[index].time.push(cur.time);
+                                }
+                                return res;
+                            }, []),
                             color: item.color,
                             eventName: item.eventName,
-                            lighter: true,
+                            // lighter: true,
 
                         };
+                        console.log('returnValue', returnValue);
                     } else {
                         returnValue =  null;
                     }
@@ -75,21 +110,27 @@ export default {
                 return returnValue;
         
             }), 
-            this.selectedDays.map(itemSelectedDays => ({
-                dates: [itemSelectedDays.date],
+            this.selectedDays.filter(item => !item.isReccuring).map(itemSelectedDays => ({
+                dates: [{ date: itemSelectedDays.date }],
                 color: itemSelectedDays.color,
                 eventName: itemSelectedDays.eventName,
-                lighter: false,
+                // lighter: false,
             }))).
             forEach(item => {
                 if (!item || !item.dates ) return;
-                item.dates.forEach(datesItem => {
+                item.dates.forEach((datesItemFromArr, index) => {
+                    const datesItem = datesItemFromArr.date;
                     if (!_.isArray(resultArr[`${datesItem.year}-${datesItem.month}-${datesItem.day}`])) {
                         resultArr[`${datesItem.year}-${datesItem.month}-${datesItem.day}`] = [];
                     }
-                    resultArr[`${datesItem.year}-${datesItem.month}-${datesItem.day}`].push({ color: item.color, eventName: item.eventName, lighter: item.lighter});
+                    resultArr[`${datesItem.year}-${datesItem.month}-${datesItem.day}`].push({ 
+                        color: item.color, 
+                        eventName: item.eventName, 
+                        lighter: !(index === 0),
+                    });
                 });
             });
+            console.log('resultArr', resultArr);
             return resultArr;
         }
     },

@@ -236,12 +236,12 @@ export default {
           times: [
             {
               start: {
-                HH: '00',
-                mm: '00',
+                HH: '',
+                mm: '',
               },
               end: {
-                HH: '00',
-                mm: '00',
+                HH: '',
+                mm: '',
               },
               every: {
                 val: 10,

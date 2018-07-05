@@ -1,5 +1,5 @@
 <template>
-  <div class="month-picker">
+  <div :class="['month-picker', {'month-picker_invalid': invalid}]">
     <button
       :disabled="disabled"
       v-for="month in months"
@@ -42,6 +42,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    invalid: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     onMonthClick(newMonth) {
@@ -74,6 +78,9 @@ export default {
   border-top: solid 1px #e3e3e3;
   border-left: solid 1px #e3e3e3;
 
+  &_invalid {
+    border: #f95d5d 1px solid;
+  }
   .month-picker-item {
     height: 25px;
     width: 25%;

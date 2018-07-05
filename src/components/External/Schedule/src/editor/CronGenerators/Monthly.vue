@@ -3,7 +3,11 @@
   <!-- {{value}} -->
     <div v-if="isEditable">
       <div class="monthly__month-picker">
-          <month-picker v-model="selectedMonthsComp" :disabled="readonly"></month-picker>
+          <month-picker 
+            v-model="selectedMonthsComp" 
+            :disabled="readonly"
+            :invalid="$v.validationCopyScheduleEventData.monthly.selectedMonths.$invalid"
+          ></month-picker>
       </div>
       <div class="recuring-configs__monthly-day_configs">
           <div class="config-line monthly__each" v-if="selectedMonths.length">
@@ -20,6 +24,7 @@
                 :months="selectedMonthsComp"
                 :selected-days.sync="selectedDaysComp"
                 :readonly="readonly || modeComp === 'onThe'"
+                :invalid="$v.validationCopyScheduleEventData.monthly.selectedDays.$invalid"
               ></days-picker>
           </div>
           <div class="config-line" v-if="selectedMonths.length">
@@ -124,7 +129,8 @@ export default {
     previewTexts: {
       type: Object,
       default: null,
-    }
+    },
+    $v: null,
   },
   data() {
     return {

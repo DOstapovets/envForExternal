@@ -1,19 +1,30 @@
 <template>
   <div class="recuring-configs__monthly-day_configs yearly">
-    <!-- {{value}} -->
+    {{value}}
     <div v-if="isEditable">
       <div class="radio-custom__wr">
           Every
-          <or-textbox :disabled="readonly" :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
-              label="" v-model="periodComp" placeholder="">
+          <or-textbox
+            :disabled="readonly"
+            :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
+              label=""
+              v-model="periodComp" 
+              placeholder=""
+              mask="##########"
+              :invalid="$v.validationCopyScheduleEventData.yearly.period.$invalid"
+            >
           </or-textbox>
           <div class="">year(s) in:</div>
       </div>
       <div class="yearly__month-picker">
-          <month-picker v-model="selectedMonthsComp" :disabled="readonly"></month-picker>
+          <month-picker
+            v-model="selectedMonthsComp"
+            :disabled="readonly"
+            :invalid="$v.validationCopyScheduleEventData.yearly.selectedMonths.$invalid"
+          ></month-picker>
       </div>
       <div class="monthly-periods monthly-periods__yearly">
-        <or-checkbox class="yearly__onThe" v-model="onTheComp">on the</or-checkbox>
+        <!-- <or-checkbox class="yearly__onThe" v-model="onTheComp">on the</or-checkbox> -->
         <or-select
             :disabled="readonly" 
             :class="['config-line__select', {/*'select-box-error': !daysPeriodComp.period*/}]"
@@ -66,6 +77,7 @@ export default {
         { label: 'last', value: 'L' },
       ],
       getWeekDays: [
+        { label: 'day', value: '*' },
         { label: 'Sunday', value: 'SUN' },
         { label: 'Monday', value: 'MON' },
         { label: 'Tuesday', value: 'TUE' },
@@ -114,10 +126,14 @@ export default {
         };
       },
     },
-    onThe: {
-      type: Boolean,
-      default: false,
+    startYear: {
+      type: String,
+      default: new Date().getFullYear()
     },
+    // onThe: {
+    //   type: Boolean,
+    //   default: false,
+    // },
     index: {
       type: Number,
       default: -1,
@@ -125,7 +141,8 @@ export default {
     previewTexts: {
       type: Object,
       default: null,
-    }
+    },
+    $v: null,
   },
   computed: {
     periodComp: {
@@ -152,14 +169,14 @@ export default {
         this.$emit('update:daysPeriod', newValue);
       },
     },
-    onTheComp: {
-      get() {
-        return this.onThe;
-      },
-      set(newValue) {
-        this.$emit('update:onThe', newValue);
-      },
-    },
+    // onTheComp: {
+    //   get() {
+    //     return this.onThe;
+    //   },
+    //   set(newValue) {
+    //     this.$emit('update:onThe', newValue);
+    //   },
+    // },
     textWhenScheduled() {
       let text = `Every <span class="bold-text">${this.period}</span> year on `;
       this.selectedMonthsComp.forEach((item, index) => {
@@ -168,10 +185,10 @@ export default {
           text += ', ';
         }
       });
-      if (this.onTheComp) {
+      // if (this.onTheComp) {
         text += ` <br/>on the <span class="bold-text">${_.find(this.getDaysPeriod, item => item.value === this.daysPeriodComp.period).label}</span> 
         <span class="bold-text">${_.find(this.getWeekDays, item => item.value === this.daysPeriodComp.day).label}</span>`;
-      }
+      // }
       this.previewTexts.reccuring = text;
       return text;
     }
@@ -188,10 +205,10 @@ export default {
       this.$emit('input', this.cronExpression());
       this.$emit('change-saved-accordion-num-item', this.index);
     },
-    onThe() {
-      this.$emit('input', this.cronExpression());
-      this.$emit('change-saved-accordion-num-item', this.index);
-    },
+    // onThe() {
+    //   this.$emit('input', this.cronExpression());
+    //   this.$emit('change-saved-accordion-num-item', this.index);
+    // },
     daysPeriodComp: {
       handler() {
         this.$emit('input', this.cronExpression());
@@ -203,23 +220,23 @@ export default {
   methods: {
     cronExpression() {
       let exp = '';
-      if (!this.onThe) {
-        exp = _.map(
-          this.runAtTime,
-          item =>
-            `${item.mm} ${item.HH} ? ${this.selectedMonthsComp} ? 1/${
-              this.periodComp
-            }`,
-        );
-      } else {
+      // if (!this.onThe) {
+      //   exp = _.map(
+      //     this.runAtTime,
+      //     item =>
+      //       `${item.mm} ${item.HH} ? ${this.selectedMonthsComp} ? 1/${
+      //         this.periodComp
+      //       }`,
+      //   );
+      // } else {
         exp = _.map(
           this.runAtTime,
           item =>
             `${item.mm} ${item.HH} ? ${this.selectedMonthsComp} ${
               this.daysPeriodComp.day
-            }${this.daysPeriodComp.period} 1/${this.periodComp}`,
+            }${this.daysPeriodComp.period} ${this.startYear}/${this.periodComp}`,
         );
-      }
+      // }
       return exp;
     },
   },
@@ -230,9 +247,9 @@ export default {
 
 <style lang="scss">
 .yearly {
-  &__onThe {
-    margin-right: 5px;
-  }
+  // &__onThe {
+  //   margin-right: 5px;
+  // }
   .radio-custom__wr {
     display: flex;
     align-items: center;
@@ -272,19 +289,18 @@ export default {
     }
     &__yearly {
       padding-top: 16px;
-      justify-content: space-between;
 
       .config-line__select:last-child {
         margin-right: 0;
       }
-      .ui-checkbox {
-        margin-bottom: 0;
-      }
+      // .ui-checkbox {
+      //   margin-bottom: 0;
+      // }
 
-      .ui-checkbox .ui-checkbox__label-text {
-        color: #0f232e;
-        font-size: 14px;
-      }
+      // .ui-checkbox .ui-checkbox__label-text {
+      //   color: #0f232e;
+      //   font-size: 14px;
+      // }
     }
   }
 

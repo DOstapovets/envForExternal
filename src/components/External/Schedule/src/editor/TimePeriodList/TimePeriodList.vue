@@ -10,6 +10,8 @@
     >
         <template scope="item">
             <time-period-item
+                :$v="$v"
+                :index="item.index"
                 :readonly="readonly"
                 :start.sync="item.item.start"
                 :endTime.sync="item.item.endTime"
@@ -40,6 +42,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    $v: null,
   },
   methods: {
     listNewItemTime() {

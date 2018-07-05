@@ -4,18 +4,35 @@
             <div class="configs-time__wr">
                 <div class="configs-time">
                     <or-icon class="configs-time__icon" icon="query_builder"></or-icon>
-                    <or-timepicker v-model="localStart" :class="[{ readony: readonly }]" format="HH:mm" hideClearButton></or-timepicker>
+                    <or-timepicker
+                      v-model="localStart"
+                      :class="[{ readony: readonly, 'timepicker-error': timepickerStartError}]"
+                      format="HH:mm"
+                      hideClearButton
+                    ></or-timepicker>
                 </div>
                 <span class="configs-time__from-to" v-if="endTime">To</span>
                 <div class="configs-time" v-if="localEndTime">
                     <or-icon class="configs-time__icon" icon="query_builder"></or-icon>
-                    <or-timepicker v-model="localEnd" :class="[{ readony: readonly }]" format="HH:mm" hideClearButton></or-timepicker>
+                    <or-timepicker
+                      v-model="localEnd"
+                      :class="[{ readony: readonly, 'timepicker-error': timepickerEndError}]"
+                      format="HH:mm" 
+                      hideClearButton
+                    ></or-timepicker>
                 </div>
             </div>
             <div v-if="localEndTime" class="every">
                 <span>every</span>
-                <or-textbox label="" placeholder="00" :class="['xs-input', {'text-box-error': !localEvery.val}]" :disabled="readonly"
-                    v-model="localEvery.val">
+                <or-textbox
+                  label=""
+                  placeholder="00" 
+                  class="xs-input"
+                  :invalid="timepickerEveryValError"
+                  :disabled="readonly"
+                  v-model="localEvery.val"
+                  mask="##########"
+                >
                 </or-textbox>
                 <or-select label="" :disabled="readonly" class="dimention-selector" :options="[{value:'hh', label:'hr'}, {value:'mm', label:'min'}]"
                     v-model="localEvery.units">
@@ -70,6 +87,8 @@ export default {
       type: Boolean,
       default: false,
     },
+    $v: null,
+    index: null
   },
   data() {
     return {};
@@ -107,6 +126,15 @@ export default {
         this.$emit('update:endTime', newEndTime);
       },
     },
+    timepickerStartError () {
+      return this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].start.HH.$invalid || this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].start.mm.$invalid;
+    },
+    timepickerEndError () {
+      return this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].end.HH.$invalid || this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].end.mm.$invalid;
+    },
+    timepickerEveryValError () {
+      return this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].every.val.$invalid;
+    }
   },
 };
 </script>
@@ -282,10 +310,17 @@ export default {
       border: 1px solid rgba(244, 67, 5, 0.46) !important;
     }
   }
+  .ui-select__label {
+    margin-left: 2px;
+  }
 }
 
 .ui-textbox__input {
   min-width: 40px;
+}
+
+.timepicker-error.time-picker input.display-time {
+  border: 1px #f95d5d solid;
 }
 </style>
 
