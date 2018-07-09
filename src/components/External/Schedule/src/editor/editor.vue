@@ -61,11 +61,15 @@ const schemaValidation = {
     return valid;
   },
   startExpression: {
-    required,
-    date: generateValidators('template.validateRequired', { required }),
+    // required,
+    date: generateValidators('template.validateRequired', {
+      // required
+    }),
   },
   timeZone: {
-    value: { required },
+    value: {
+      // required
+    },
   },
   times: {
     custom(value) {
