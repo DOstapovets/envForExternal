@@ -1,12 +1,12 @@
 <template>
-  <div> 
+  <div>
     <!-- {{schema}} -->
      <!-- {{$v}}
      <br/>
      <br/>
      <br/> -->
      <!-- {{schemaValidation}} -->
-     <!-- {{validationCopyScheduleEventData}} -->
+     {{validationCopyScheduleEventData}}
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -136,103 +136,52 @@ export const validator = template => {
 };
 
 export const data = template => ({
-  scheduleEvents: [
-    {
-      scheduleEventData: {
-        startExpression: {
-          time: '00:00',
-          date: '',
-        },
-        deactivateAfterLastRun: false,
-        includeEndTime: false,
-        isReccuring: false,
-        expressions: [],
-        isEndTime: false,
-        eventName: '',
-        endExpression: {
-          time: '00:00',
-          date: '',
-        },
-        timeZone: {
-          label: '',
-          value: '',
-        },
-        daily: defaultValues.daily,
-        weekly: defaultValues.weekly,
-        monthly: defaultValues.monthly,
-        yearly: defaultValues.yearly,
-        times: [
-          {
-            start: {
-              HH: '',
-              mm: '',
-            },
-            end: {
-              HH: '',
-              mm: '',
-            },
-            every: {
-              val: 10,
-              units: 'mm',
-            },
-            endTime: false,
-          },
-        ],
-        color: '',
-        savedAccordionSlotName: null,
-
-        previewTexts: {
-          reccuring: '',
-        },
-      },
-    },
-  ],
+  scheduleEvents: [],
   validationCopyScheduleEventData: {
-    startExpression: {
-      time: '00:00',
-      date: '',
-    },
-    deactivateAfterLastRun: false,
-    includeEndTime: false,
-    isReccuring: false,
-    expressions: [],
-    isEndTime: false,
-    eventName: '',
-    endExpression: {
-      time: '00:00',
-      date: '',
-    },
-    timeZone: {
-      label: '',
-      value: '',
-    },
-    daily: defaultValues.daily,
-    weekly: defaultValues.weekly,
-    monthly: defaultValues.monthly,
-    yearly: defaultValues.yearly,
-    times: [
-      {
-        start: {
-          HH: '',
-          mm: '',
-        },
-        end: {
-          HH: '',
-          mm: '',
-        },
-        every: {
-          val: 10,
-          units: 'mm',
-        },
-        endTime: false,
-      },
-    ],
-    color: '',
-    savedAccordionSlotName: null,
-
-    previewTexts: {
-      reccuring: '',
-    },
+    // startExpression: {
+    //   time: '00:00',
+    //   date: '',
+    // },
+    // deactivateAfterLastRun: false,
+    // includeEndTime: false,
+    // isReccuring: false,
+    // expressions: [],
+    // isEndTime: false,
+    // eventName: '',
+    // endExpression: {
+    //   time: '00:00',
+    //   date: '',
+    // },
+    // timeZone: {
+    //   label: '',
+    //   value: '',
+    // },
+    // daily: defaultValues.daily,
+    // weekly: defaultValues.weekly,
+    // monthly: defaultValues.monthly,
+    // yearly: defaultValues.yearly,
+    // times: [
+    //   {
+    //     start: {
+    //       HH: '',
+    //       mm: '',
+    //     },
+    //     end: {
+    //       HH: '',
+    //       mm: '',
+    //     },
+    //     every: {
+    //       val: 10,
+    //       units: 'mm',
+    //     },
+    //     endTime: false,
+    //   },
+    // ],
+    // color: '',
+    // savedAccordionSlotName: null,
+    // previewTexts: {
+    //   reccuring: '',
+    // },
   },
 });
 
