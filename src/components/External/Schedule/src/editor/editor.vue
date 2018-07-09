@@ -28,61 +28,61 @@ import defaultValues from './Constants/DefaultValues.js';
 
 const { required, generateValidators } = validators;
 const schemaValidation = {
-  custom(value) {
-    console.log('valuevalue', value);
-    let valid = true;
-    if (value.isReccuring) {
-      if (!value.isEndTime && !value.endExpression.date) {
-        valid = false;
-      }
+  // required,
+  // custom(value) {
+  //   console.log('valuevalue', value);
+  //   let valid = true;
+  //   if (value.isReccuring) {
+  //     if (!value.isEndTime && !value.endExpression.date) {
+  //       valid = false;
+  //     }
 
-      if (!value.savedAccordionSlotName) {
-        valid = false;
-      }
+  //     if (!value.savedAccordionSlotName) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.daily(value)) {
-        valid = false;
-      }
+  //     if (!valdationsReccurin.daily(value)) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.weekly(value)) {
-        valid = false;
-      }
+  //     if (!valdationsReccurin.weekly(value)) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.monthly(value)) {
-        valid = false;
-      }
+  //     if (!valdationsReccurin.monthly(value)) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.yearly(value)) {
-        valid = false;
-      }
-    }
+  //     if (!valdationsReccurin.yearly(value)) {
+  //       valid = false;
+  //     }
+  //   }
 
-    return valid;
-  },
+  //   return valid;
+  // },
   startExpression: {
-    required,
-    date: generateValidators('template.validateRequired', { required }),
+    // required,
+    // date: generateValidators('template.validateRequired', { required }),
   },
   timeZone: {
-    value: { required },
+    // value: { required },
   },
   times: {
-    custom(value) {
-      let valid = true;
-      value.forEach(item => {
-        if (!item.start.HH || !item.start.mm) {
-          valid = false;
-        }
-        if (item.endTime && (!item.end.HH || !item.end.mm)) {
-          valid = false;
-        }
-
-        if (item.endTime && (!item.every.val || item.every.val < 1)) {
-          valid = false;
-        }
-      });
-      return valid;
-    },
+    // custom(value) {
+    //   let valid = true;
+    //   value.forEach(item => {
+    //     if (!item.start.HH || !item.start.mm) {
+    //       valid = false;
+    //     }
+    //     if (item.endTime && (!item.end.HH || !item.end.mm)) {
+    //       valid = false;
+    //     }
+    //     if (item.endTime && (!item.every.val || item.every.val < 1)) {
+    //       valid = false;
+    //     }
+    //   });
+    //   return valid;
+    // },
   },
   daily: {
     period: {
@@ -123,6 +123,7 @@ const schemaValidation = {
 export const validator = template => {
   return {
     scheduleEvents: {
+      required,
       $each: {
         scheduleEventData: schemaValidation,
       },
