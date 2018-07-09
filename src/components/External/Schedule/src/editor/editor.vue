@@ -19,8 +19,8 @@
 import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-import { validators } from '../../../../../validators.js';
-// import { validators } from '_validators';
+// import { validators } from '../../../../../validators.js';
+import { validators } from '_validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 
 import defaultValues from './Constants/DefaultValues.js';
@@ -137,7 +137,7 @@ export const validator = template => {
 };
 
 export const data = template => ({
-  scheduleEvents: [],
+  // scheduleEvents: [{ scheduleEventData: {} }],
   // validationCopyScheduleEventData: {
   // startExpression: {
   //   time: '00:00',
@@ -224,7 +224,7 @@ export default {
   data() {
     return {
       // scheduleEvents: this.schema.scheduleEvents,
-      scheduleEvents: this.schema.scheduleEvents,
+      scheduleEvents: [{ scheduleEventData: {} }],
       validationCopyScheduleEventData: null,
     };
   },
