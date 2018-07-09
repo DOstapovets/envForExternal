@@ -224,7 +224,34 @@ export default {
   data() {
     return {
       // scheduleEvents: this.schema.scheduleEvents,
-      scheduleEvents: [{ scheduleEventData: {} }],
+      scheduleEvents: [
+        {
+          scheduleEventData: {
+            startExpression: {
+              date: {},
+            },
+            timeZone: {
+              value: {},
+            },
+            times: {},
+            daily: {
+              period: {},
+            },
+            weekly: {
+              period: {},
+              weekDays: {},
+            },
+            monthly: {
+              selectedMonths: {},
+              selectedDays: {},
+            },
+            yearly: {
+              period: {},
+              selectedMonths: {},
+            },
+          },
+        },
+      ],
       validationCopyScheduleEventData: {
         startExpression: {
           date: {},
