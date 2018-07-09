@@ -1,5 +1,6 @@
 <template>
-  <div>   
+  <div> 
+    {{schema}}
      <!-- {{$v}}
      <br/>
      <br/>
@@ -20,8 +21,8 @@
 import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-// import { validators } from '../../../../../validators.js';
-import { validators } from '_validators';
+import { validators } from '../../../../../validators.js';
+// import { validators } from '_validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 /* eslint-enable */
 
@@ -135,10 +136,10 @@ export const validator = template => {
   };
 };
 
-export const data = () => ({
+export const data = template => ({
   scheduleEvents: [],
   validationCopyScheduleEventData: null,
-  schemaValidation: this.schema,
+  schemaValidation: template,
 });
 
 export default {
@@ -171,12 +172,12 @@ export default {
   validations() {
     return validator(this.template);
   },
-  // data() {
-  //   return {
-  //     schemaValidation: this.schema,
-  //     validationCopyScheduleEventData: null,
-  //   };
-  // },
+  data() {
+    return {
+      schemaValidation: this.schema,
+      validationCopyScheduleEventData: null,
+    };
+  },
 };
 
 export const meta = {
