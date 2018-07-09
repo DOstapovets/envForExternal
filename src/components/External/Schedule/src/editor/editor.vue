@@ -135,52 +135,52 @@ export const validator = template => {
 
 export const data = template => ({
   scheduleEvents: [],
-  validationCopyScheduleEventData: {
-    // startExpression: {
-    //   time: '00:00',
-    //   date: '',
-    // },
-    // deactivateAfterLastRun: false,
-    // includeEndTime: false,
-    // isReccuring: false,
-    // expressions: [],
-    // isEndTime: false,
-    // eventName: '',
-    // endExpression: {
-    //   time: '00:00',
-    //   date: '',
-    // },
-    // timeZone: {
-    //   label: '',
-    //   value: '',
-    // },
-    // daily: defaultValues.daily,
-    // weekly: defaultValues.weekly,
-    // monthly: defaultValues.monthly,
-    // yearly: defaultValues.yearly,
-    // times: [
-    //   {
-    //     start: {
-    //       HH: '',
-    //       mm: '',
-    //     },
-    //     end: {
-    //       HH: '',
-    //       mm: '',
-    //     },
-    //     every: {
-    //       val: 10,
-    //       units: 'mm',
-    //     },
-    //     endTime: false,
-    //   },
-    // ],
-    // color: '',
-    // savedAccordionSlotName: null,
-    // previewTexts: {
-    //   reccuring: '',
-    // },
-  },
+  // validationCopyScheduleEventData: {
+  //   // startExpression: {
+  //   //   time: '00:00',
+  //   //   date: '',
+  //   // },
+  //   // deactivateAfterLastRun: false,
+  //   // includeEndTime: false,
+  //   // isReccuring: false,
+  //   // expressions: [],
+  //   // isEndTime: false,
+  //   // eventName: '',
+  //   // endExpression: {
+  //   //   time: '00:00',
+  //   //   date: '',
+  //   // },
+  //   // timeZone: {
+  //   //   label: '',
+  //   //   value: '',
+  //   // },
+  //   // daily: defaultValues.daily,
+  //   // weekly: defaultValues.weekly,
+  //   // monthly: defaultValues.monthly,
+  //   // yearly: defaultValues.yearly,
+  //   // times: [
+  //   //   {
+  //   //     start: {
+  //   //       HH: '',
+  //   //       mm: '',
+  //   //     },
+  //   //     end: {
+  //   //       HH: '',
+  //   //       mm: '',
+  //   //     },
+  //   //     every: {
+  //   //       val: 10,
+  //   //       units: 'mm',
+  //   //     },
+  //   //     endTime: false,
+  //   //   },
+  //   // ],
+  //   // color: '',
+  //   // savedAccordionSlotName: null,
+  //   // previewTexts: {
+  //   //   reccuring: '',
+  //   // },
+  // },
 });
 
 export default {
@@ -204,10 +204,10 @@ export default {
     newCopyScheduleEventData(newValue) {
       console.log(
         'validationCopyScheduleEventData',
-        this.schema.validationCopyScheduleEventData,
+        this.validationCopyScheduleEventData,
       );
-      if (this.schema && this.schema.validationCopyScheduleEventData) {
-        this.schema.validationCopyScheduleEventData = newValue;
+      if (this.schema && this.validationCopyScheduleEventData) {
+        this.validationCopyScheduleEventData = newValue;
       }
     },
   },
@@ -218,13 +218,57 @@ export default {
   validations() {
     return validator(this.template);
   },
-  // data() {
-  //   return {
-  //     scheduleEvents: this.schema.scheduleEvents,
-  //     validationCopyScheduleEventData: this.schema
-  //       .validationCopyScheduleEventData,
-  //   };
-  // },
+  data() {
+    return {
+      // scheduleEvents: this.schema.scheduleEvents,
+      validationCopyScheduleEventData: {
+        startExpression: {
+          time: '00:00',
+          date: '',
+        },
+        deactivateAfterLastRun: false,
+        includeEndTime: false,
+        isReccuring: false,
+        expressions: [],
+        isEndTime: false,
+        eventName: '',
+        endExpression: {
+          time: '00:00',
+          date: '',
+        },
+        timeZone: {
+          label: '',
+          value: '',
+        },
+        daily: defaultValues.daily,
+        weekly: defaultValues.weekly,
+        monthly: defaultValues.monthly,
+        yearly: defaultValues.yearly,
+        times: [
+          {
+            start: {
+              HH: '',
+              mm: '',
+            },
+            end: {
+              HH: '',
+              mm: '',
+            },
+            every: {
+              val: 10,
+              units: 'mm',
+            },
+            endTime: false,
+          },
+        ],
+        color: '',
+        savedAccordionSlotName: null,
+        previewTexts: {
+          reccuring: '',
+        },
+      },
+    };
+  },
 };
 
 export const meta = {
