@@ -25,7 +25,7 @@ import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
 import { validators } from '_validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 
-import defaultValues from '../Constants/DefaultValues.js';
+import defaultValues from './Constants/DefaultValues.js';
 /* eslint-enable */
 
 const { required, generateValidators } = validators;
