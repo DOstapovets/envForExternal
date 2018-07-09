@@ -29,37 +29,37 @@ import defaultValues from './Constants/DefaultValues.js';
 const { required, generateValidators } = validators;
 const schemaValidation = {
   // required,
-  // custom(value) {
-  //   console.log('valuevalue', value);
-  //   let valid = true;
-  //   if (value.isReccuring) {
-  //     if (!value.isEndTime && !value.endExpression.date) {
-  //       valid = false;
-  //     }
+  custom(value) {
+    console.log('valuevalue', value);
+    let valid = true;
+    if (value.isReccuring) {
+      if (!value.isEndTime && !value.endExpression.date) {
+        valid = false;
+      }
 
-  //     if (!value.savedAccordionSlotName) {
-  //       valid = false;
-  //     }
+      if (!value.savedAccordionSlotName) {
+        valid = false;
+      }
 
-  //     if (!valdationsReccurin.daily(value)) {
-  //       valid = false;
-  //     }
+      if (!valdationsReccurin.daily(value)) {
+        valid = false;
+      }
 
-  //     if (!valdationsReccurin.weekly(value)) {
-  //       valid = false;
-  //     }
+      if (!valdationsReccurin.weekly(value)) {
+        valid = false;
+      }
 
-  //     if (!valdationsReccurin.monthly(value)) {
-  //       valid = false;
-  //     }
+      if (!valdationsReccurin.monthly(value)) {
+        valid = false;
+      }
 
-  //     if (!valdationsReccurin.yearly(value)) {
-  //       valid = false;
-  //     }
-  //   }
+      if (!valdationsReccurin.yearly(value)) {
+        valid = false;
+      }
+    }
 
-  //   return valid;
-  // },
+    return valid;
+  },
   startExpression: {
     // required,
     date: generateValidators('template.validateRequired', {
@@ -138,7 +138,7 @@ export const validator = template => {
 };
 
 export const data = template => ({
-  scheduleEvents: [],
+  // scheduleEvents: [],
   // validationCopyScheduleEventData: {
   //   // startExpression: {
   //   //   time: '00:00',
@@ -225,6 +225,7 @@ export default {
   data() {
     return {
       // scheduleEvents: this.schema.scheduleEvents,
+      scheduleEvents: [],
       validationCopyScheduleEventData: {
         startExpression: {
           time: '00:00',
