@@ -1113,7 +1113,7 @@ export default {
       // return only canonical zones
       const timeZones = libs.moment.tz._zones;
 
-      return _.chain(timeZones || {})
+      return _.chain(timeZones)
         .keys()
         .map(key => {
           // due to mutation in moment we need check if it's object

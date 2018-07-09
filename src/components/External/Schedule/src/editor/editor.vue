@@ -28,7 +28,6 @@ import defaultValues from './Constants/DefaultValues.js';
 
 const { required, generateValidators } = validators;
 const schemaValidation = {
-  required,
   custom(value) {
     console.log('valuevalue', value);
     let valid = true;
@@ -124,7 +123,6 @@ const schemaValidation = {
 export const validator = template => {
   return {
     scheduleEvents: {
-      required,
       $each: {
         scheduleEventData: schemaValidation,
       },
@@ -204,10 +202,10 @@ export default {
     newCopyScheduleEventData(newValue) {
       console.log(
         'validationCopyScheduleEventData',
-        this.validationCopyScheduleEventData,
+        this.schema.validationCopyScheduleEventData,
       );
-      if (this.schema && this.validationCopyScheduleEventData) {
-        this.validationCopyScheduleEventData = newValue;
+      if (this.schema && this.schema.validationCopyScheduleEventData) {
+        this.schema.validationCopyScheduleEventData = newValue;
       }
     },
   },
