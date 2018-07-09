@@ -19,8 +19,8 @@
 import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-// import { validators } from '../../../../../validators.js';
-import { validators } from '_validators';
+import { validators } from '../../../../../validators.js';
+// import { validators } from '_validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 
 import defaultValues from './Constants/DefaultValues.js';
@@ -224,58 +224,8 @@ export default {
   data() {
     return {
       // scheduleEvents: this.schema.scheduleEvents,
-      scheduleEvents: [
-        {
-          scheduleEventData: {
-            startExpression: {
-              date: {},
-            },
-            timeZone: {
-              value: {},
-            },
-            times: {},
-            daily: {
-              period: {},
-            },
-            weekly: {
-              period: {},
-              weekDays: {},
-            },
-            monthly: {
-              selectedMonths: {},
-              selectedDays: {},
-            },
-            yearly: {
-              period: {},
-              selectedMonths: {},
-            },
-          },
-        },
-      ],
-      validationCopyScheduleEventData: {
-        startExpression: {
-          date: {},
-        },
-        timeZone: {
-          value: {},
-        },
-        times: {},
-        daily: {
-          period: {},
-        },
-        weekly: {
-          period: {},
-          weekDays: {},
-        },
-        monthly: {
-          selectedMonths: {},
-          selectedDays: {},
-        },
-        yearly: {
-          period: {},
-          selectedMonths: {},
-        },
-      },
+      scheduleEvents: [],
+      validationCopyScheduleEventData: null,
     };
   },
 };
