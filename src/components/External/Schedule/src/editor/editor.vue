@@ -20,7 +20,8 @@
 import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-import { validators } from '../../../../../validators.js';
+// import { validators } from '../../../../../validators.js';
+import * as vuelidators from 'vuelidate/lib/validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 /* eslint-enable */
 
