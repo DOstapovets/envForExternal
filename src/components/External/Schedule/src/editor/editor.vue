@@ -19,8 +19,8 @@
 import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-// import { validators } from '../../../../../validators.js';
-import { validators } from '_validators';
+import { validators } from '../../../../../validators.js';
+// import { validators } from '_validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 
 import defaultValues from './Constants/DefaultValues.js';
@@ -29,37 +29,37 @@ import defaultValues from './Constants/DefaultValues.js';
 const { required, generateValidators } = validators;
 const schemaValidation = {
   // required,
-  custom(value) {
-    console.log('valuevalue', value);
-    let valid = true;
-    if (value.isReccuring) {
-      if (!value.isEndTime && !value.endExpression.date) {
-        valid = false;
-      }
+  // custom(value) {
+  //   console.log('valuevalue', value);
+  //   let valid = true;
+  //   if (value.isReccuring) {
+  //     if (!value.isEndTime && !value.endExpression.date) {
+  //       valid = false;
+  //     }
 
-      if (!value.savedAccordionSlotName) {
-        valid = false;
-      }
+  //     if (!value.savedAccordionSlotName) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.daily(value)) {
-        valid = false;
-      }
+  //     if (!valdationsReccurin.daily(value)) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.weekly(value)) {
-        valid = false;
-      }
+  //     if (!valdationsReccurin.weekly(value)) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.monthly(value)) {
-        valid = false;
-      }
+  //     if (!valdationsReccurin.monthly(value)) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.yearly(value)) {
-        valid = false;
-      }
-    }
+  //     if (!valdationsReccurin.yearly(value)) {
+  //       valid = false;
+  //     }
+  //   }
 
-    return valid;
-  },
+  //   return valid;
+  // },
   startExpression: {
     // required,
     date: generateValidators('template.validateRequired', {
@@ -72,22 +72,21 @@ const schemaValidation = {
     },
   },
   times: {
-    custom(value) {
-      let valid = true;
-      value.forEach(item => {
-        if (!item.start.HH || !item.start.mm) {
-          valid = false;
-        }
-        if (item.endTime && (!item.end.HH || !item.end.mm)) {
-          valid = false;
-        }
-
-        if (item.endTime && (!item.every.val || item.every.val < 1)) {
-          valid = false;
-        }
-      });
-      return valid;
-    },
+    // custom(value) {
+    //   let valid = true;
+    //   value.forEach(item => {
+    //     if (!item.start.HH || !item.start.mm) {
+    //       valid = false;
+    //     }
+    //     if (item.endTime && (!item.end.HH || !item.end.mm)) {
+    //       valid = false;
+    //     }
+    //     if (item.endTime && (!item.every.val || item.every.val < 1)) {
+    //       valid = false;
+    //     }
+    //   });
+    //   return valid;
+    // },
   },
   daily: {
     period: {
@@ -138,52 +137,52 @@ export const validator = template => {
 };
 
 export const data = template => ({
-  // scheduleEvents: [],
+  scheduleEvents: [],
   // validationCopyScheduleEventData: {
-  //   // startExpression: {
-  //   //   time: '00:00',
-  //   //   date: '',
-  //   // },
-  //   // deactivateAfterLastRun: false,
-  //   // includeEndTime: false,
-  //   // isReccuring: false,
-  //   // expressions: [],
-  //   // isEndTime: false,
-  //   // eventName: '',
-  //   // endExpression: {
-  //   //   time: '00:00',
-  //   //   date: '',
-  //   // },
-  //   // timeZone: {
-  //   //   label: '',
-  //   //   value: '',
-  //   // },
-  //   // daily: defaultValues.daily,
-  //   // weekly: defaultValues.weekly,
-  //   // monthly: defaultValues.monthly,
-  //   // yearly: defaultValues.yearly,
-  //   // times: [
-  //   //   {
-  //   //     start: {
-  //   //       HH: '',
-  //   //       mm: '',
-  //   //     },
-  //   //     end: {
-  //   //       HH: '',
-  //   //       mm: '',
-  //   //     },
-  //   //     every: {
-  //   //       val: 10,
-  //   //       units: 'mm',
-  //   //     },
-  //   //     endTime: false,
-  //   //   },
-  //   // ],
-  //   // color: '',
-  //   // savedAccordionSlotName: null,
-  //   // previewTexts: {
-  //   //   reccuring: '',
-  //   // },
+  // startExpression: {
+  //   time: '00:00',
+  //   date: '',
+  // },
+  // deactivateAfterLastRun: false,
+  // includeEndTime: false,
+  // isReccuring: false,
+  // expressions: [],
+  // isEndTime: false,
+  // eventName: '',
+  // endExpression: {
+  //   time: '00:00',
+  //   date: '',
+  // },
+  // timeZone: {
+  //   label: '',
+  //   value: '',
+  // },
+  // daily: defaultValues.daily,
+  // weekly: defaultValues.weekly,
+  // monthly: defaultValues.monthly,
+  // yearly: defaultValues.yearly,
+  // times: [
+  //   {
+  //     start: {
+  //       HH: '',
+  //       mm: '',
+  //     },
+  //     end: {
+  //       HH: '',
+  //       mm: '',
+  //     },
+  //     every: {
+  //       val: 10,
+  //       units: 'mm',
+  //     },
+  //     endTime: false,
+  //   },
+  // ],
+  // color: '',
+  // savedAccordionSlotName: null,
+  // previewTexts: {
+  //   reccuring: '',
+  // },
   // },
 });
 
@@ -225,53 +224,8 @@ export default {
   data() {
     return {
       // scheduleEvents: this.schema.scheduleEvents,
-      scheduleEvents: [],
-      validationCopyScheduleEventData: {
-        startExpression: {
-          time: '00:00',
-          date: '',
-        },
-        deactivateAfterLastRun: false,
-        includeEndTime: false,
-        isReccuring: false,
-        expressions: [],
-        isEndTime: false,
-        eventName: '',
-        endExpression: {
-          time: '00:00',
-          date: '',
-        },
-        timeZone: {
-          label: '',
-          value: '',
-        },
-        daily: defaultValues.daily,
-        weekly: defaultValues.weekly,
-        monthly: defaultValues.monthly,
-        yearly: defaultValues.yearly,
-        times: [
-          {
-            start: {
-              HH: '',
-              mm: '',
-            },
-            end: {
-              HH: '',
-              mm: '',
-            },
-            every: {
-              val: 10,
-              units: 'mm',
-            },
-            endTime: false,
-          },
-        ],
-        color: '',
-        savedAccordionSlotName: null,
-        previewTexts: {
-          reccuring: '',
-        },
-      },
+      scheduleEvents: this.schema.scheduleEvents,
+      validationCopyScheduleEventData: null,
     };
   },
 };

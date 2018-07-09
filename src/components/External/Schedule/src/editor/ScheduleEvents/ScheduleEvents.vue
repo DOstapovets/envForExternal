@@ -31,6 +31,7 @@
             :invalid="$v.scheduleEvents.$each.$iter[item.index].scheduleEventData.$invalid"
           >
           </schedule-event-preview>
+          {{$v.scheduleEvents}}sdfsdfsdfs
         </div>
       </template>
     </or-list>
@@ -95,7 +96,7 @@
                 @do-editable="doEditable"
                 @copy-event="copyEvent"
                 @delete-event="deleteEvent"
-                :invalid="$v.scheduleEvents.$each.$iter[item.index].scheduleEventData.$invalid"
+                :invalid="$v.schemaValidation.scheduleEvents.$each.$iter[item.index].scheduleEventData.$invalid"
               >
               </schedule-event-preview>
             </template>
