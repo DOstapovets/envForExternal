@@ -38,12 +38,15 @@
                 <span 
                   class="calendar__item_event calendar__item_event-recurring"
                 >
-                  <div class="calendar__events-names">
+                  <div
+                    class="calendar__events-names"
+                    v-if="previousMonthDaysValue.length"
+                  >
                     <div>
                       <span
                         class="calendar__event"
                         :key="key"
-                        v-if="key < 3"
+                        v-if="key < 3 && previousMonthDaysValue.length"
                         v-for="(value, key) in previousMonthDaysValue"
                         :style="{color : value.lighter ? '#0F232E' : ''}"
                       >
@@ -120,7 +123,10 @@
                 <span 
                   class="calendar__item_event calendar__item_event-actice calendar__item_event-recurring"  
                 > 
-                  <div class="calendar__events-names">
+                  <div 
+                    v-if="dayValue.length"
+                    class="calendar__events-names"
+                  >
                     <div>
                       <span
                         class="calendar__event"
@@ -201,7 +207,10 @@
               <span 
                 class="calendar__item_event calendar__item_event-recurring"
               >
-              <div class="calendar__events-names">
+              <div
+                class="calendar__events-names"
+                v-if="nextMonthDayValue.length"
+              >
                 <div>
                   <span
                     class="calendar__event"
@@ -492,7 +501,7 @@ export default {
     // },
     isHighlightedItem(date, nexOrPrevMonthFlag) {
       let month = date.month;
-      let year = date.year
+      let year = date.year;
       // let ItemDate = moment(`${date.year}-${date.month}-${date.day}`);
       let res = {};
     // if (`${year}-${month}-${date.day}` === '2018-2-31')
@@ -673,7 +682,14 @@ export default {
   background: #fff;
   padding-bottom: 4px;
   box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
-
+  width: calc(100% + 4px);
+  margin-left: -2px;
+  
+  .calendar__event {
+    width: calc(100% - 4px);
+    margin-left: auto;
+    margin-right: auto;
+  }
 
   &.calendar__event-more-items_year {
     opacity: 1;

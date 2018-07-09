@@ -39,7 +39,16 @@
       </div>
     </div>
     <div v-else>
-      <span v-html="textWhenScheduled"></span>
+        <div 
+          v-html="textWhenScheduled"
+          v-if="!invalid"
+        ></div>
+        <div
+          v-else
+          class="cron-gen__error"
+        >
+          Please correct errors
+        </div>
     </div>
 </div>
 </template>
@@ -106,6 +115,10 @@ export default {
       default: null,
     },
     $v: null,
+    invalid: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     isWeekBtnActive(day) {
@@ -161,16 +174,18 @@ export default {
       },
     },
     textWhenScheduled() {
-        let text = `Every <span class="bold-text">${this.periodLocal}</span> week on `;
-        this.weekDaysLocal.forEach((item, index) => {
-          text += `<span class="bold-text">${item.label}</span>`;
-          if(this.weekDaysLocal.length - 1 !== index) {
-            text += ', ';
-          }
-        });
-        this.previewTexts.reccuring = text;
-        return text;
-      }
+      let text = `Every <span class="bold-text">${
+        this.periodLocal
+      }</span> week on `;
+      this.weekDaysLocal.forEach((item, index) => {
+        text += `<span class="bold-text">${item.label}</span>`;
+        if (this.weekDaysLocal.length - 1 !== index) {
+          text += ', ';
+        }
+      });
+      this.previewTexts.reccuring = text;
+      return text;
+    },
   },
   watch: {
     runAtTime() {
@@ -256,6 +271,9 @@ export default {
         color: #ffffff;
       }
     }
+  }
+  .cron-gen__error {
+    color: #f95d5d;
   }
 }
 </style>

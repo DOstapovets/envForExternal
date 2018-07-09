@@ -32,7 +32,16 @@
           </div>
       </div>
       <div v-else>
-        <div v-html="textWhenScheduled"></div>
+        <div 
+          v-html="textWhenScheduled"
+          v-if="!invalid"
+        ></div>
+        <div
+          v-else
+          class="cron-gen__error"
+        >
+          Please correct errors
+        </div>
       </div>
   </div>
 </template>
@@ -85,6 +94,10 @@ export default {
       default: null,
     },
     $v: null,
+    invalid: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     periodLocal: {
@@ -119,21 +132,21 @@ export default {
       let text = '';
       switch (this.periodModeLocal) {
         case 'everyDay':
-          text =  `Every <span class="bold-text">${this.periodLocal}</span> day`;
+          text = `Every <span class="bold-text">${this.periodLocal}</span> day`;
           break;
         case 'oddDay':
-          text =  'Every <span class="bold-text">odd</span> days';
+          text = 'Every <span class="bold-text">odd</span> days';
           break;
         case 'evenDay':
-          text =  'Every <span class="bold-text">even</span> days';
+          text = 'Every <span class="bold-text">even</span> days';
           break;
         default:
-          text =  '';
+          text = '';
           break;
       }
       this.previewTexts.reccuring = text;
       return text;
-    }
+    },
   },
   methods: {
     cronExpression() {
@@ -141,7 +154,7 @@ export default {
         this.runAtTime,
         item => `${item.mm} ${item.HH} ${this.dailyValue}  * ? *`,
       );
-    }
+    },
   },
   watch: {
     runAtTime() {
@@ -150,7 +163,7 @@ export default {
     dailyValue() {
       this.$emit('input', this.cronExpression());
       this.$emit('change-saved-accordion-num-item', this.index);
-    }
+    },
   },
   mixins: [savedState],
 };
@@ -186,6 +199,9 @@ export default {
       align-items: center;
       padding-right: 16px;
     }
+  }
+  .cron-gen__error {
+    color: #f95d5d;
   }
 }
 </style>

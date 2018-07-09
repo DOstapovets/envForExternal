@@ -2,6 +2,8 @@
     <div class="wr-time-item">
         <div class="wr-configs-every">
             <div class="configs-time__wr">
+              <!-- {{$v.validationCopyScheduleEventData.times.$each.$iter[this.index]
+          .start}} -->
                 <div class="configs-time">
                     <or-icon class="configs-time__icon" icon="query_builder"></or-icon>
                     <or-timepicker
@@ -88,7 +90,7 @@ export default {
       default: false,
     },
     $v: null,
-    index: null
+    index: null,
   },
   data() {
     return {};
@@ -126,15 +128,15 @@ export default {
         this.$emit('update:endTime', newEndTime);
       },
     },
-    timepickerStartError () {
-      return this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].start.HH.$invalid || this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].start.mm.$invalid;
+    timepickerStartError() {
+      return !(this.localStart.HH && this.localStart.mm);
     },
-    timepickerEndError () {
-      return this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].end.HH.$invalid || this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].end.mm.$invalid;
+    timepickerEndError() {
+      return !(this.localEnd.HH && this.localEnd.mm);
     },
-    timepickerEveryValError () {
-      return this.$v.validationCopyScheduleEventData.times.$each.$iter[this.index].every.val.$invalid;
-    }
+    timepickerEveryValError() {
+      return !(this.localEvery.val && this.localEvery.val > 0);
+    },
   },
 };
 </script>

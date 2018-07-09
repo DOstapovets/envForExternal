@@ -1,6 +1,6 @@
 <template>
   <div class="recuring-configs__monthly-day_configs yearly">
-    {{value}}
+    <!-- {{value}} -->
     <div v-if="isEditable">
       <div class="radio-custom__wr">
           Every
@@ -46,7 +46,16 @@
       </div>
     </div>
     <div v-else>
-      <span v-html="textWhenScheduled"></span>
+        <div 
+          v-html="textWhenScheduled"
+          v-if="!invalid"
+        ></div>
+        <div
+          v-else
+          class="cron-gen__error"
+        >
+          Please correct errors
+        </div>
     </div>
 
   </div>
@@ -127,8 +136,8 @@ export default {
       },
     },
     startYear: {
-      type: String,
-      default: new Date().getFullYear()
+      type: Number,
+      default: new Date().getFullYear(),
     },
     // onThe: {
     //   type: Boolean,
@@ -143,6 +152,10 @@ export default {
       default: null,
     },
     $v: null,
+    invalid: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     periodComp: {
@@ -180,18 +193,30 @@ export default {
     textWhenScheduled() {
       let text = `Every <span class="bold-text">${this.period}</span> year on `;
       this.selectedMonthsComp.forEach((item, index) => {
-        text += `<span class="bold-text">${moment(item, 'MM').format('MMMM').slice(0, 3)}</span>`;
-        if(this.selectedMonthsComp.length - 1 !== index) {
+        text += `<span class="bold-text">${moment(item, 'MM')
+          .format('MMMM')
+          .slice(0, 3)}</span>`;
+        if (this.selectedMonthsComp.length - 1 !== index) {
           text += ', ';
         }
       });
       // if (this.onTheComp) {
-        text += ` <br/>on the <span class="bold-text">${_.find(this.getDaysPeriod, item => item.value === this.daysPeriodComp.period).label}</span> 
-        <span class="bold-text">${_.find(this.getWeekDays, item => item.value === this.daysPeriodComp.day).label}</span>`;
+      text += ` <br/>on the <span class="bold-text">${
+        _.find(
+          this.getDaysPeriod,
+          item => item.value === this.daysPeriodComp.period,
+        ).label
+      }</span> 
+        <span class="bold-text">${
+          _.find(
+            this.getWeekDays,
+            item => item.value === this.daysPeriodComp.day,
+          ).label
+        }</span>`;
       // }
       this.previewTexts.reccuring = text;
       return text;
-    }
+    },
   },
   watch: {
     runAtTime() {
@@ -229,13 +254,13 @@ export default {
       //       }`,
       //   );
       // } else {
-        exp = _.map(
-          this.runAtTime,
-          item =>
-            `${item.mm} ${item.HH} ? ${this.selectedMonthsComp} ${
-              this.daysPeriodComp.day
-            }${this.daysPeriodComp.period} ${this.startYear}/${this.periodComp}`,
-        );
+      exp = _.map(
+        this.runAtTime,
+        item =>
+          `${item.mm} ${item.HH} ? ${this.selectedMonthsComp} ${
+            this.daysPeriodComp.day
+          }${this.daysPeriodComp.period} ${this.startYear}/${this.periodComp}`,
+      );
       // }
       return exp;
     },
@@ -314,6 +339,13 @@ export default {
     max-width: 60px;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  &.recuring-configs__monthly-day_configs {
+    margin-top: 0;
+  }
+  .cron-gen__error {
+    color: #f95d5d;
   }
 }
 </style>

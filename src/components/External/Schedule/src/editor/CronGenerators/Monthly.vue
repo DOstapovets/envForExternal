@@ -1,6 +1,5 @@
 <template>
 <div class="monthly">
-  <!-- {{value}} -->
     <div v-if="isEditable">
       <div class="monthly__month-picker">
           <month-picker 
@@ -58,7 +57,16 @@
       </div>
     </div>
     <div v-else>
-      <span v-html="textWhenScheduled"></span>
+        <div 
+          v-html="textWhenScheduled"
+          v-if="!invalid"
+        ></div>
+        <div
+          v-else
+          class="cron-gen__error"
+        >
+          Please correct errors
+        </div>
     </div>
 </div>
 </template>
@@ -131,6 +139,10 @@ export default {
       default: null,
     },
     $v: null,
+    invalid: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -193,8 +205,10 @@ export default {
     textWhenScheduled() {
       let text = `Every `;
       this.selectedMonthsComp.forEach((item, index) => {
-        text += `<span class="bold-text">${moment(item, 'MM').format('MMMM')}</span>`;
-        if(this.selectedMonthsComp.length - 1 !== index) {
+        text += `<span class="bold-text">${moment(item, 'MM').format(
+          'MMMM',
+        )}</span>`;
+        if (this.selectedMonthsComp.length - 1 !== index) {
           text += ', ';
         }
       });
@@ -202,18 +216,28 @@ export default {
       if (this.modeComp === 'each') {
         _.sortBy(this.selectedDaysComp).forEach((item, index) => {
           text += `<span class="bold-text">${item}</span>`;
-          if(this.selectedDaysComp.length - 1 !== index) {
+          if (this.selectedDaysComp.length - 1 !== index) {
             text += ', ';
           }
         });
-        text +=  ` day${this.selectedDaysComp.length > 1 ? 's' : ''}`;
+        text += ` day${this.selectedDaysComp.length > 1 ? 's' : ''}`;
       } else if (this.modeComp === 'onThe') {
-        text += `the <span class="bold-text">${_.find(this.getDaysPeriod, item => item.value === this.daysPeriodComp.period).label}</span> 
-        <span class="bold-text">${_.find(this.getWeekDays, item => item.value === this.daysPeriodComp.day).label}</span>`;
+        text += `the <span class="bold-text">${
+          _.find(
+            this.getDaysPeriod,
+            item => item.value === this.daysPeriodComp.period,
+          ).label
+        }</span> 
+        <span class="bold-text">${
+          _.find(
+            this.getWeekDays,
+            item => item.value === this.daysPeriodComp.day,
+          ).label
+        }</span>`;
       }
       this.previewTexts.reccuring = text;
       return text;
-    }
+    },
   },
   watch: {
     modeComp(newValue) {
@@ -303,6 +327,9 @@ export default {
   }
   .ui-radio .ui-radio__label-text {
     white-space: nowrap;
+  }
+  .cron-gen__error {
+    color: #f95d5d;
   }
 }
 </style>

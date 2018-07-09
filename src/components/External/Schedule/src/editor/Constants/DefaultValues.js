@@ -1,4 +1,4 @@
-export default  {
+export default {
     daily: {
         periodMode: 'everyDay',
         period: '1',

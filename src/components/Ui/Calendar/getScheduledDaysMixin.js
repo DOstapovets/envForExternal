@@ -12,14 +12,14 @@ export default {
             [].concat(
                 this.selectedDays.map(item => {
                 let startInterval;
-                let endInterval
+                let endInterval;
                 const endDate = !item.isEndTime ? item.endExpression.date : undefined;
                 const startDate = item.startExpression.date;
                 let atDates = [];
                 let returnValue = [];
                 if (this.state === 'month') {
-                    startInterval = moment(`${this.interval.start}, ${this.interval.year}`);
-                    endInterval = moment(`${this.interval.end}, ${this.interval.year}`);
+                    startInterval = moment(`${this.interval.start}, ${_.get(this.interval, 'year')}`);
+                    endInterval = moment(`${this.interval.end}, ${_.get(this.interval, 'year')}`);
                     if (endInterval.format('MM') === '01' && endInterval.format('DD') !== '31') {
                         endInterval.add('years', 1);
                     }
@@ -31,12 +31,13 @@ export default {
                     startInterval = startInterval.format('YYYY-MM-DD');
                     endInterval = endInterval.format('YYYY-MM-DD');
                 } else if (this.state === 'year') {
-                    startInterval = `${this.interval.year}-01-01`;
-                    endInterval = moment(`${this.interval.year}-12-31`).add('days', 7).format('YYYY-MM-DD');
+                    startInterval = `${_.get(this.interval, 'year')}-01-01`;
+                    endInterval = moment(`${_.get(this.interval, 'year')}-12-31`).add('days', 7).format('YYYY-MM-DD');
                 }
                 if (startDate && startInterval !== 'Invalid date') {
                     const start = !startDate || moment(startInterval).isSameOrBefore(moment(startDate)) ? startDate : startInterval;
-                    const end = moment(!endDate || moment(endInterval).isSameOrBefore(moment(endDate)) ? endInterval : endDate).format('YYYY-MM-DD');
+                    const end = moment(!endDate || moment(endInterval).isSameOrBefore(moment(endDate)) ? endInterval : endDate).add('days', 1).format('YYYY-MM-DD');
+                    console.log('endend', end);
                     // if (parseInt(end.format('MM'), 10) === 12) {
                     //     end.add('month', 1);
                     // }
@@ -82,13 +83,13 @@ export default {
                                 day: null,
                             }))
                             .reduce((res, cur) => {
-                                const index = _.findIndex(res, itemFilter => itemFilter.date.year === cur.date.year && itemFilter.date.month === cur.date.month && itemFilter.date.day === cur.date.day);
+                                const index = _.findIndex(res, itemFilter => _.get(itemFilter, 'date.year') === cur.date.year && itemFilter.date.month === cur.date.month && itemFilter.date.day === cur.date.day);
                                 if (index === -1) {
                                     res.push({
                                         date: {
-                                            year: cur.date.year,
-                                            month: cur.date.month,
-                                            day: cur.date.day
+                                            year: _.get(cur, 'date.year'),
+                                            month: _.get(cur, 'date.month'),
+                                            day: _.get(cur, 'date.day'),
                                         },
                                         time: [cur.time],
                                     });

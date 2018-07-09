@@ -43,9 +43,9 @@ export default {
     },
     invalid: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    $v: null
+    $v: null,
   },
   computed: {
     selectedDaysComp: {

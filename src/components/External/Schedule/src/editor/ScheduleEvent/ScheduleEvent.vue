@@ -1,5 +1,6 @@
 <template>
   <div class="schedule-event">
+    <!-- {{$v.validationCopyScheduleEventData.$invalid}} -->
     <!-- {{$v.schemaValidation.scheduleEvents.$each.$iter[index].scheduleEventData.startExpression.date}} -->
     <!-- <div class="date">
       <span v-if="!copyScheduleEventData.eventName">Choose date on calendar</span>
@@ -69,7 +70,7 @@
                           iconPosition="right" placeholder="Select date"
                           :custom-formatter="formatDate" 
                           v-model="endDate"
-                          :invalid="$v.validationCopyScheduleEventData.endExpression.date.$invalid"
+                          :invalid="!endDate"
                         >
                         </ui-datepicker>
                       </div>
@@ -91,9 +92,13 @@
       @close-item="closeAccordionItem"
       @opened-item="openedAccordionItem"
       @do-editable="doEditable"
+      :slot-errors="errorsAccordion"
+      :invalid="!copyScheduleEventData.savedAccordionSlotName"
     >
-        <template  slot="item1">
-            <div placeholderItem="Set recurring daily"  titleItem="Daily">
+        <template slot="item1">
+            <div 
+              placeholderItem="Set recurring daily"
+               titleItem="Daily">
               <cron-generators-daily
                 :period.sync="copyScheduleEventData.daily.period"
                 :period-mode.sync="copyScheduleEventData.daily.periodMode"
@@ -106,6 +111,7 @@
                 :preview-texts.sync="previewTexts"
                 @text-when-scheduled="/*textWhenScheduled*/"
                 :$v="$v"
+                :invalid="errorsAccordion.item1"
               ></cron-generators-daily>
             </div>
         </template>
@@ -122,6 +128,7 @@
                 :is-editable.sync="isEditable"
                 :preview-texts.sync="previewTexts"
                 :$v="$v"
+                :invalid="errorsAccordion.item2"
               ></cron-generators-weekly>
             </div>
         </template>
@@ -141,6 +148,7 @@
                 :is-editable.sync="isEditable"
                 :preview-texts.sync="previewTexts"
                 :$v="$v"
+                :invalid="errorsAccordion.item3"
               ></cron-generators-monthly>
             </div>
         </template> 
@@ -159,11 +167,20 @@
                 :is-editable.sync="isEditable"
                 :preview-texts.sync="previewTexts"
                 :$v="$v"
+                :invalid="errorsAccordion.item4"
               ></cron-generators-yearly>
             </div>
         </template>
     </accordion>
     <div class="schedule-event__wr-buttons">
+      <or-button 
+        @click="deleteEvent" 
+        class="schedule-event__bottom-button_delete" 
+        color="red" 
+        type="secondary"
+      >
+        Delete
+      </or-button>
       <or-button 
         @click="cancel" 
         class="schedule-event__bottom-button" 
@@ -198,6 +215,7 @@ import CronGeneratorsWeekly from '../CronGenerators/Weekly.vue';
 import CronGeneratorsMonthly from '../CronGenerators/Monthly.vue';
 import CronGeneratorsYearly from '../CronGenerators/Yearly.vue';
 import defaultValues from '../Constants/DefaultValues.js';
+import valdationsReccurin from '../validation/validationReccuring.js';
 /* eslint-enable */
 
 export default {
@@ -233,18 +251,18 @@ export default {
     },
     dataState: {
       type: String,
-      default: 'saved'
+      default: 'saved',
     },
     previewTexts: {
       type: Object,
       default: null,
-    }
+    },
   },
   data() {
     return {
       runAtTimeLocal: [],
       loadingApply: false,
-      isEditable: false
+      isEditable: false,
     };
   },
   computed: {
@@ -322,7 +340,9 @@ export default {
       },
       set(newValue) {
         const date = new Date(newValue);
-        this.copyScheduleEventData.endExpression.date = moment(date).format('YYYY-MM-DD');
+        this.copyScheduleEventData.endExpression.date = moment(date).format(
+          'YYYY-MM-DD',
+        );
         // this.generateCronExpression(); // update crons when data changed
       },
     },
@@ -333,23 +353,40 @@ export default {
       },
       set(newValue) {
         const date = new Date(newValue);
-        this.copyScheduleEventData.startExpression.date = moment(date).format('YYYY-MM-DD');
+        this.copyScheduleEventData.startExpression.date = moment(date).format(
+          'YYYY-MM-DD',
+        );
         // this.generateCronExpression(); // update crons when data changed
       },
     },
     dataStateComp: {
-      get(){
+      get() {
         return this.dataState || 'saved';
       },
-      set(newValue){
+      set(newValue) {
         // console.log('here', newValue);
         this.$emit('update:dataState', newValue);
-      }
+      },
     },
     savedAccordionNumItemComp() {
-        return this.copyScheduleEventData.savedAccordionSlotName ?
-          parseInt(this.copyScheduleEventData.savedAccordionSlotName.split('').reverse().join(), 10) : -1;
-    }
+      return this.copyScheduleEventData.savedAccordionSlotName
+        ? parseInt(
+            this.copyScheduleEventData.savedAccordionSlotName
+              .split('')
+              .reverse()
+              .join(),
+            10,
+          )
+        : -1;
+    },
+    errorsAccordion() {
+      return {
+        item1: !valdationsReccurin.daily(this.copyScheduleEventData),
+        item2: !valdationsReccurin.weekly(this.copyScheduleEventData),
+        item3: !valdationsReccurin.monthly(this.copyScheduleEventData),
+        item4: !valdationsReccurin.yearly(this.copyScheduleEventData),
+      };
+    },
   },
   methods: {
     apply() {
@@ -465,22 +502,23 @@ export default {
       this.copyScheduleEventData.savedAccordionSlotName = number;
     },
     closeAccordionItem(item) {
-
       switch (item) {
         case 'item1':
-            this.copyScheduleEventData.daily = _.cloneDeep(defaultValues.daily);
+          this.copyScheduleEventData.daily = _.cloneDeep(defaultValues.daily);
           break;
         case 'item2':
-            this.copyScheduleEventData.weekly = _.cloneDeep(defaultValues.weekly);
+          this.copyScheduleEventData.weekly = _.cloneDeep(defaultValues.weekly);
           break;
         case 'item3':
-            this.copyScheduleEventData.monthly = _.cloneDeep(defaultValues.monthly);
+          this.copyScheduleEventData.monthly = _.cloneDeep(
+            defaultValues.monthly,
+          );
           break;
         case 'item4':
-            this.copyScheduleEventData.yearly = _.cloneDeep(defaultValues.yearly);
+          this.copyScheduleEventData.yearly = _.cloneDeep(defaultValues.yearly);
           break;
         default:
-            throw new Error('incorrect number of accordion item');
+          throw new Error('incorrect number of accordion item');
       }
       console.log(item);
       // this.copyScheduleEventData.savedAccordionSlotName = null;
@@ -490,9 +528,15 @@ export default {
       // this.copyScheduleEventData.savedAccordionSlotName = itemNum;
     },
     doEditable(index) {
-      if (this.copyScheduleEventData.savedAccordionSlotName === index || this.savedAccordionNumItemComp === -1) {
+      if (
+        this.copyScheduleEventData.savedAccordionSlotName === index ||
+        this.savedAccordionNumItemComp === -1
+      ) {
         this.isEditable = true;
       }
+    },
+    deleteEvent() {
+      this.$emit('delete-event', this.index);
     },
     //TODO
     // textWhenScheduled(text) {
@@ -542,7 +586,10 @@ export default {
     copyScheduleEventData: {
       handler(newValue, oldValue) {
         // console.log(newValue.id)
-        if (!_.isEqual(newValue, this.scheduleEventData) && newValue.id === oldValue.id) {
+        if (
+          !_.isEqual(newValue, this.scheduleEventData) &&
+          newValue.id === oldValue.id
+        ) {
           this.dataStateComp = 'changed';
           // console.log(JSON.stringify(newValue));
           // console.log(JSON.stringify(this.scheduleEventData));
@@ -605,6 +652,7 @@ export default {
 .schedule-event {
   min-width: 410px;
   padding-left: 16px;
+
   &__wr-buttons {
     padding-top: 25px;
     display: flex;
@@ -628,14 +676,19 @@ export default {
   }
 
   &__label {
-    color: #91969D;
+    color: #91969d;
     font-size: 12px;
     line-height: 16px;
     padding-bottom: 8px;
   }
 
-  &__bottom-button:not(:last-child) {
-    margin-right: 12px;
+  &__bottom-button {
+    &_delete.ui-button.ui-button--type-secondary.ui-button--color-red {
+      border: none;
+    }
+    &:not(:last-child) {
+      margin-right: 12px;
+    }
   }
 
   .wr-tizezone-start-date {
@@ -646,8 +699,7 @@ export default {
     padding-right: 30px;
   }
 
-  .ui-select .ui-select__content 
-  .ui-select__label .ui-select__display {
+  .ui-select .ui-select__content .ui-select__label .ui-select__display {
     min-height: 32px;
   }
 
@@ -659,7 +711,7 @@ export default {
     .ui-textbox__input {
       border: none;
       background: #fff;
-      color: #0F232E;
+      color: #0f232e;
       font-size: 17px;
       font-weight: bold;
       line-height: 23px;

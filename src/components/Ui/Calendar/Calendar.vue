@@ -9,6 +9,7 @@
     <br>
     <br>
     {{selectedDays}} -->
+    <!-- {{interval.year}} -->
     <div class="nav">
         <div>
             <span class="nav__interval">

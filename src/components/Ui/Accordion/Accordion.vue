@@ -1,14 +1,22 @@
 <template>
     <div>
-        <div >
-            <ul class="accordion" >
+        <div>
+            <ul class="accordion" :class="{'accordion_invalid': invalid}">
                 <li class="accordion__item"  :key="index" v-for="(slot, index) in slots">
                     <div class="accordion__wr-content" @click="openItem(index)">
-                        <span class="accordion__title" :class="{'active' : openedItemComp === index, 'disabled': openedItemComp && openedItemComp !== index}">
+                        <span 
+                          class="accordion__title" 
+                          :class="{
+                                    'active' : openedItemComp === index,
+                                    'disabled': openedItemComp && openedItemComp !== index,
+                                    'invalid': slotErrors[index] && openedItemComp === index
+                                  }">
                             {{slot[0].data.attrs.titleItem}}
                         </span>
                         <div v-if="openedItemComp === index" class="accordion__slot">
-                            <slot :name="index"></slot>
+                            <slot 
+                              :name="index"
+                            ></slot>
                         </div>
                         <span v-if="!openedItemComp" class="accordion__placeholder">
                             {{slot[0].data.attrs.placeholderItem}}
@@ -45,7 +53,15 @@ export default {
     savedAccordionNumItem: {
       type: String,
       default: null,
-    } 
+    },
+    slotErrors: {
+      type: Object,
+      default: () => [],
+    },
+    invalid: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     openModal(ref) {
@@ -61,7 +77,6 @@ export default {
         this.$emit('close-item', this.openedItemComp);
         this.openedItemComp = null;
       }
-
     },
     openItem(index) {
       this.$emit('do-editable', index);
@@ -73,7 +88,7 @@ export default {
       this.$emit('close-item', this.openedItemComp);
       this.openedItemComp = null;
       this.closeModal('deleteSettingsInAccordionItemConfirmation');
-    }
+    },
   },
   computed: {
     openedItemComp: {
@@ -82,22 +97,27 @@ export default {
       },
       set(newValue) {
         this.$emit('update:openedItem', newValue);
-      }
-    }
-  }
+      },
+    },
+  },
   // created() {
   //   console.log(this.slots);
   // },
 };
 </script>
-
-<style scoped>
+<style scoped lang="scss">
 * {
   padding: 0;
   margin: 0;
 }
 ul {
   list-style: none;
+}
+
+.accordion_invalid {
+  border: red 1px solid;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .accordion__item:not(:last-child) {
@@ -128,6 +148,10 @@ ul {
   padding-right: 5px;
   display: inline-block;
   vertical-align: top;
+
+  &.invalid {
+    color: #f95d5d;
+  }
 }
 
 .accordion__title.active {

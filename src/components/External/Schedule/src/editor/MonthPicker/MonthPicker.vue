@@ -44,8 +44,8 @@ export default {
     },
     invalid: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     onMonthClick(newMonth) {
