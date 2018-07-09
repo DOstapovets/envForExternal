@@ -28,7 +28,7 @@
             @do-editable="doEditable"
             @copy-event="copyEvent"
             @delete-event="deleteEvent"
-            :invalid="$v.schemaValidation.scheduleEvents.$each.$iter[item.index].scheduleEventData.$invalid"
+            :invalid="$v.scheduleEvents.$each.$iter[item.index].scheduleEventData.$invalid"
           >
           </schedule-event-preview>
         </div>
@@ -95,7 +95,7 @@
                 @do-editable="doEditable"
                 @copy-event="copyEvent"
                 @delete-event="deleteEvent"
-                :invalid="$v.schemaValidation.scheduleEvents.$each.$iter[item.index].scheduleEventData.$invalid"
+                :invalid="$v.scheduleEvents.$each.$iter[item.index].scheduleEventData.$invalid"
               >
               </schedule-event-preview>
             </template>

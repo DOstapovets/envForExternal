@@ -123,13 +123,10 @@ const schemaValidation = {
 
 export const validator = template => {
   return {
-    schemaValidation: {
+    scheduleEvents: {
       required,
-      scheduleEvents: {
-        required,
-        $each: {
-          scheduleEventData: schemaValidation,
-        },
+      $each: {
+        scheduleEventData: schemaValidation,
       },
     },
     validationCopyScheduleEventData: schemaValidation,
@@ -139,7 +136,6 @@ export const validator = template => {
 export const data = template => ({
   scheduleEvents: [],
   validationCopyScheduleEventData: null,
-  schemaValidation: template,
 });
 
 export default {
@@ -174,7 +170,7 @@ export default {
   },
   // data() {
   //   return {
-  //     schemaValidation: this.schema,
+  //     scheduleEvents: this.schema.scheduleEvents,
   //     validationCopyScheduleEventData: null,
   //   };
   // },
