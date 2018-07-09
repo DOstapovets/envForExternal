@@ -6,7 +6,6 @@
      <br/>
      <br/> -->
      <!-- {{schemaValidation}} -->
-     {{validationCopyScheduleEventData}}
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -16,7 +15,6 @@
       ></schedule-events>
   </div>
 </template>
-
 <script>
 import * as _ from 'lodash';
 /* eslint-disable */
@@ -198,6 +196,9 @@ export default {
         }
       },
     },
+    // this.validationCopyScheduleEventDataComp() {
+    //   return validationCopyScheduleEventData
+    // }
   },
   methods: {
     newCopyScheduleEventData(newValue) {

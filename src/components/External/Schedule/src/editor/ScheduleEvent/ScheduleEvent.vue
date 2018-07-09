@@ -28,7 +28,8 @@
           <or-icon class="recurring-controls__custom-icon-date" icon="view_comfy"></or-icon>
           <ui-datepicker :disabled="readonly" class="recurring-controls__calendar-picker-custom" iconPosition="right" placeholder="Select date"
               :custom-formatter="formatDate" v-model="startDate"
-              :invalid="/*$v.schemaValidation.scheduleEvents.$each.$iter[index].scheduleEventData.startExpression.date.$invalid ||*/ $v.validationCopyScheduleEventData && $v.validationCopyScheduleEventData.startExpression.date.$invalid">
+             
+          >
           </ui-datepicker>
         </div>
       </div>
