@@ -209,9 +209,9 @@ export default {
         'validationCopyScheduleEventData',
         this.schema.validationCopyScheduleEventData,
       );
-      if (this.schema && this.schema.validationCopyScheduleEventData) {
-        this.schema.validationCopyScheduleEventData = newValue;
-      }
+      // if (this.schema && this.schema.validationCopyScheduleEventData) {
+      //   this.schema.validationCopyScheduleEventData = newValue;
+      // }
     },
   },
   components: { ScheduleEvents },
@@ -225,7 +225,30 @@ export default {
     return {
       // scheduleEvents: this.schema.scheduleEvents,
       scheduleEvents: [{ scheduleEventData: {} }],
-      validationCopyScheduleEventData: null,
+      validationCopyScheduleEventData: {
+        startExpression: {
+          date: {},
+        },
+        timeZone: {
+          value: {},
+        },
+        times: {},
+        daily: {
+          period: {},
+        },
+        weekly: {
+          period: {},
+          weekDays: {},
+        },
+        monthly: {
+          selectedMonths: {},
+          selectedDays: {},
+        },
+        yearly: {
+          period: {},
+          selectedMonths: {},
+        },
+      },
     };
   },
 };
