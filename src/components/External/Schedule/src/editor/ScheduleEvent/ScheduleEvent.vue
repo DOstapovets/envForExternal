@@ -271,7 +271,7 @@ export default {
       // return only canonical zones
       const timeZones = moment.tz._zones; // eslint-disable-line no-underscore-dangle
 
-      return _.chain(timeZones)
+      return _.chain(timeZones || {})
         .keys()
         .map(key => {
           // due to mutation in moment we need check if it's object
