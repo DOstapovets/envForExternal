@@ -171,12 +171,12 @@ export default {
   validations() {
     return validator(this.template);
   },
-  data() {
-    return {
-      schemaValidation: this.schema,
-      validationCopyScheduleEventData: null,
-    };
-  },
+  // data() {
+  //   return {
+  //     schemaValidation: this.schema,
+  //     validationCopyScheduleEventData: null,
+  //   };
+  // },
 };
 
 export const meta = {
