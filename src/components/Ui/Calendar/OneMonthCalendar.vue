@@ -69,7 +69,7 @@
                     <div 
                       class="calendar__event-more-items"
                       :class="{'calendar__event-more-items_year': yearsCalendar}"
-                      v-if="Object.keys(previousMonthDaysValue).length > 3"
+                      v-if="Object.keys(previousMonthDaysValue || []).length > 3"
                     >
                       <span
                         class="calendar__event"
@@ -154,7 +154,7 @@
                     <div 
                       class="calendar__event-more-items"
                       :class="{'calendar__event-more-items_year': yearsCalendar}"
-                      v-if="Object.keys(dayValue).length > 3"
+                      v-if="Object.keys(dayValue || []).length > 3"
                     >
                       <span
                         class="calendar__event"
@@ -238,7 +238,7 @@
                 <div
                   class="calendar__event-more-items"
                   :class="{'calendar__event-more-items_year': yearsCalendar}"
-                  v-if="Object.keys(nextMonthDayValue).length > 3"
+                  v-if="Object.keys(nextMonthDayValue || []).length > 3"
                 >
                   <span
                     class="calendar__event"
@@ -412,7 +412,10 @@ export default {
       if (this.dPrevDays) {
         return this.dPrevDays.reduce((accumulator, currentValue) => {
           const resLocal = accumulator;
-          resLocal[currentValue] = this.isHighlightedItem({day: currentValue, month: this.month, year: this.year}, 'prevMonth');
+          resLocal[currentValue] = this.isHighlightedItem(
+            { day: currentValue, month: this.month, year: this.year },
+            'prevMonth',
+          );
           return resLocal;
         }, {});
       }
@@ -420,11 +423,17 @@ export default {
     },
     highlightedCurrDays() {
       if (this.currDays) {
-        return this.currDays.map(item => item.reduce((accumulator, currentValue) => {
-          const resLocal = accumulator;
-          resLocal[currentValue] = this.isHighlightedItem({day: currentValue, month: this.month, year: this.year});
-          return resLocal;
-        }, {}));
+        return this.currDays.map(item =>
+          item.reduce((accumulator, currentValue) => {
+            const resLocal = accumulator;
+            resLocal[currentValue] = this.isHighlightedItem({
+              day: currentValue,
+              month: this.month,
+              year: this.year,
+            });
+            return resLocal;
+          }, {}),
+        );
       }
       return null;
     },
@@ -432,12 +441,15 @@ export default {
       if (this.dNextDays) {
         return this.dNextDays.reduce((accumulator, currentValue) => {
           const resLocal = accumulator;
-          resLocal[currentValue] = this.isHighlightedItem({day: currentValue, month: this.month, year: this.year}, 'nextMonth');
+          resLocal[currentValue] = this.isHighlightedItem(
+            { day: currentValue, month: this.month, year: this.year },
+            'nextMonth',
+          );
           return resLocal;
         }, {});
       }
       return null;
-    }
+    },
   },
   methods: {
     getDay(date) {
@@ -504,19 +516,18 @@ export default {
       let year = date.year;
       // let ItemDate = moment(`${date.year}-${date.month}-${date.day}`);
       let res = {};
-    // if (`${year}-${month}-${date.day}` === '2018-2-31')
-        // // console.log(`${year}-${month}-${date.day}`);
+      // if (`${year}-${month}-${date.day}` === '2018-2-31')
+      // // console.log(`${year}-${month}-${date.day}`);
 
       if (nexOrPrevMonthFlag === 'nextMonth') {
         month += 1;
-        if (month  === 13) {
+        if (month === 13) {
           month = 1;
           year += 1;
         }
-
       } else if (nexOrPrevMonthFlag === 'prevMonth') {
         month -= 1;
-        if (month  === 0) {
+        if (month === 0) {
           month = 12;
           year -= 1;
         }
@@ -525,7 +536,7 @@ export default {
 
       // console.log('this.highlightedDates',this.highlightedDates);
       // if (`${year}-${month}-${date.day}` === '2018-1-31')
-        // console.log(`${year}-${month}-${date.day}`);
+      // console.log(`${year}-${month}-${date.day}`);
       _.forIn(this.highlightedDates, (value, key) => {
         if (key === `${year}-${month}-${date.day}`) {
           res = value;
@@ -601,7 +612,7 @@ export default {
 }
 
 .wr-calendar:not(.calendar_years) .calendar {
-   min-height: 820px;
+  min-height: 820px;
 }
 
 .calendar__title {
@@ -640,9 +651,9 @@ export default {
 
 .calendar__events-names {
   position: absolute;
-	color: #FFFFFF;
-	font-size: 10px;
-	line-height: 20px;
+  color: #ffffff;
+  font-size: 10px;
+  line-height: 20px;
   width: calc(100% - 10px);
   left: 50%;
   top: 35px;
@@ -665,9 +676,9 @@ export default {
   z-index: 1;
   white-space: nowrap;
   min-height: 20px;
-  
+
   &_more {
-    color: #0F232E;
+    color: #0f232e;
     text-align: center;
     margin-bottom: 0;
     &:hover + .calendar__event-more-items {
@@ -684,7 +695,7 @@ export default {
   box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
   width: calc(100% + 4px);
   margin-left: -2px;
-  
+
   .calendar__event {
     width: calc(100% - 4px);
     margin-left: auto;
@@ -701,11 +712,11 @@ export default {
 }
 
 .calendar__event-background {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%; 
+  width: 100%;
   height: 100%;
   z-index: -1;
 
@@ -713,7 +724,7 @@ export default {
     font-size: 10px;
     line-height: 12px;
     text-align: center;
-    background-color: #DFDFDF;
+    background-color: #dfdfdf;
   }
 }
 
@@ -779,8 +790,8 @@ export default {
       position: absolute;
       left: 50%;
       top: 50%;
-    margin-top: -17.5px;
-    margin-left: -17.75px;
+      margin-top: -17.5px;
+      margin-left: -17.75px;
     }
   }
   .calendar__items {
@@ -790,7 +801,7 @@ export default {
   .calendar__day-num {
     justify-content: flex-start;
   }
-  
+
   .calendar__day-num-text {
     width: 100%;
   }
@@ -801,6 +812,4 @@ export default {
     box-shadow: none;
   }
 }
-
-
 </style>
