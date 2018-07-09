@@ -21,8 +21,8 @@
 import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-// import { validators } from '../../../../../validators.js';
-import { validators } from '_validators';
+import { validators } from '../../../../../validators.js';
+// import { validators } from '_validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 
 import defaultValues from './Constants/DefaultValues.js';
@@ -138,49 +138,48 @@ export const validator = template => {
 export const data = template => ({
   scheduleEvents: [],
   validationCopyScheduleEventData: {
-    scheduleEventData: {
-      startExpression: {
-        time: '00:00',
-        date: '',
-      },
-      deactivateAfterLastRun: false,
-      includeEndTime: false,
-      isReccuring: false,
-      expressions: [],
-      isEndTime: false,
-      eventName: '',
-      endExpression: {
-        time: '00:00',
-        date: '',
-      },
-      timeZone: {
-        label: '',
-        value: '',
-      },
-      daily: defaultValues.daily,
-      weekly: defaultValues.weekly,
-      monthly: defaultValues.monthly,
-      yearly: defaultValues.yearly,
-      times: [
-        {
-          start: {
-            HH: '',
-            mm: '',
-          },
-          end: {
-            HH: '',
-            mm: '',
-          },
-          every: {
-            val: 10,
-            units: 'mm',
-          },
-          endTime: false,
-        },
-      ],
-      color: '',
-      savedAccordionSlotName: null,
+    startExpression: {
+      time: '00:00',
+      date: '',
     },
+    deactivateAfterLastRun: false,
+    includeEndTime: false,
+    isReccuring: false,
+    expressions: [],
+    isEndTime: false,
+    eventName: '',
+    endExpression: {
+      time: '00:00',
+      date: '',
+    },
+    timeZone: {
+      label: '',
+      value: '',
+    },
+    daily: defaultValues.daily,
+    weekly: defaultValues.weekly,
+    monthly: defaultValues.monthly,
+    yearly: defaultValues.yearly,
+    times: [
+      {
+        start: {
+          HH: '',
+          mm: '',
+        },
+        end: {
+          HH: '',
+          mm: '',
+        },
+        every: {
+          val: 10,
+          units: 'mm',
+        },
+        endTime: false,
+      },
+    ],
+    color: '',
+    savedAccordionSlotName: null,
+
     previewTexts: {
       reccuring: '',
     },
@@ -219,13 +218,13 @@ export default {
   validations() {
     return validator(this.template);
   },
-  // data() {
-  //   return {
-  //     scheduleEvents: this.schema.scheduleEvents,
-  //     validationCopyScheduleEventData: this.schema
-  //       .validationCopyScheduleEventData,
-  //   };
-  // },
+  data() {
+    return {
+      scheduleEvents: this.schema.scheduleEvents,
+      validationCopyScheduleEventData: this.schema
+        .validationCopyScheduleEventData,
+    };
+  },
 };
 
 export const meta = {
