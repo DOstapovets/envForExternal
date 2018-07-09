@@ -1,6 +1,6 @@
 <template>
   <div> 
-    {{schema}}
+    <!-- {{schema}} -->
      <!-- {{$v}}
      <br/>
      <br/>
@@ -21,12 +21,12 @@
 import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-// import { validators } from '../../../../../validators.js';
-import { validators } from '_validators';
+import { validators } from '../../../../../validators.js';
+// import { validators } from '_validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 /* eslint-enable */
 
-const { required, generateValidators, minValue } = validators;
+const { required, generateValidators } = validators;
 const schemaValidation = {
   required,
   custom(value) {
@@ -135,7 +135,7 @@ export const validator = template => {
 
 export const data = template => ({
   scheduleEvents: [],
-  // validationCopyScheduleEventData: null,
+  validationCopyScheduleEventData: null,
 });
 
 export default {
@@ -156,9 +156,9 @@ export default {
     newCopyScheduleEventData(newValue) {
       console.log(
         'validationCopyScheduleEventData',
-        this.validationCopyScheduleEventData,
+        this.schema.validationCopyScheduleEventData,
       );
-      this.validationCopyScheduleEventData = newValue;
+      this.schema.validationCopyScheduleEventData = newValue;
     },
   },
   components: { ScheduleEvents },
@@ -170,8 +170,9 @@ export default {
   },
   data() {
     return {
-      // scheduleEvents: this.schema.scheduleEvents,
-      validationCopyScheduleEventData: null,
+      scheduleEvents: this.schema.scheduleEvents,
+      validationCopyScheduleEventData: this.schema
+        .validationCopyScheduleEventData,
     };
   },
 };
