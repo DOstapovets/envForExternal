@@ -168,13 +168,13 @@ export default {
   validations() {
     return validator(this.template);
   },
-  data() {
-    return {
-      scheduleEvents: this.schema.scheduleEvents,
-      validationCopyScheduleEventData: this.schema
-        .validationCopyScheduleEventData,
-    };
-  },
+  // data() {
+  //   return {
+  //     scheduleEvents: this.schema.scheduleEvents,
+  //     validationCopyScheduleEventData: this.schema
+  //       .validationCopyScheduleEventData,
+  //   };
+  // },
 };
 
 export const meta = {
