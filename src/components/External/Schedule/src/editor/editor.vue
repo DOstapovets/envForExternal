@@ -135,7 +135,7 @@ export const validator = template => {
 
 export const data = template => ({
   scheduleEvents: [],
-  validationCopyScheduleEventData: null,
+  // validationCopyScheduleEventData: null,
 });
 
 export default {
@@ -168,12 +168,12 @@ export default {
   validations() {
     return validator(this.template);
   },
-  // data() {
-  //   return {
-  //     scheduleEvents: this.schema.scheduleEvents,
-  //     validationCopyScheduleEventData: null,
-  //   };
-  // },
+  data() {
+    return {
+      // scheduleEvents: this.schema.scheduleEvents,
+      validationCopyScheduleEventData: null,
+    };
+  },
 };
 
 export const meta = {
