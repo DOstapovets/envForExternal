@@ -7,7 +7,7 @@
      <br/> -->
      <!-- {{schemaValidation}} -->
       <schedule-events
-        :schedule-events.sync="scheduleEventsComp"
+        :schedule-events.sync="scheduleEvents"
         :step="step"
         :stepId="stepId"
         :$v="$v"
@@ -189,16 +189,16 @@ export const data = template => ({
 export default {
   props: ['template', 'schema', 'step', 'stepId', 'steps', 'readonly'],
   computed: {
-    scheduleEventsComp: {
-      get() {
-        return _.get(this, 'schema.scheduleEvents', null) || [];
-      },
-      set(newValue) {
-        if (_.get(this, 'schema.scheduleEvents', null)) {
-          this.schema.scheduleEvents = newValue;
-        }
-      },
-    },
+    // scheduleEventsComp: {
+    //   get() {
+    //     return _.get(this, 'schema.scheduleEvents', null) || [];
+    //   },
+    //   set(newValue) {
+    //     if (_.get(this, 'schema.scheduleEvents', null)) {
+    //       this.schema.scheduleEvents = newValue;
+    //     }
+    //   },
+    // },
     // this.validationCopyScheduleEventDataComp() {
     //   return validationCopyScheduleEventData
     // }
