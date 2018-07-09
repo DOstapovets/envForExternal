@@ -21,8 +21,8 @@
 import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-import { validators } from '../../../../../validators.js';
-// import { validators } from '_validators';
+// import { validators } from '../../../../../validators.js';
+import { validators } from '_validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 
 import defaultValues from './Constants/DefaultValues.js';
@@ -218,13 +218,13 @@ export default {
   validations() {
     return validator(this.template);
   },
-  data() {
-    return {
-      scheduleEvents: this.schema.scheduleEvents,
-      validationCopyScheduleEventData: this.schema
-        .validationCopyScheduleEventData,
-    };
-  },
+  // data() {
+  //   return {
+  //     scheduleEvents: this.schema.scheduleEvents,
+  //     validationCopyScheduleEventData: this.schema
+  //       .validationCopyScheduleEventData,
+  //   };
+  // },
 };
 
 export const meta = {
