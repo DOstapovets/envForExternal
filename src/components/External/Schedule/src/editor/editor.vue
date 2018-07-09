@@ -123,7 +123,7 @@ const schemaValidation = {
 export const validator = template => {
   return {
     scheduleEvents: {
-      required,
+      // required,
       $each: {
         scheduleEventData: schemaValidation,
       },
