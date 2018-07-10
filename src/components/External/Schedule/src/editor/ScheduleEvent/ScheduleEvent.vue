@@ -582,7 +582,7 @@ export default {
               });
 
               nextRunAtTime = nextRunAtTime.add(
-                parseInt(item.every.val, 10),
+                parseInt(10, item.every.val),
                 units,
               );
             } while (
