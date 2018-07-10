@@ -1,13 +1,13 @@
 <template>
   <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': false}]" @click="doEditable">
-    <template v-if="!false">
-      <!-- <span 
+    <!-- <template v-if="!false">
+      <span 
           class="schedule-event-preview__circle"
           :style="{background: color}"
-        ></span> -->
+        ></span>
         <div class="schedule-event-preview__content">
           <div class="schedule-event-preview__title-text">{{eventName}}</div>
-          <!-- <div class="schedule-event-preview__dates">
+          <div class="schedule-event-preview__dates">
             <span
               :key="index"
               v-for="(date, index) in startsAt"
@@ -23,8 +23,8 @@
             >
               see more
             </span>
-          </div> -->
-          <!-- <div class="schedule-event-preview__times">
+          </div>
+          <div class="schedule-event-preview__times">
             <span 
               :key="time.id" 
               v-for="(time, index) in startTimes"
@@ -38,18 +38,18 @@
               >
                 see more
               </span>
-          </div> -->
-          <!-- <div
+          </div>
+          <div
             class="schedule-event-preview__end-date"
             v-html="endDateComp">
           </div>
-          <div v-html="previewTexts.reccuring"></div> -->
+          <div v-html="previewTexts.reccuring"></div>
         </div>
-    </template>
+    </template> -->
     <!-- <template v-else>
       The event was created with an error.
     </template> -->
-    <or-icon-button
+    <!-- <or-icon-button
       has-dropdown icon="more_vert" 
       ref="dropdownButton" 
       size="normal"
@@ -64,7 +64,7 @@
           @select="selectOption"
         >
         </or-menu>
-    </or-icon-button>
+    </or-icon-button> -->
   </div>
 </template>
 
