@@ -16,12 +16,12 @@
               }"
               v-if="conditionalStartsAt(index)"
             >
-            {{date}}<span v-if="startsAt && indexOfStartsAt !== startsAt.length - 1">,</span><span v-if="conditionalEllipsis(indexOfStartsAt)">...</span>
+            {{date}}<span v-if="startsAt && indexOfStartsAt !== startsAt.length - 1">,</span><span v-if="conditionalEllipsisForDate(indexOfStartsAt)">...</span>
             </span>
             <span 
               class="schedule-event-preview__see-more"
               @click.stop="seeMoreDates"
-              v-if="!moreDates && startsAt.length > 3"
+              v-if="conditionalSeeMoreDates"
             >
               see more
             </span>
@@ -30,13 +30,13 @@
             <span 
               :key="time.id" 
               v-for="(time, index) in startTimes"
-              v-if="index < 3 || moreTimes"
+              v-if="conditionalStartTimes"
             >
-              <span v-html="`<span class='bold-text'>${time.start.HH}:${time.start.mm}</span>`"></span><span v-html="time.endTime ? ` to  <span class='bold-text'>${time.end.HH}:${time.end.mm}</span> every <span class='bold-text'>${time.every.val} ${time.every.units === 'mm' ? 'min' : 'h'}</span>`: ''"></span><span v-if="!moreTimes ? index !== 2 && index !== startTimes.length - 1 : index !== startTimes.length - 1">, </span></span><span v-if="!moreTimes && startTimes.length > 3">,...</span>
+              <span v-html="`<span class='bold-text'>${time.start.HH}:${time.start.mm}</span>`"></span><span v-html="time.endTime ? ` to  <span class='bold-text'>${time.end.HH}:${time.end.mm}</span> every <span class='bold-text'>${time.every.val} ${time.every.units === 'mm' ? 'min' : 'h'}</span>`: ''"></span><span v-if="conditionalTimeСomma(index)">, </span></span><span v-if="conditionalEllipsisForTimes">,...</span>
               <span 
                 class="schedule-event-preview__see-more"
                 @click.stop="seeMoreTimes"
-                v-if="conditionalSeeMore"
+                v-if="conditionalSeeMoreTimes"
               >
                 see more
               </span>
@@ -181,7 +181,7 @@ export default {
     conditionalStartsAt(index) {
       return !!(index < this.countAtDates && (index < 3 || this.moreDates));
     },
-    conditionalEllipsis(index) {
+    conditionalEllipsisForDate(index) {
       return (
         index >= this.countAtDates - 1 ||
         (this.startsAt &&
@@ -189,6 +189,14 @@ export default {
           !this.moreDates &&
           this.startsAt.length > 3)
       );
+    },
+    conditionalStartTimes(index) {
+      return index < 3 || this.moreTimes;
+    },
+    conditionalTimeСomma(index) {
+      return !this.moreTimes
+        ? index !== 2 && index !== this.startTimes.length - 1
+        : index !== this.startTimes.length - 1;
     },
   },
   computed: {
@@ -235,7 +243,13 @@ export default {
       //   )
       //   .map(item => moment(item).format('L'));
     },
-    conditionalSeeMore() {
+    conditionalSeeMoreTimes() {
+      return !this.moreTimes && this.startTimes.length > 3;
+    },
+    conditionalSeeMoreDates() {
+      return !this.moreDates && this.startsAt.length > 3;
+    },
+    conditionalEllipsisForTimes() {
       return !this.moreTimes && this.startTimes.length > 3;
     },
   },
