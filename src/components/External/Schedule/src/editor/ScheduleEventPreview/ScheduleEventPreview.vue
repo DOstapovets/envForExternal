@@ -1,6 +1,6 @@
 <template>
   <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': invalid}]" @click="doEditable">
-    <div v-if="!invalid">
+    <!-- <template v-if="!invalid">
       <span 
           class="schedule-event-preview__circle"
           :style="{background: color}"
@@ -45,12 +45,11 @@
           </div>
           <div v-html="previewTexts.reccuring"></div>
         </div>
-    </div>
-    <div v-else>
+    </template>
+    <template v-else>
       The event was created with an error.
-    </div>
-    <or-icon-button 
-      @click.stop="/**/" 
+    </template>
+    <or-icon-button
       has-dropdown icon="more_vert" 
       ref="dropdownButton" 
       size="normal"
@@ -65,7 +64,8 @@
           @select="selectOption"
         >
         </or-menu>
-    </or-icon-button>
+    </or-icon-button> -->
+    sdfdsfsdf
   </div>
 </template>
 
