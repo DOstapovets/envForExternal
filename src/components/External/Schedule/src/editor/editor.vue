@@ -225,7 +225,7 @@ export default {
     return {
       // scheduleEvents: this.schema.scheduleEvents,
       scheduleEvents: [],
-      validationCopyScheduleEventData: null,
+      validationCopyScheduleEventData: {},
     };
   },
 };
