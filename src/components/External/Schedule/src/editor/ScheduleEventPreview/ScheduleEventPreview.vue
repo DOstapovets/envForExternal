@@ -184,25 +184,29 @@ export default {
           ).format('ll')}</span>`;
     },
     startsAt() {
-      const startDate = new Date(moment(this.startDate).format('YYYY-MM-DD'));
-      const endDate = this.endDate.noEnd
-        ? undefined
-        : new Date(moment(this.endDate.date).format('YYYY-MM-DD'));
+      try {
+        const startDate = new Date(moment(this.startDate).format('YYYY-MM-DD'));
+        const endDate = this.endDate.noEnd
+          ? undefined
+          : new Date(moment(this.endDate.date).format('YYYY-MM-DD'));
 
-      const result = [].concat
-        .apply(
-          [],
-          this.expressions.map(item =>
-            later
-              .schedule(later.parse.cron(item))
-              .next(this.countAtDates + 1, startDate, endDate),
-          ),
-        )
-        .map(item => moment(item).format('L'));
+        const result = [].concat
+          .apply(
+            [],
+            this.expressions.map(item =>
+              later
+                .schedule(later.parse.cron(item))
+                .next(this.countAtDates + 1, startDate, endDate),
+            ),
+          )
+          .map(item => moment(item).format('L'));
 
-      console.log('startsAt', result);
+        console.log('startsAt', result);
 
-      return result;
+        return result;
+      } catch (e) {
+        return [];
+      }
 
       // return []
       //   .concat(
