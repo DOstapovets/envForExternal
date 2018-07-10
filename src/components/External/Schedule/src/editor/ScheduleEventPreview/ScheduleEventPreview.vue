@@ -15,7 +15,7 @@
               :class="{'bold-text': index === 0}"
               v-if="index < countAtDates && (index < 3 || moreDates)"
             >
-            {{date}}<span v-if="index !== startsAt.length - 1">,</span><span v-if="index >= countAtDates - 1 || (index === 2 && !moreDates && startsAt.length > 3)">...</span>
+            <!-- {{date}}<span v-if="index !== startsAt.length - 1">,</span><span v-if="index >= countAtDates - 1 || (index === 2 && !moreDates && startsAt.length > 3)">...</span> -->
             </span>
             <!-- <span 
               class="schedule-event-preview__see-more"
