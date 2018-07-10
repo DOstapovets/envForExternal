@@ -1,6 +1,6 @@
 <template>
-  <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': invalid}]" @click="doEditable">
-    <template v-if="!invalid">
+  <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': false}]" @click="doEditable">
+    <template v-if="!false">
       <span 
           class="schedule-event-preview__circle"
           :style="{background: color}"
