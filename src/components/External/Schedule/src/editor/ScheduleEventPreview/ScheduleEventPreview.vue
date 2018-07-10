@@ -73,6 +73,7 @@
 <script>
 import moment from 'moment';
 import later from 'later';
+import _ from 'lodash';
 
 export default {
   data() {
@@ -176,10 +177,10 @@ export default {
   computed: {
     endDateComp() {
       if (!this.isReccuring) return '';
-      return this.endDate.noEnd
+      return _.get(this, 'endDate.noEnd')
         ? 'Reccuring <span class="bold-text">no end</span>'
         : `Reccuring till <span class="bold-text">${moment(
-            this.endDate.date,
+            _.get(this, 'endDate.date'),
           ).format('ll')}</span>`;
     },
     startsAt() {
@@ -188,7 +189,7 @@ export default {
         ? undefined
         : new Date(moment(this.endDate.date).format('YYYY-MM-DD'));
 
-      return [].concat
+      const result = [].concat
         .apply(
           [],
           this.expressions.map(item =>
@@ -198,6 +199,10 @@ export default {
           ),
         )
         .map(item => moment(item).format('L'));
+
+      console.log('startsAt', result);
+
+      return result;
 
       // return []
       //   .concat(
