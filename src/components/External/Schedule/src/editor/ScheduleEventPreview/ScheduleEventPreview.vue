@@ -49,7 +49,7 @@
     <!-- <template v-else>
       The event was created with an error.
     </template> -->
-    <!-- <or-icon-button
+    <or-icon-button
       has-dropdown icon="more_vert" 
       ref="dropdownButton" 
       size="normal"
@@ -64,7 +64,7 @@
           @select="selectOption"
         >
         </or-menu>
-    </or-icon-button> -->
+    </or-icon-button>
     sdssdf
   </div>
 </template>
