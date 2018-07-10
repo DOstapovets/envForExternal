@@ -13,9 +13,8 @@
               :key="indexOfStartsAt"
               v-for="(date, indexOfStartsAt) in startsAt || []"
               :class="{'bold-text': !!(indexOfStartsAt === 0)}"
-              
+              v-if="(indexOfStartsAt < countAtDates) && (indexOfStartsAt < 3 || moreDates)"
             >
-            <!-- v-if="indexOfStartsAt < countAtDates && (indexOfStartsAt < 3 || moreDates)" -->
             <!-- {{date}}<span v-if="startsAt && indexOfStartsAt !== startsAt.length - 1">,</span><span v-if="indexOfStartsAt >= countAtDates - 1 || (startsAt && indexOfStartsAt === 2 && !moreDates && startsAt.length > 3)">...</span> -->
             </span>
             <!-- <span 
