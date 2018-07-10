@@ -1,5 +1,6 @@
 <template>
   <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': false}]" @click="doEditable">
+    {{startsAt}}
     <template v-if="!false">
       <span 
           class="schedule-event-preview__circle"
