@@ -7,7 +7,7 @@
      <br/> -->
      <!-- {{schemaValidation}} -->
       <schedule-events
-        :schedule-events.sync="scheduleEvents"
+        :schedule-events.sync="scheduleEventsComp"
         :step="step"
         :stepId="stepId"
         :$v="$v"
