@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{scheduleEvents}}
     <!-- {{schema}} -->
      <!-- {{$v}}
      <br/>
