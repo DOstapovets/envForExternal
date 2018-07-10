@@ -187,15 +187,38 @@ export default {
       const endDate = this.endDate.noEnd
         ? undefined
         : new Date(moment(this.endDate.date).format('YYYY-MM-DD'));
-      return []
-        .concat(
-          ...this.expressions.map(item =>
+      // const result = [];
+
+      // this.expressions
+      //   .map(item =>
+      //     later
+      //       .schedule(later.parse.cron(item))
+      //       .next(this.countAtDates + 1, startDate, endDate),
+      //   )
+      //   .forEach(element => {
+      //     result.push(element);
+      //   });
+      // return result.map(item => moment(item).format('L'));
+      return [].concat
+        .apply(
+          [],
+          this.expressions.map(item =>
             later
               .schedule(later.parse.cron(item))
               .next(this.countAtDates + 1, startDate, endDate),
           ),
         )
         .map(item => moment(item).format('L'));
+
+      // return []
+      //   .concat(
+      //     ...this.expressions.map(item =>
+      //       later
+      //         .schedule(later.parse.cron(item))
+      //         .next(this.countAtDates + 1, startDate, endDate),
+      //     ),
+      //   )
+      //   .map(item => moment(item).format('L'));
     },
   },
 };
