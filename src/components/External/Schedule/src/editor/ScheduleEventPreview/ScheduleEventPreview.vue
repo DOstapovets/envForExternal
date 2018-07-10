@@ -1,6 +1,6 @@
 <template>
   <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': invalid}]" @click="doEditable">
-    <!-- <template v-if="!invalid">
+    <template v-if="!invalid">
       <span 
           class="schedule-event-preview__circle"
           :style="{background: color}"
@@ -64,8 +64,7 @@
           @select="selectOption"
         >
         </or-menu>
-    </or-icon-button> -->
-    sdfdsfsdf
+    </or-icon-button>
   </div>
 </template>
 
