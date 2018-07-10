@@ -1,7 +1,6 @@
 <template>
   <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': false}]" @click="doEditable">
-    {{countAtDates}}
-    <template v-if="!false">
+    <template v-if="!invalid">
       <span 
           class="schedule-event-preview__circle"
           :style="{background: color}"
@@ -15,21 +14,19 @@
               :class="{
                 'bold-text': !!(indexOfStartsAt === 0)
               }"
-              v-if="conditionalStartsAt"
+              v-if="conditionalStartsAt(index)"
             >
-                          <!-- v-if="!!((2 < countAtDates) && ((1 < 3) || moreDates))" -->
-            <!-- v-if="!!((indexOfStartsAt < countAtDates) && (indexOfStartsAt < 3 || moreDates))" -->
-            <!-- {{date}}<span v-if="startsAt && indexOfStartsAt !== startsAt.length - 1">,</span><span v-if="indexOfStartsAt >= countAtDates - 1 || (startsAt && indexOfStartsAt === 2 && !moreDates && startsAt.length > 3)">...</span> -->
+            {{date}}<span v-if="startsAt && indexOfStartsAt !== startsAt.length - 1">,</span><span v-if="conditionalEllipsis(indexOfStartsAt)">...</span>
             </span>
-            <!-- <span 
+            <span 
               class="schedule-event-preview__see-more"
               @click.stop="seeMoreDates"
               v-if="!moreDates && startsAt.length > 3"
             >
               see more
-            </span> -->
+            </span>
           </div>
-          <!-- <div class="schedule-event-preview__times">
+          <div class="schedule-event-preview__times">
             <span 
               :key="time.id" 
               v-for="(time, index) in startTimes"
@@ -39,11 +36,11 @@
               <span 
                 class="schedule-event-preview__see-more"
                 @click.stop="seeMoreTimes"
-                v-if="!moreTimes && startTimes.length > 3"
+                v-if="conditionalSeeMore"
               >
                 see more
               </span>
-          </div> -->
+          </div>
           <div
             class="schedule-event-preview__end-date"
             v-html="endDateComp">
@@ -51,9 +48,9 @@
           <div v-html="previewTexts.reccuring"></div>
         </div>
     </template>
-    <!-- <template v-else>
+    <template v-else>
       The event was created with an error.
-    </template> -->
+    </template>
     <or-icon-button
       has-dropdown icon="more_vert" 
       ref="dropdownButton" 
@@ -181,6 +178,18 @@ export default {
           }();
       }
     },
+    conditionalStartsAt(index) {
+      return !!(index < this.countAtDates && (index < 3 || this.moreDates));
+    },
+    conditionalEllipsis(index) {
+      return (
+        index >= this.countAtDates - 1 ||
+        (this.startsAt &&
+          index === 2 &&
+          !this.moreDates &&
+          this.startsAt.length > 3)
+      );
+    },
   },
   computed: {
     endDateComp() {
@@ -226,11 +235,8 @@ export default {
       //   )
       //   .map(item => moment(item).format('L'));
     },
-    conditionalStartsAt() {
-      return !!(
-        this.indexOfStartsAt < this.countAtDates &&
-        (this.indexOfStartsAt < 3 || this.moreDates)
-      );
+    conditionalSeeMore() {
+      return !this.moreTimes && this.startTimes.length > 3;
     },
   },
 };
