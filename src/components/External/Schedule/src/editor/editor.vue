@@ -224,7 +224,7 @@ export default {
   data() {
     return {
       // scheduleEvents: this.schema.scheduleEvents,
-      scheduleEvents: [],
+      // scheduleEvents: [],
       validationCopyScheduleEventData: {
         id: '',
         startExpression: {
