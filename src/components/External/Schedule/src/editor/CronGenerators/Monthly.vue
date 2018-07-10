@@ -5,7 +5,7 @@
           <month-picker 
             v-model="selectedMonthsComp" 
             :disabled="readonly"
-            :invalid="$v.validationCopyScheduleEventData.monthly.selectedMonths.$invalid"
+            :invalid="validdationSelectedMonths"
           ></month-picker>
       </div>
       <div class="recuring-configs__monthly-day_configs">
@@ -23,7 +23,7 @@
                 :months="selectedMonthsComp"
                 :selected-days.sync="selectedDaysComp"
                 :readonly="readonly || modeComp === 'onThe'"
-                :invalid="$v.validationCopyScheduleEventData.monthly.selectedDays.$invalid"
+                :invalid="validdationSelectedDays"
               ></days-picker>
           </div>
           <div class="config-line" v-if="selectedMonths.length">
@@ -237,6 +237,18 @@ export default {
       }
       this.previewTexts.reccuring = text;
       return text;
+    },
+    validdationSelectedMonths() {
+      return _.get(
+        this.$v,
+        'validationCopyScheduleEventData.monthly.selectedMonths.$invalid',
+      );
+    },
+    validdationSelectedDays() {
+      return _.get(
+        this.$v,
+        'validationCopyScheduleEventData.monthly.selectedDays.$invalid',
+      );
     },
   },
   watch: {

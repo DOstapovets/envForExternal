@@ -11,7 +11,7 @@
               v-model="periodComp" 
               placeholder=""
               mask="##########"
-              :invalid="$v.validationCopyScheduleEventData.yearly.period.$invalid"
+              :invalid="validdationPeriod"
             >
           </or-textbox>
           <div class="">year(s) in:</div>
@@ -20,7 +20,7 @@
           <month-picker
             v-model="selectedMonthsComp"
             :disabled="readonly"
-            :invalid="$v.validationCopyScheduleEventData.yearly.selectedMonths.$invalid"
+            :invalid="validdationSelectedMonths"
           ></month-picker>
       </div>
       <div class="monthly-periods monthly-periods__yearly">
@@ -216,6 +216,20 @@ export default {
       // }
       this.previewTexts.reccuring = text;
       return text;
+    },
+    validdationPeriod() {
+      return _.get(
+        this.$v,
+        'validationCopyScheduleEventData.yearly.period.$invalid',
+        false,
+      );
+    },
+    validdationSelectedMonths() {
+      return _.get(
+        this.$v,
+        'validationCopyScheduleEventData.yearly.selectedMonths.$invalid',
+        false,
+      );
     },
   },
   watch: {

@@ -12,7 +12,7 @@
               v-model="periodLocal"
               placeholder=""
               mask="##########"
-              :invalid="$v.validationCopyScheduleEventData.weekly.period.$invalid"
+              :invalid="validdationPeriod"
             >
           </or-textbox>
           <div class="">week(s) on:</div>
@@ -20,7 +20,7 @@
       <div 
         :class="[
           'weekly-days',
-          {'weekly-days_error': $v.validationCopyScheduleEventData.weekly.weekDays.$invalid}
+          {'weekly-days_error': validdationWeekDays}
         ]"
       >
           <button 
@@ -185,6 +185,20 @@ export default {
       });
       this.previewTexts.reccuring = text;
       return text;
+    },
+    validdationPeriod() {
+      return _.get(
+        this.$v,
+        'validationCopyScheduleEventData.weekly.period.$invalid',
+        false,
+      );
+    },
+    validdationWeekDays() {
+      return _.get(
+        this.$v,
+        'validationCopyScheduleEventData.weekly.weekDays.$invalid',
+        false,
+      );
     },
   },
   watch: {

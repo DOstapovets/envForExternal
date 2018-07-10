@@ -28,7 +28,7 @@
           <or-icon class="recurring-controls__custom-icon-date" icon="view_comfy"></or-icon>
           <ui-datepicker :disabled="readonly" class="recurring-controls__calendar-picker-custom" iconPosition="right" placeholder="Select date"
               :custom-formatter="formatDate" v-model="startDate"
-              :invalid=" $v.validationCopyScheduleEventData.startExpression.date.$invalid"
+              :invalid="validdationDate"
           >
           </ui-datepicker>
         </div>
@@ -42,7 +42,7 @@
             :has-search="true" 
             :options="getRegions"
             v-model="timeZoneComp"
-            :invalid="$v.validationCopyScheduleEventData.timeZone.value.$invalid"
+            :invalid="validdationTimeZone"
           >
           </or-select>
       </label>
@@ -387,6 +387,20 @@ export default {
         item3: !valdationsReccurin.monthly(this.copyScheduleEventData),
         item4: !valdationsReccurin.yearly(this.copyScheduleEventData),
       };
+    },
+    validdationDate() {
+      return _.get(
+        this.$v,
+        'validationCopyScheduleEventData.startExpression.date.$invalid',
+        false,
+      );
+    },
+    validdationTimeZone() {
+      return _.get(
+        this.$v,
+        'validationCopyScheduleEventData.timeZone.value.$invalid',
+        false,
+      );
     },
   },
   methods: {

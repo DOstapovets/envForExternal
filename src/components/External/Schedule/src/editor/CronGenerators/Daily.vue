@@ -13,7 +13,7 @@
                 v-model="periodLocal"
                 placeholder=""
                 mask="##########"
-                :invalid="$v.validationCopyScheduleEventData.daily.period.$invalid"
+                :invalid="validationPeriod"
               >
               </or-textbox>
               <div class="">day(s)</div>
@@ -146,6 +146,13 @@ export default {
       }
       this.previewTexts.reccuring = text;
       return text;
+    },
+    validationPeriod() {
+      return _.get(
+        this.$v,
+        'validationCopyScheduleEventData.daily.period.$invalid',
+        false,
+      );
     },
   },
   methods: {

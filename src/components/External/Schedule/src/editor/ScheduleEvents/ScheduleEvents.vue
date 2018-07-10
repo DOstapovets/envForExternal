@@ -28,10 +28,10 @@
             @do-editable="doEditable"
             @copy-event="copyEvent"
             @delete-event="deleteEvent"
-            :invalid="$v.scheduleEvents.$each.$iter[item.index].scheduleEventData.$invalid"
+            :invalid="validdationScheduleEventData(item.index)"
           >
           </schedule-event-preview>
-          {{$v.scheduleEvents}}sdfsdfsdfs
+          <!-- {{$v.scheduleEvents}}sdfsdfsdfs -->
         </div>
       </template>
     </or-list>
@@ -96,7 +96,7 @@
                 @do-editable="doEditable"
                 @copy-event="copyEvent"
                 @delete-event="deleteEvent"
-                :invalid="$v.schemaValidation.scheduleEvents.$each.$iter[item.index].scheduleEventData.$invalid"
+                :invalid="validdationScheduleEventData(item.index)"
               >
               </schedule-event-preview>
             </template>
@@ -366,6 +366,13 @@ export default {
     eventAdded() {
       // this.$set(this.dataStates, this.scheduleEvents.length - 1, 'new');
       this.doEditable(this.scheduleEvents.length - 1);
+    },
+    validdationScheduleEventData(index) {
+      return _.get(
+        this.$v,
+        `scheduleEvents.$each.$iter[${index}].scheduleEventData.$invalid`,
+        false,
+      );
     },
   },
   watch: {

@@ -137,7 +137,7 @@ export const validator = template => {
 };
 
 export const data = template => ({
-  // scheduleEvents: [{ scheduleEventData: {} }],
+  scheduleEvents: [],
   // validationCopyScheduleEventData: {
   // startExpression: {
   //   time: '00:00',
@@ -189,16 +189,16 @@ export const data = template => ({
 export default {
   props: ['template', 'schema', 'step', 'stepId', 'steps', 'readonly'],
   computed: {
-    // scheduleEventsComp: {
-    //   get() {
-    //     return _.get(this, 'schema.scheduleEvents', null) || [];
-    //   },
-    //   set(newValue) {
-    //     if (_.get(this, 'schema.scheduleEvents', null)) {
-    //       this.schema.scheduleEvents = newValue;
-    //     }
-    //   },
-    // },
+    scheduleEventsComp: {
+      get() {
+        return _.get(this, 'schema.scheduleEvents', null) || [];
+      },
+      set(newValue) {
+        if (_.get(this, 'schema.scheduleEvents', null)) {
+          this.schema.scheduleEvents = newValue;
+        }
+      },
+    },
     // this.validationCopyScheduleEventDataComp() {
     //   return validationCopyScheduleEventData
     // }
