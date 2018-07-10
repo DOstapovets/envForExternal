@@ -7,7 +7,7 @@
         ></span>
         <div class="schedule-event-preview__content">
           <div class="schedule-event-preview__title-text">{{eventName}}</div>
-          <div class="schedule-event-preview__dates">
+          <!-- <div class="schedule-event-preview__dates">
             <span
               :key="index"
               v-for="(date, index) in startsAt"
@@ -23,8 +23,8 @@
             >
               see more
             </span>
-          </div>
-          <!-- <div class="schedule-event-preview__times">
+          </div> -->
+          <div class="schedule-event-preview__times">
             <span 
               :key="time.id" 
               v-for="(time, index) in startTimes"
@@ -38,7 +38,7 @@
               >
                 see more
               </span>
-          </div> -->
+          </div>
           <!-- <div
             class="schedule-event-preview__end-date"
             v-html="endDateComp">
