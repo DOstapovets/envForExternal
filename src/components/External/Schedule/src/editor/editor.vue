@@ -137,7 +137,7 @@ export const validator = template => {
 };
 
 export const data = template => ({
-  scheduleEvents: [],
+  // scheduleEvents: [],
   // validationCopyScheduleEventData: {
   // startExpression: {
   //   time: '00:00',
@@ -224,7 +224,7 @@ export default {
   data() {
     return {
       // scheduleEvents: this.schema.scheduleEvents,
-      // scheduleEvents: [],
+      scheduleEvents: [],
       validationCopyScheduleEventData: {
         id: '',
         startExpression: {
