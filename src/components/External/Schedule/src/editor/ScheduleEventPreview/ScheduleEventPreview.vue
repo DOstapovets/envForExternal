@@ -43,7 +43,7 @@
             class="schedule-event-preview__end-date"
             v-html="endDateComp">
           </div>
-          <div v-html="previewTexts.reccuring"></div>
+          <!-- <div v-html="previewTexts.reccuring"></div> -->
         </div>
     </template>
     <!-- <template v-else>
