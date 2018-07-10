@@ -230,7 +230,7 @@ export default {
           vforkey: '1d9c97fe-b53d-4df1-a090-0e10bd324e9c',
           scheduleEventData: {
             id: '1b2b80d3-5173-407d-80ba-00cdd460b8ca',
-            startExpression: { time: '00:00', date: '' },
+            startExpression: { time: '00:00', date: '2018-07-04' },
             deactivateAfterLastRun: false,
             includeEndTime: false,
             isReccuring: false,
