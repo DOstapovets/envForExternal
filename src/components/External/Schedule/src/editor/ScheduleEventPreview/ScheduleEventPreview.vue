@@ -15,7 +15,7 @@
               :class="{
                 'bold-text': !!(indexOfStartsAt === 0)
               }"
-              v-if="1 < 2"
+              v-if="conditionalStartsAt"
             >
                           <!-- v-if="!!((2 < countAtDates) && ((1 < 3) || moreDates))" -->
             <!-- v-if="!!((indexOfStartsAt < countAtDates) && (indexOfStartsAt < 3 || moreDates))" -->
@@ -225,6 +225,12 @@ export default {
       //     ),
       //   )
       //   .map(item => moment(item).format('L'));
+    },
+    conditionalStartsAt() {
+      return !!(
+        this.indexOfStartsAt < this.countAtDates &&
+        (this.indexOfStartsAt < 3 || this.moreDates)
+      );
     },
   },
 };
