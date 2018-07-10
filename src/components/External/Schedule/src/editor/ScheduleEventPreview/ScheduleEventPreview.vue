@@ -15,7 +15,7 @@
               :class="{
                 'bold-text': !!(indexOfStartsAt === 0)
               }"
-              v-if="!!((true < countAtDates) && ((true < 3) || moreDates))"
+              v-if="!!((2 < countAtDates) && ((1 < 3) || moreDates))"
             >
             <!-- v-if="!!((indexOfStartsAt < countAtDates) && (indexOfStartsAt < 3 || moreDates))" -->
             <!-- {{date}}<span v-if="startsAt && indexOfStartsAt !== startsAt.length - 1">,</span><span v-if="indexOfStartsAt >= countAtDates - 1 || (startsAt && indexOfStartsAt === 2 && !moreDates && startsAt.length > 3)">...</span> -->
@@ -81,6 +81,7 @@ import _ from 'lodash';
 export default {
   created() {
     console.log('countAtDates', this.countAtDates);
+    console.log('moreDates', this.moreDates);
   },
   data() {
     return {
