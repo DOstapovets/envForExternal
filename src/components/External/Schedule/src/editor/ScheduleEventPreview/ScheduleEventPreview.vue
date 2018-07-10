@@ -11,11 +11,12 @@
           <div class="schedule-event-preview__dates">
             <span
               :key="indexOfStartsAt"
-              v-for="(date, indexOfStartsAt) in startsAt"
+              v-for="(date, indexOfStartsAt) in startsAt || []"
               :class="{'bold-text': indexOfStartsAt === 0}"
               v-if="indexOfStartsAt < countAtDates && (indexOfStartsAt < 3 || moreDates)"
             >
-            {{date}}<span v-if="indexOfStartsAt !== startsAt.length - 1">,</span><span v-if="indexOfStartsAt >= countAtDates - 1 || (indexOfStartsAt === 2 && !moreDates && startsAt.length > 3)">...</span>
+            sdfsf
+            <!-- {{date}}<span v-if="indexOfStartsAt !== startsAt.length - 1">,</span><span v-if="indexOfStartsAt >= countAtDates - 1 || (indexOfStartsAt === 2 && !moreDates && startsAt.length > 3)">...</span> -->
             </span>
             <!-- <span 
               class="schedule-event-preview__see-more"
