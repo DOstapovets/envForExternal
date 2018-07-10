@@ -15,7 +15,7 @@
               :class="{
                 'bold-text': !!(indexOfStartsAt === 0)
               }"
-              v-if="countAtDates && moreDates"
+              v-if="(2 < countAtDates) && (1 < 3 || moreDates)"
             >
                           <!-- v-if="!!((2 < countAtDates) && ((1 < 3) || moreDates))" -->
             <!-- v-if="!!((indexOfStartsAt < countAtDates) && (indexOfStartsAt < 3 || moreDates))" -->
