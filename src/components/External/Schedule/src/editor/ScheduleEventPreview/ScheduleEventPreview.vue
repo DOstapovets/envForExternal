@@ -1,5 +1,6 @@
 <template>
   <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': false}]" @click="doEditable">
+    {{countAtDates}}
     <template v-if="!false">
       <span 
           class="schedule-event-preview__circle"
@@ -78,6 +79,9 @@ import later from 'later';
 import _ from 'lodash';
 
 export default {
+  created() {
+    console.log('countAtDates', this.countAtDates);
+  },
   data() {
     return {
       countAtDates: 16,
