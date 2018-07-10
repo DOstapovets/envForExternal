@@ -1,6 +1,6 @@
 <template>
   <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': false}]" @click="doEditable">
-    <!-- <template v-if="!false">
+    <template v-if="!false">
       <span 
           class="schedule-event-preview__circle"
           :style="{background: color}"
@@ -24,7 +24,7 @@
               see more
             </span>
           </div>
-          <div class="schedule-event-preview__times">
+          <!-- <div class="schedule-event-preview__times">
             <span 
               :key="time.id" 
               v-for="(time, index) in startTimes"
@@ -38,14 +38,14 @@
               >
                 see more
               </span>
-          </div>
+          </div> -->
           <div
             class="schedule-event-preview__end-date"
             v-html="endDateComp">
           </div>
           <div v-html="previewTexts.reccuring"></div>
         </div>
-    </template> -->
+    </template>
     <!-- <template v-else>
       The event was created with an error.
     </template> -->
