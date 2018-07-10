@@ -13,7 +13,7 @@
               v-for="(date, indexOfStartsAt) in startsAt || []"
               :class="{
                 'bold-text': !!(indexOfStartsAt === 0), 
-                'hide': !!((parseInt(indexOfStartsAt, 10) < countAtDates) && (parseInt(indexOfStartsAt, 10) < 3 || moreDates))
+                'hide': !!((parseInt(indexOfStartsAt, 10) < countAtDates) && ((parseInt(indexOfStartsAt, 10) < 3) || moreDates))
               }"
             >
             <!-- v-if="!!((indexOfStartsAt < countAtDates) && (indexOfStartsAt < 3 || moreDates))" -->
