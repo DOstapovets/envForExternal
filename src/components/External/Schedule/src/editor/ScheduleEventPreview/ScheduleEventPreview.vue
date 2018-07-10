@@ -17,13 +17,13 @@
             >
             {{date}}<span v-if="index !== startsAt.length - 1">,</span><span v-if="index >= countAtDates - 1 || (index === 2 && !moreDates && startsAt.length > 3)">...</span>
             </span>
-            <span 
+            <!-- <span 
               class="schedule-event-preview__see-more"
               @click.stop="seeMoreDates"
               v-if="!moreDates && startsAt.length > 3"
             >
               see more
-            </span>
+            </span> -->
           </div>
           <!-- <div class="schedule-event-preview__times">
             <span 
