@@ -209,9 +209,9 @@ export default {
         'validationCopyScheduleEventData',
         this.schema.validationCopyScheduleEventData,
       );
-      // if (this.schema && this.schema.validationCopyScheduleEventData) {
-      //   this.schema.validationCopyScheduleEventData = newValue;
-      // }
+      if (this.validationCopyScheduleEventData) {
+        this.validationCopyScheduleEventData = newValue;
+      }
     },
   },
   components: { ScheduleEvents },
