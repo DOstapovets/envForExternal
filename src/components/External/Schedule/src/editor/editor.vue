@@ -1,6 +1,6 @@
 <template>
   <div>
-    33
+    <!-- 33 -->
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"

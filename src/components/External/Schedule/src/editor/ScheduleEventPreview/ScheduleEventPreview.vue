@@ -56,6 +56,7 @@
       ref="dropdownButton" 
       size="normal"
       class="schedule-event-preview__settings"
+      @click.stop="/**/"
     >
         <or-menu
           contain-focus
