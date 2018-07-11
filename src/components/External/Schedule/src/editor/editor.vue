@@ -241,6 +241,7 @@ export default {
   watch: {
     schema: {
       handler(newValue) {
+        console.log('newValue234234234', JSON.stringify(newValue));
         if (newValue.scheduleEvents) {
           this.scheduleEventsValidation.scheduleEvents =
             newValue.scheduleEvents;
