@@ -1,6 +1,6 @@
 <template>
   <div>
-    28
+    30
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -247,7 +247,7 @@ export default {
     console.log(this.schema);
 
     return {
-      scheduleEventsValidation: this.schema, //{ scheduleEvents: this.schema.scheduleEvents },
+      scheduleEventsValidation: { scheduleEvents: this.schema.scheduleEvents },
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
       // scheduleEvents: [
