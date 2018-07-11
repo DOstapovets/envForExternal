@@ -15,9 +15,9 @@ import * as _ from 'lodash';
 
 /* eslint-disable */
 // if (process.env.NODE_ENV === 'development') {
-// import { validators } from '../../../../../validators.js';
+import { validators } from '../../../../../validators.js';
 // } else {
-import { validators } from '_validators';
+// import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
@@ -244,6 +244,8 @@ export default {
     return validator(this.template);
   },
   data() {
+    console.log(this.schema);
+
     return {
       scheduleEventsValidation: this.schema, //{ scheduleEvents: this.schema.scheduleEvents },
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
