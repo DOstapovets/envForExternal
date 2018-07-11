@@ -12,13 +12,20 @@
 </template>
 <script>
 import * as _ from 'lodash';
+
 /* eslint-disable */
+// if (process.env.NODE_ENV === 'development') {
+// import { validators } from '../../../../../validators.js';
+// } else {
+import { validators } from '_validators';
+// }
+
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-import { validators } from '../../../../../validators.js';
-// import { validators } from '_validators';
+
 import valdationsReccurin from './validation/validationReccuring.js';
 
 import defaultValues from './Constants/DefaultValues.js';
+
 /* eslint-enable */
 
 const { required, generateValidators } = validators;
