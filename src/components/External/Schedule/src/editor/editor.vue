@@ -1,6 +1,6 @@
 <template>
   <div>
-    30
+    31
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -143,53 +143,7 @@ export const validator = template => {
 
 export const data = template => ({
   scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
-  // scheduleEventsValidation: _.get(this, 'schema.scheduleEvents', null) || [],
-  // validationCopyScheduleEventData: {
-  // startExpression: {
-  //   time: '00:00',
-  //   date: '',
-  // },
-  // deactivateAfterLastRun: false,
-  // includeEndTime: false,
-  // isReccuring: false,
-  // expressions: [],
-  // isEndTime: false,
-  // eventName: '',
-  // endExpression: {
-  //   time: '00:00',
-  //   date: '',
-  // },
-  // timeZone: {
-  //   label: '',
-  //   value: '',
-  // },
-  // daily: defaultValues.daily,
-  // weekly: defaultValues.weekly,
-  // monthly: defaultValues.monthly,
-  // yearly: defaultValues.yearly,
-  // times: [
-  //   {
-  //     start: {
-  //       HH: '',
-  //       mm: '',
-  //     },
-  //     end: {
-  //       HH: '',
-  //       mm: '',
-  //     },
-  //     every: {
-  //       val: 10,
-  //       units: 'mm',
-  //     },
-  //     endTime: false,
-  //   },
-  // ],
-  // color: '',
-  // savedAccordionSlotName: null,
-  // previewTexts: {
-  //   reccuring: '',
-  // },
-  // },
+  // scheduleEventsValidation: _.get(this, 'schema.scheduleEvents', null) || [];
 });
 
 export default {
@@ -203,7 +157,6 @@ export default {
         if (_.get(this, 'schema.scheduleEvents', null)) {
           this.schema.scheduleEvents = newValue;
           // this.scheduleEventsValidation = newValue;
-          this.scheduleEventsValidation.scheduleEvents = newValue;
           // this.$set(this.scheduleEventsValidation, 'scheduleEvents', newValue);
         }
       },
@@ -212,19 +165,19 @@ export default {
     //   return validationCopyScheduleEventData
     // }
   },
-  // watch: {
-  //   'schema.scheduleEvents': {
-  //     handler(newValue) {
-  //       this.scheduleEventsValidation.scheduleEvents = newValue;
-  //     },
-  //     deep: true,
-  //   },
-  //   // scheduleEventsComp(newValue) {
-  //   //   // setTimeout(() => {
-  //   //   this.scheduleEventsValidation = this.schema.scheduleEvents;
-  //   //   // }, 2000);
-  //   // },
-  // },
+  watch: {
+    schema: {
+      handler(newValue) {
+        this.scheduleEventsValidation.scheduleEvents = newValue.scheduleEvents;
+      },
+      deep: true,
+    },
+    // scheduleEventsComp(newValue) {
+    //   // setTimeout(() => {
+    //   this.scheduleEventsValidation = this.schema.scheduleEvents;
+    //   // }, 2000);
+    // },
+  },
   methods: {
     newCopyScheduleEventData(newValue) {
       console.log(
@@ -247,100 +200,10 @@ export default {
     console.log(this.schema);
 
     return {
-      scheduleEventsValidation: { scheduleEvents: this.schema.scheduleEvents },
+      scheduleEventsValidation: { scheduleEvents: [] },
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
-      // scheduleEvents: [
-      // {
-      //   vforkey: '1d9c97fe-b53d-4df1-a090-0e10bd324e9c',
-      //   scheduleEventData: {
-      //     id: '1b2b80d3-5173-407d-80ba-00cdd460b8ca',
-      //     startExpression: { time: '00:00', date: '2018-07-04' },
-      //     deactivateAfterLastRun: false,
-      //     includeEndTime: false,
-      //     isReccuring: false,
-      //     expressions: [],
-      //     isEndTime: false,
-      //     eventName: '',
-      //     endExpression: { time: '00:00', date: '' },
-      //     timeZone: { label: '', value: '' },
-      //     daily: { periodMode: 'everyDay', period: '1', cronExpressions: [] },
-      //     weekly: { period: '1', cronExpressions: [], weekDays: [] },
-      //     monthly: {
-      //       selectedMonths: [],
-      //       selectedDays: [],
-      //       mode: 'each',
-      //       daysPeriod: { day: 'SUN', period: '' },
-      //       cronExpressions: [],
-      //     },
-      //     yearly: {
-      //       selectedMonths: [],
-      //       period: '1',
-      //       cronExpressions: [],
-      //       selectedDays: [],
-      //       daysPeriod: { day: 'SUN', period: '' },
-      //       startYear: 2018,
-      //     },
-      //     times: [
-      //       {
-      //         start: { HH: '', mm: '' },
-      //         end: { HH: '', mm: '' },
-      //         every: { val: 10, units: 'mm' },
-      //         endTime: false,
-      //         vforkey: '2380fd05-59ea-4839-8788-b88b6847ea20',
-      //       },
-      //     ],
-      //     color: '#E91E63',
-      //     savedAccordionSlotName: null,
-      //   },
-      //   previewTexts: { reccuring: '' },
-      // },
-      // ],
-      validationCopyScheduleEventData: {
-        // id: '',
-        // startExpression: {
-        //   time: '00:00',
-        //   date: '',
-        // },
-        // deactivateAfterLastRun: false,
-        // includeEndTime: false,
-        // isReccuring: false,
-        // expressions: [],
-        // isEndTime: false,
-        // eventName: '',
-        // endExpression: {
-        //   time: '00:00',
-        //   date: '',
-        // },
-        // timeZone: {
-        //   label: '',
-        //   value: '',
-        // },
-        // daily: defaultValues.daily,
-        // weekly: defaultValues.weekly,
-        // monthly: defaultValues.monthly,
-        // yearly: defaultValues.yearly,
-        // times: [
-        //   {
-        //     start: {
-        //       HH: '',
-        //       mm: '',
-        //     },
-        //     end: {
-        //       HH: '',
-        //       mm: '',
-        //     },
-        //     every: {
-        //       val: 10,
-        //       units: 'mm',
-        //     },
-        //     endTime: false,
-        //     vforkey: '',
-        //   },
-        // ],
-        // color: '',
-        // savedAccordionSlotName: null,
-      },
+      validationCopyScheduleEventData: {},
     };
   },
 };
