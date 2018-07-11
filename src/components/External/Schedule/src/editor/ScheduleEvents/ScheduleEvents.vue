@@ -371,13 +371,13 @@ export default {
         'this.$v.scheduleEventsValidation',
         JSON.stringify(this.$v.scheduleEventsValidation),
       );
-      return this.$v.scheduleEventsValidation.scheduleEvents.$each.$iter[index]
-        .scheduleEventData.$invalid;
-      // return _.get(
-      //   this.$v,
-      //   `scheduleEventsValidation.scheduleEvents.$each.$iter[${index}].scheduleEventData.$invalid`,
-      //   false,
-      // );
+      // return this.$v.scheduleEventsValidation.scheduleEvents.$each.$iter[index]
+      //   .scheduleEventData.$invalid;
+      return _.get(
+        this.$v,
+        `scheduleEventsValidation.scheduleEvents.$each.$iter[${index}].scheduleEventData.$invalid`,
+        false,
+      );
     },
   },
   watch: {
