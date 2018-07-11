@@ -367,9 +367,11 @@ export default {
       this.doEditable(this.scheduleEvents.length - 1);
     },
     validdationScheduleEventData(index) {
+      // return this.$v.scheduleEventsValidation.scheduleEvents.$each.$iter[index]
+      //   .scheduleEventData.$invalid;
       return _.get(
         this.$v,
-        `scheduleEventsValidation.$each.$iter[${index}].scheduleEventData.$invalid`,
+        `scheduleEventsValidation.scheduleEvents.$each.$iter[${index}].scheduleEventData.$invalid`,
         false,
       );
     },

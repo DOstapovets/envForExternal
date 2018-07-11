@@ -15,9 +15,9 @@ import * as _ from 'lodash';
 
 /* eslint-disable */
 // if (process.env.NODE_ENV === 'development') {
-// import { validators } from '../../../../../validators.js';
+import { validators } from '../../../../../validators.js';
 // } else {
-import { validators } from '_validators';
+// import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
@@ -130,8 +130,11 @@ export const validator = template => {
   return {
     scheduleEventsValidation: {
       required,
-      $each: {
-        scheduleEventData: _.cloneDeep(schemaValidation),
+      scheduleEvents: {
+        required,
+        $each: {
+          scheduleEventData: _.cloneDeep(schemaValidation),
+        },
       },
     },
     validationCopyScheduleEventData: _.cloneDeep(schemaValidation),
@@ -199,7 +202,9 @@ export default {
       set(newValue) {
         if (_.get(this, 'schema.scheduleEvents', null)) {
           this.schema.scheduleEvents = newValue;
-          this.scheduleEventsValidation = newValue;
+          // this.scheduleEventsValidation = newValue;
+          this.scheduleEventsValidation.scheduleEvents = newValue;
+          // this.$set(this.scheduleEventsValidation, 'scheduleEvents', newValue);
         }
       },
     },
@@ -207,19 +212,19 @@ export default {
     //   return validationCopyScheduleEventData
     // }
   },
-  watch: {
-    'schema.scheduleEvents': {
-      handler(newValue) {
-        this.scheduleEventsValidation = newValue;
-      },
-      deep: true,
-    },
-    // scheduleEventsComp(newValue) {
-    //   // setTimeout(() => {
-    //   this.scheduleEventsValidation = this.schema.scheduleEvents;
-    //   // }, 2000);
-    // },
-  },
+  // watch: {
+  //   'schema.scheduleEvents': {
+  //     handler(newValue) {
+  //       this.scheduleEventsValidation.scheduleEvents = newValue;
+  //     },
+  //     deep: true,
+  //   },
+  //   // scheduleEventsComp(newValue) {
+  //   //   // setTimeout(() => {
+  //   //   this.scheduleEventsValidation = this.schema.scheduleEvents;
+  //   //   // }, 2000);
+  //   // },
+  // },
   methods: {
     newCopyScheduleEventData(newValue) {
       console.log(
@@ -240,7 +245,7 @@ export default {
   },
   data() {
     return {
-      scheduleEventsValidation: [],
+      scheduleEventsValidation: this.schema, //{ scheduleEvents: this.schema.scheduleEvents },
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
       // scheduleEvents: [
