@@ -17,7 +17,7 @@ import * as _ from 'lodash';
 // if (process.env.NODE_ENV === 'development') {
 // import { validators } from '../../../../../validators.js';
 // } else {
-// import { validators } from '_validators';
+import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
