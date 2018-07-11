@@ -9,16 +9,16 @@
           <div class="schedule-event-preview__title-text">{{eventName}}</div>
           <div class="schedule-event-preview__dates">
             <span
-              :key="indexOfStartsAt"
-              v-for="(date, indexOfStartsAt) in startsAt || []"
+              :key="index"
+              v-for="(date, index) in startsAt || []"
               :class="{
-                'bold-text': !!(indexOfStartsAt === 0)
+                'bold-text': !!(index === 0)
               }"
               v-if="conditionalStartsAt(index)"
             >
-            {{date}}<span v-if="startsAt && indexOfStartsAt !== startsAt.length - 1">,</span><span v-if="conditionalEllipsisForDate(indexOfStartsAt)">...</span>
+            {{date}}<span v-if="startsAt && index !== startsAt.length - 1">,</span><span v-if="conditionalEllipsisForDate(index)">...</span>
             </span>
-            <span 
+            <span
               class="schedule-event-preview__see-more"
               @click.stop="seeMoreDates"
               v-if="conditionalSeeMoreDates"
@@ -67,7 +67,6 @@
         >
         </or-menu>
     </or-icon-button>
-    sdssdf
   </div>
 </template>
 
@@ -215,7 +214,7 @@ export default {
           ? undefined
           : new Date(moment(this.endDate.date).format('YYYY-MM-DD'));
 
-        const result = [].concat
+        const result = [].concat // eslint-disable-line
           .apply(
             [],
             this.expressions.map(item =>
@@ -232,7 +231,6 @@ export default {
       } catch (e) {
         return [];
       }
-
       // return []
       //   .concat(
       //     ...this.expressions.map(item =>

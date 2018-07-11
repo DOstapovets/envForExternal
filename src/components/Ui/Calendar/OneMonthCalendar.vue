@@ -46,7 +46,7 @@
                       <span
                         class="calendar__event"
                         :key="key"
-                        v-if="key < 3 && previousMonthDaysValue.length"
+                        v-if="previousMonthDaysShowFirst3(key, previousMonthDaysValue.length)"
                         v-for="(value, key) in previousMonthDaysValue"
                         :style="{color : value.lighter ? '#0F232E' : ''}"
                       >
@@ -59,7 +59,7 @@
                     </div>
                     <span
                       class="calendar__event calendar__event_more"
-                      v-if="!yearsCalendar && previousMonthDaysValue.length > 3"
+                      v-if="isShowButtonMore(previousMonthDaysValue.length)"
                     >
                       <span 
                         class="calendar__event-background calendar__event-background_more"
@@ -69,7 +69,7 @@
                     <div 
                       class="calendar__event-more-items"
                       :class="{'calendar__event-more-items_year': yearsCalendar}"
-                      v-if="Object.keys(previousMonthDaysValue).length > 3"
+                      v-if="isShowMoreItems(Object.keys(previousMonthDaysValue).length)"
                     >
                       <span
                         class="calendar__event"
@@ -90,7 +90,7 @@
                     <span></span>
                     <div
                       class="stroke__wr"
-                      v-if="yearsCalendar && previousMonthDaysValue.length > 0" 
+                      v-if="isShowCircle(previousMonthDaysValue.length)"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" height="34" width="34">
                         <circle 
@@ -144,7 +144,7 @@
                     </div>
                     <span
                       class="calendar__event calendar__event_more"
-                      v-if="!yearsCalendar && dayValue.length > 3"
+                      v-if="isShowButtonMore(dayValue.length)"
                     >
                       <span 
                         class="calendar__event-background calendar__event-background_more"
@@ -154,7 +154,7 @@
                     <div 
                       class="calendar__event-more-items"
                       :class="{'calendar__event-more-items_year': yearsCalendar}"
-                      v-if="Object.keys(dayValue).length > 3"
+                      v-if="isShowMoreItems(Object.keys(dayValue).length)"
                     >
                       <span
                         class="calendar__event"
@@ -175,7 +175,7 @@
                     <span></span>
                     <div
                       class="stroke__wr"
-                      v-if="yearsCalendar && dayValue.length > 0" 
+                      v-if="isShowCircle(dayValue.length)" 
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" height="34" width="34">
                         <circle 
@@ -228,7 +228,7 @@
                 </div>
                 <span
                   class="calendar__event calendar__event_more"
-                  v-if="nextMonthDayValue.length > 3 && !yearsCalendar"
+                  v-if="isShowButtonMore(nextMonthDayValue.length)"
                 >
                   <span 
                     class="calendar__event-background calendar__event-background_more"
@@ -238,7 +238,7 @@
                 <div
                   class="calendar__event-more-items"
                   :class="{'calendar__event-more-items_year': yearsCalendar}"
-                  v-if="Object.keys(nextMonthDayValue).length > 3"
+                  v-if="isShowMoreItems(Object.keys(nextMonthDayValue).length)"
                 >
                   <span
                     class="calendar__event"
@@ -259,7 +259,7 @@
                 <span></span>
                 <div
                   class="stroke__wr"
-                  v-if="nextMonthDayValue.length > 0 && yearsCalendar" 
+                  v-if="isShowCircle(nextMonthDayValue.length)" 
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" height="34" width="34">
                     <circle 
@@ -571,6 +571,18 @@ export default {
       //   return true;
       // });
       // return res;
+    },
+    previousMonthDaysShowFirst3(key, len) {
+      return key < 3 && len;
+    },
+    isShowButtonMore(len) {
+      return !this.yearsCalendar && len > 3;
+    },
+    isShowCircle(len) {
+      return this.yearsCalendar && len > 0;
+    },
+    isShowMoreItems(len) {
+      return len > 3;
     },
   },
   watch: {
