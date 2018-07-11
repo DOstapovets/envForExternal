@@ -225,7 +225,7 @@ export default {
   },
   data() {
     return {
-      scheduleEvents: this.schema.scheduleEvents,
+      // scheduleEvents: this.schema.scheduleEvents,
       // scheduleEvents: this.schema.scheduleEvents,
       // scheduleEvents: [
       // {
