@@ -144,7 +144,7 @@ export const validator = template => {
         },
       },
     },
-    validationCopyScheduleEventData: _.cloneDeep(schemaValidation),
+    // validationCopyScheduleEventData: _.cloneDeep(schemaValidation),
   };
 };
 
