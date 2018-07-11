@@ -140,6 +140,7 @@ export const validator = template => {
 
 export const data = template => ({
   scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
+  scheduleEventsValidation: _.get(this, 'schema.scheduleEvents', null) || [],
   // validationCopyScheduleEventData: {
   // startExpression: {
   //   time: '00:00',
@@ -198,7 +199,7 @@ export default {
       set(newValue) {
         if (_.get(this, 'schema.scheduleEvents', null)) {
           this.schema.scheduleEvents = newValue;
-          this.scheduleEventsValidation = newValue;
+          // this.scheduleEventsValidation = _.cloneDeep(newValue);
         }
       },
     },
@@ -233,53 +234,53 @@ export default {
   },
   data() {
     return {
-      scheduleEventsValidation: [
-        {
-          id: '',
-          startExpression: {
-            time: '00:00',
-            date: '',
-          },
-          deactivateAfterLastRun: false,
-          includeEndTime: false,
-          isReccuring: false,
-          expressions: [],
-          isEndTime: false,
-          eventName: '',
-          endExpression: {
-            time: '00:00',
-            date: '',
-          },
-          timeZone: {
-            label: '',
-            value: '',
-          },
-          daily: defaultValues.daily,
-          weekly: defaultValues.weekly,
-          monthly: defaultValues.monthly,
-          yearly: defaultValues.yearly,
-          times: [
-            {
-              start: {
-                HH: '',
-                mm: '',
-              },
-              end: {
-                HH: '',
-                mm: '',
-              },
-              every: {
-                val: 10,
-                units: 'mm',
-              },
-              endTime: false,
-              vforkey: '',
-            },
-          ],
-          color: '',
-          savedAccordionSlotName: null,
-        },
-      ],
+      // scheduleEventsValidation: [
+      //   {
+      //     id: '',
+      //     startExpression: {
+      //       time: '00:00',
+      //       date: '',
+      //     },
+      //     deactivateAfterLastRun: false,
+      //     includeEndTime: false,
+      //     isReccuring: false,
+      //     expressions: [],
+      //     isEndTime: false,
+      //     eventName: '',
+      //     endExpression: {
+      //       time: '00:00',
+      //       date: '',
+      //     },
+      //     timeZone: {
+      //       label: '',
+      //       value: '',
+      //     },
+      //     daily: defaultValues.daily,
+      //     weekly: defaultValues.weekly,
+      //     monthly: defaultValues.monthly,
+      //     yearly: defaultValues.yearly,
+      //     times: [
+      //       {
+      //         start: {
+      //           HH: '',
+      //           mm: '',
+      //         },
+      //         end: {
+      //           HH: '',
+      //           mm: '',
+      //         },
+      //         every: {
+      //           val: 10,
+      //           units: 'mm',
+      //         },
+      //         endTime: false,
+      //         vforkey: '',
+      //       },
+      //     ],
+      //     color: '',
+      //     savedAccordionSlotName: null,
+      //   },
+      // ],
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
       // scheduleEvents: [
