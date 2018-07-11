@@ -1,6 +1,6 @@
 <template>
   <div>
-    22
+    25
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -198,6 +198,7 @@ export default {
       set(newValue) {
         if (_.get(this, 'schema.scheduleEvents', null)) {
           this.schema.scheduleEvents = newValue;
+          this.scheduleEventsValidation = newValue;
         }
       },
     },
@@ -205,13 +206,13 @@ export default {
     //   return validationCopyScheduleEventData
     // }
   },
-  watch: {
-    scheduleEventsComp(newValue) {
-      // setTimeout(() => {
-      this.scheduleEventsValidation = _.cloneDeep(newValue);
-      // }, 2000);
-    },
-  },
+  // watch: {
+  //   scheduleEventsComp(newValue) {
+  //     // setTimeout(() => {
+  //     this.scheduleEventsValidation = _.cloneDeep(newValue);
+  //     // }, 2000);
+  //   },
+  // },
   methods: {
     newCopyScheduleEventData(newValue) {
       console.log(
