@@ -367,13 +367,17 @@ export default {
       this.doEditable(this.scheduleEvents.length - 1);
     },
     validdationScheduleEventData(index) {
-      // return this.$v.scheduleEventsValidation.scheduleEvents.$each.$iter[index]
-      //   .scheduleEventData.$invalid;
-      return _.get(
-        this.$v,
-        `scheduleEventsValidation.scheduleEvents.$each.$iter[${index}].scheduleEventData.$invalid`,
-        false,
+      console.log(
+        'this.$v.scheduleEventsValidation',
+        JSON.stringify(this.$v.scheduleEventsValidation),
       );
+      return this.$v.scheduleEventsValidation.scheduleEvents.$each.$iter[index]
+        .scheduleEventData.$invalid;
+      // return _.get(
+      //   this.$v,
+      //   `scheduleEventsValidation.scheduleEvents.$each.$iter[${index}].scheduleEventData.$invalid`,
+      //   false,
+      // );
     },
   },
   watch: {

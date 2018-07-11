@@ -17,7 +17,7 @@ import * as _ from 'lodash';
 // if (process.env.NODE_ENV === 'development') {
 // import { validators } from '../../../../../validators.js';
 // } else {
-import { validators } from '_validators';
+// import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
@@ -33,6 +33,9 @@ const schemaValidation = {
   required,
   custom(value) {
     console.log('valuevalue', value);
+    if (!value) {
+      return false;
+    }
     let valid = true;
     if (value.isReccuring) {
       if (!value.isEndTime && !value.endExpression.date) {
@@ -75,6 +78,10 @@ const schemaValidation = {
   },
   times: {
     custom(value) {
+      console.log('valuevalue', value);
+      if (!value) {
+        return false;
+      }
       let valid = true;
       value.forEach(item => {
         if (!item.start.HH || !item.start.mm) {
@@ -147,7 +154,70 @@ export const data = template => ({
 });
 
 export default {
-  props: ['template', 'schema', 'step', 'stepId', 'steps', 'readonly'],
+  props: {
+    template: null,
+    schema: {
+      type: Object,
+      default: () => ({
+        scheduleEvents: [
+          {
+            scheduleEventData: {
+              id: '',
+              startExpression: {
+                time: '00:00',
+                date: '',
+              },
+              deactivateAfterLastRun: false,
+              includeEndTime: false,
+              isReccuring: false,
+              expressions: [],
+              isEndTime: false,
+              eventName: '',
+              endExpression: {
+                time: '00:00',
+                date: '',
+              },
+              timeZone: {
+                label: '',
+                value: '',
+              },
+              daily: defaultValues.daily,
+              weekly: defaultValues.weekly,
+              monthly: defaultValues.monthly,
+              yearly: defaultValues.yearly,
+              times: [
+                {
+                  start: {
+                    HH: '',
+                    mm: '',
+                  },
+                  end: {
+                    HH: '',
+                    mm: '',
+                  },
+                  every: {
+                    val: 10,
+                    units: 'mm',
+                  },
+                  endTime: false,
+                  vforkey: uuid.v4(),
+                },
+              ],
+              color: '',
+              savedAccordionSlotName: null,
+            },
+            previewTexts: {
+              reccuring: '',
+            },
+          },
+        ],
+      }),
+    },
+    step: null,
+    stepId: null,
+    steps: null,
+    readonly: null,
+  },
   computed: {
     scheduleEventsComp: {
       get() {
@@ -158,6 +228,9 @@ export default {
           this.schema.scheduleEvents = newValue;
           // this.scheduleEventsValidation = newValue;
           // this.$set(this.scheduleEventsValidation, 'scheduleEvents', newValue);
+          // if (newValue.scheduleEvents) {
+          //   this.scheduleEventsValidation.scheduleEvents = this.schema.scheduleEvents;
+          // }
         }
       },
     },
@@ -175,11 +248,6 @@ export default {
       },
       deep: true,
     },
-    // scheduleEventsComp(newValue) {
-    //   // setTimeout(() => {
-    //   this.scheduleEventsValidation = this.schema.scheduleEvents;
-    //   // }, 2000);
-    // },
   },
   methods: {
     newCopyScheduleEventData(newValue) {
@@ -200,10 +268,10 @@ export default {
     return validator(this.template);
   },
   data() {
-    console.log(this.schema);
+    console.log('this.schema', this.schema);
 
     return {
-      scheduleEventsValidation: { scheduleEvents: [] },
+      scheduleEventsValidation: this.schema,
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
       validationCopyScheduleEventData: {},
