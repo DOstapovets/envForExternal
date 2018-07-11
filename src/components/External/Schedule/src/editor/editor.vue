@@ -1,6 +1,6 @@
 <template>
   <div>
-    25
+    26
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -329,49 +329,49 @@ export default {
       // },
       // ],
       validationCopyScheduleEventData: {
-        id: '',
-        startExpression: {
-          time: '00:00',
-          date: '',
-        },
-        deactivateAfterLastRun: false,
-        includeEndTime: false,
-        isReccuring: false,
-        expressions: [],
-        isEndTime: false,
-        eventName: '',
-        endExpression: {
-          time: '00:00',
-          date: '',
-        },
-        timeZone: {
-          label: '',
-          value: '',
-        },
-        daily: defaultValues.daily,
-        weekly: defaultValues.weekly,
-        monthly: defaultValues.monthly,
-        yearly: defaultValues.yearly,
-        times: [
-          {
-            start: {
-              HH: '',
-              mm: '',
-            },
-            end: {
-              HH: '',
-              mm: '',
-            },
-            every: {
-              val: 10,
-              units: 'mm',
-            },
-            endTime: false,
-            vforkey: '',
-          },
-        ],
-        color: '',
-        savedAccordionSlotName: null,
+        // id: '',
+        // startExpression: {
+        //   time: '00:00',
+        //   date: '',
+        // },
+        // deactivateAfterLastRun: false,
+        // includeEndTime: false,
+        // isReccuring: false,
+        // expressions: [],
+        // isEndTime: false,
+        // eventName: '',
+        // endExpression: {
+        //   time: '00:00',
+        //   date: '',
+        // },
+        // timeZone: {
+        //   label: '',
+        //   value: '',
+        // },
+        // daily: defaultValues.daily,
+        // weekly: defaultValues.weekly,
+        // monthly: defaultValues.monthly,
+        // yearly: defaultValues.yearly,
+        // times: [
+        //   {
+        //     start: {
+        //       HH: '',
+        //       mm: '',
+        //     },
+        //     end: {
+        //       HH: '',
+        //       mm: '',
+        //     },
+        //     every: {
+        //       val: 10,
+        //       units: 'mm',
+        //     },
+        //     endTime: false,
+        //     vforkey: '',
+        //   },
+        // ],
+        // color: '',
+        // savedAccordionSlotName: null,
       },
     };
   },
