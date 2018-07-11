@@ -272,7 +272,7 @@ export default {
     console.log('this.schema', this.schema);
 
     return {
-      scheduleEventsValidation: this.schema,
+      scheduleEventsValidation: { scheduleEvents: this.schema.scheduleEvents },
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
       validationCopyScheduleEventData: {},
