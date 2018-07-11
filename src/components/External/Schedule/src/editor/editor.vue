@@ -1,6 +1,6 @@
 <template>
   <div>
-    31
+    32
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -200,7 +200,7 @@ export default {
                     units: 'mm',
                   },
                   endTime: false,
-                  vforkey: uuid.v4(),
+                  vforkey: '',
                 },
               ],
               color: '',
