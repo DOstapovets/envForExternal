@@ -140,7 +140,7 @@ export const validator = template => {
 
 export const data = template => ({
   scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
-  scheduleEventsValidation: _.get(this, 'schema.scheduleEvents', null) || [],
+  // scheduleEventsValidation: _.get(this, 'schema.scheduleEvents', null) || [],
   // validationCopyScheduleEventData: {
   // startExpression: {
   //   time: '00:00',
@@ -199,7 +199,7 @@ export default {
       set(newValue) {
         if (_.get(this, 'schema.scheduleEvents', null)) {
           this.schema.scheduleEvents = newValue;
-          // this.scheduleEventsValidation = _.cloneDeep(newValue);
+          this.scheduleEventsValidation = newValue;
         }
       },
     },
@@ -207,13 +207,19 @@ export default {
     //   return validationCopyScheduleEventData
     // }
   },
-  // watch: {
-  //   scheduleEventsComp(newValue) {
-  //     // setTimeout(() => {
-  //     this.scheduleEventsValidation = _.cloneDeep(newValue);
-  //     // }, 2000);
-  //   },
-  // },
+  watch: {
+    'schema.scheduleEvents': {
+      handler(newValue) {
+        this.scheduleEventsValidation = newValue;
+      },
+      deep: true,
+    },
+    // scheduleEventsComp(newValue) {
+    //   // setTimeout(() => {
+    //   this.scheduleEventsValidation = this.schema.scheduleEvents;
+    //   // }, 2000);
+    // },
+  },
   methods: {
     newCopyScheduleEventData(newValue) {
       console.log(
@@ -234,53 +240,7 @@ export default {
   },
   data() {
     return {
-      // scheduleEventsValidation: [
-      //   {
-      //     id: '',
-      //     startExpression: {
-      //       time: '00:00',
-      //       date: '',
-      //     },
-      //     deactivateAfterLastRun: false,
-      //     includeEndTime: false,
-      //     isReccuring: false,
-      //     expressions: [],
-      //     isEndTime: false,
-      //     eventName: '',
-      //     endExpression: {
-      //       time: '00:00',
-      //       date: '',
-      //     },
-      //     timeZone: {
-      //       label: '',
-      //       value: '',
-      //     },
-      //     daily: defaultValues.daily,
-      //     weekly: defaultValues.weekly,
-      //     monthly: defaultValues.monthly,
-      //     yearly: defaultValues.yearly,
-      //     times: [
-      //       {
-      //         start: {
-      //           HH: '',
-      //           mm: '',
-      //         },
-      //         end: {
-      //           HH: '',
-      //           mm: '',
-      //         },
-      //         every: {
-      //           val: 10,
-      //           units: 'mm',
-      //         },
-      //         endTime: false,
-      //         vforkey: '',
-      //       },
-      //     ],
-      //     color: '',
-      //     savedAccordionSlotName: null,
-      //   },
-      // ],
+      scheduleEventsValidation: [],
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
       // scheduleEvents: [
