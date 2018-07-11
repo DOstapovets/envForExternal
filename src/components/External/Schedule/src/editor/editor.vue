@@ -1,6 +1,6 @@
 <template>
   <div>
-    21
+    22
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -15,9 +15,9 @@ import * as _ from 'lodash';
 
 /* eslint-disable */
 // if (process.env.NODE_ENV === 'development') {
-import { validators } from '../../../../../validators.js';
+// import { validators } from '../../../../../validators.js';
 // } else {
-// import { validators } from '_validators';
+import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
