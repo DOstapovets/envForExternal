@@ -168,7 +168,10 @@ export default {
   watch: {
     schema: {
       handler(newValue) {
-        this.scheduleEventsValidation.scheduleEvents = newValue.scheduleEvents;
+        if (newValue.scheduleEvents) {
+          this.scheduleEventsValidation.scheduleEvents =
+            newValue.scheduleEvents;
+        }
       },
       deep: true,
     },
