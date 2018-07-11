@@ -1,6 +1,6 @@
 <template>
   <div>
-    18
+    19
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -15,9 +15,9 @@ import * as _ from 'lodash';
 
 /* eslint-disable */
 // if (process.env.NODE_ENV === 'development') {
-// import { validators } from '../../../../../validators.js';
+import { validators } from '../../../../../validators.js';
 // } else {
-import { validators } from '_validators';
+// import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
@@ -128,7 +128,7 @@ const schemaValidation = {
 
 export const validator = template => {
   return {
-    scheduleEvents: {
+    scheduleEventsValidation: {
       required,
       $each: {
         scheduleEventData: _.cloneDeep(schemaValidation),
@@ -205,6 +205,11 @@ export default {
     //   return validationCopyScheduleEventData
     // }
   },
+  watch: {
+    scheduleEventsComp(newValue) {
+      this.scheduleEventsValidation = newValue;
+    },
+  },
   methods: {
     newCopyScheduleEventData(newValue) {
       console.log(
@@ -225,6 +230,7 @@ export default {
   },
   data() {
     return {
+      scheduleEventsValidation: [],
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
       // scheduleEvents: [

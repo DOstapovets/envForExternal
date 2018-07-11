@@ -31,7 +31,6 @@
             :invalid="validdationScheduleEventData(item.index)"
           >
           </schedule-event-preview>
-          <!-- {{$v.scheduleEvents}}sdfsdfsdfs -->
         </div>
       </template>
     </or-list>
@@ -370,7 +369,7 @@ export default {
     validdationScheduleEventData(index) {
       return _.get(
         this.$v,
-        `scheduleEvents.$each.$iter[${index}].scheduleEventData.$invalid`,
+        `scheduleEventsValidation.$each.$iter[${index}].scheduleEventData.$invalid`,
         false,
       );
     },
