@@ -15,9 +15,9 @@ import * as _ from 'lodash';
 
 /* eslint-disable */
 // if (process.env.NODE_ENV === 'development') {
-// import { validators } from '../../../../../validators.js';
+import { validators } from '../../../../../validators.js';
 // } else {
-import { validators } from '_validators';
+// import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
@@ -207,9 +207,9 @@ export default {
   },
   watch: {
     scheduleEventsComp(newValue) {
-      setTimeout(() => {
-        this.scheduleEventsValidation = newValue;
-      }, 2000);
+      // setTimeout(() => {
+      this.scheduleEventsValidation = _.cloneDeep(newValue);
+      // }, 2000);
     },
   },
   methods: {
