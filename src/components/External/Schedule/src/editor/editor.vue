@@ -1,13 +1,6 @@
 <template>
   <div>
     11
-    {{scheduleEvents}}
-    <!-- {{schema}} -->
-     <!-- {{$v}}
-     <br/>
-     <br/>
-     <br/> -->
-     <!-- {{schemaValidation}} -->
       <schedule-events
         :schedule-events.sync="scheduleEvents"
         :step="step"
@@ -21,8 +14,8 @@
 import * as _ from 'lodash';
 /* eslint-disable */
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
-// import { validators } from '../../../../../validators.js';
-import { validators } from '_validators';
+import { validators } from '../../../../../validators.js';
+// import { validators } from '_validators';
 import valdationsReccurin from './validation/validationReccuring.js';
 
 import defaultValues from './Constants/DefaultValues.js';
@@ -30,65 +23,65 @@ import defaultValues from './Constants/DefaultValues.js';
 
 const { required, generateValidators } = validators;
 const schemaValidation = {
-  // required,
-  // custom(value) {
-  //   console.log('valuevalue', value);
-  //   let valid = true;
-  //   if (value.isReccuring) {
-  //     if (!value.isEndTime && !value.endExpression.date) {
-  //       valid = false;
-  //     }
+  required,
+  custom(value) {
+    console.log('valuevalue', value);
+    let valid = true;
+    if (value.isReccuring) {
+      if (!value.isEndTime && !value.endExpression.date) {
+        valid = false;
+      }
 
-  //     if (!value.savedAccordionSlotName) {
-  //       valid = false;
-  //     }
+      if (!value.savedAccordionSlotName) {
+        valid = false;
+      }
 
-  //     if (!valdationsReccurin.daily(value)) {
-  //       valid = false;
-  //     }
+      if (!valdationsReccurin.daily(value)) {
+        valid = false;
+      }
 
-  //     if (!valdationsReccurin.weekly(value)) {
-  //       valid = false;
-  //     }
+      if (!valdationsReccurin.weekly(value)) {
+        valid = false;
+      }
 
-  //     if (!valdationsReccurin.monthly(value)) {
-  //       valid = false;
-  //     }
+      if (!valdationsReccurin.monthly(value)) {
+        valid = false;
+      }
 
-  //     if (!valdationsReccurin.yearly(value)) {
-  //       valid = false;
-  //     }
-  //   }
+      if (!valdationsReccurin.yearly(value)) {
+        valid = false;
+      }
+    }
 
-  //   return valid;
-  // },
+    return valid;
+  },
   startExpression: {
-    // required,
+    required,
     date: generateValidators('template.validateRequired', {
-      // required
+      required,
     }),
   },
   timeZone: {
     value: {
-      // required
+      required,
     },
   },
   times: {
-    // custom(value) {
-    //   let valid = true;
-    //   value.forEach(item => {
-    //     if (!item.start.HH || !item.start.mm) {
-    //       valid = false;
-    //     }
-    //     if (item.endTime && (!item.end.HH || !item.end.mm)) {
-    //       valid = false;
-    //     }
-    //     if (item.endTime && (!item.every.val || item.every.val < 1)) {
-    //       valid = false;
-    //     }
-    //   });
-    //   return valid;
-    // },
+    custom(value) {
+      let valid = true;
+      value.forEach(item => {
+        if (!item.start.HH || !item.start.mm) {
+          valid = false;
+        }
+        if (item.endTime && (!item.end.HH || !item.end.mm)) {
+          valid = false;
+        }
+        if (item.endTime && (!item.every.val || item.every.val < 1)) {
+          valid = false;
+        }
+      });
+      return valid;
+    },
   },
   daily: {
     period: {
@@ -129,7 +122,7 @@ const schemaValidation = {
 export const validator = template => {
   return {
     scheduleEvents: {
-      // required,
+      required,
       $each: {
         scheduleEventData: _.cloneDeep(schemaValidation),
       },
@@ -225,53 +218,54 @@ export default {
   },
   data() {
     return {
+      scheduleEvents: this.schema.scheduleEvents,
       // scheduleEvents: this.schema.scheduleEvents,
-      scheduleEvents: [
-        // {
-        //   vforkey: '1d9c97fe-b53d-4df1-a090-0e10bd324e9c',
-        //   scheduleEventData: {
-        //     id: '1b2b80d3-5173-407d-80ba-00cdd460b8ca',
-        //     startExpression: { time: '00:00', date: '2018-07-04' },
-        //     deactivateAfterLastRun: false,
-        //     includeEndTime: false,
-        //     isReccuring: false,
-        //     expressions: [],
-        //     isEndTime: false,
-        //     eventName: '',
-        //     endExpression: { time: '00:00', date: '' },
-        //     timeZone: { label: '', value: '' },
-        //     daily: { periodMode: 'everyDay', period: '1', cronExpressions: [] },
-        //     weekly: { period: '1', cronExpressions: [], weekDays: [] },
-        //     monthly: {
-        //       selectedMonths: [],
-        //       selectedDays: [],
-        //       mode: 'each',
-        //       daysPeriod: { day: 'SUN', period: '' },
-        //       cronExpressions: [],
-        //     },
-        //     yearly: {
-        //       selectedMonths: [],
-        //       period: '1',
-        //       cronExpressions: [],
-        //       selectedDays: [],
-        //       daysPeriod: { day: 'SUN', period: '' },
-        //       startYear: 2018,
-        //     },
-        //     times: [
-        //       {
-        //         start: { HH: '', mm: '' },
-        //         end: { HH: '', mm: '' },
-        //         every: { val: 10, units: 'mm' },
-        //         endTime: false,
-        //         vforkey: '2380fd05-59ea-4839-8788-b88b6847ea20',
-        //       },
-        //     ],
-        //     color: '#E91E63',
-        //     savedAccordionSlotName: null,
-        //   },
-        //   previewTexts: { reccuring: '' },
-        // },
-      ],
+      // scheduleEvents: [
+      // {
+      //   vforkey: '1d9c97fe-b53d-4df1-a090-0e10bd324e9c',
+      //   scheduleEventData: {
+      //     id: '1b2b80d3-5173-407d-80ba-00cdd460b8ca',
+      //     startExpression: { time: '00:00', date: '2018-07-04' },
+      //     deactivateAfterLastRun: false,
+      //     includeEndTime: false,
+      //     isReccuring: false,
+      //     expressions: [],
+      //     isEndTime: false,
+      //     eventName: '',
+      //     endExpression: { time: '00:00', date: '' },
+      //     timeZone: { label: '', value: '' },
+      //     daily: { periodMode: 'everyDay', period: '1', cronExpressions: [] },
+      //     weekly: { period: '1', cronExpressions: [], weekDays: [] },
+      //     monthly: {
+      //       selectedMonths: [],
+      //       selectedDays: [],
+      //       mode: 'each',
+      //       daysPeriod: { day: 'SUN', period: '' },
+      //       cronExpressions: [],
+      //     },
+      //     yearly: {
+      //       selectedMonths: [],
+      //       period: '1',
+      //       cronExpressions: [],
+      //       selectedDays: [],
+      //       daysPeriod: { day: 'SUN', period: '' },
+      //       startYear: 2018,
+      //     },
+      //     times: [
+      //       {
+      //         start: { HH: '', mm: '' },
+      //         end: { HH: '', mm: '' },
+      //         every: { val: 10, units: 'mm' },
+      //         endTime: false,
+      //         vforkey: '2380fd05-59ea-4839-8788-b88b6847ea20',
+      //       },
+      //     ],
+      //     color: '#E91E63',
+      //     savedAccordionSlotName: null,
+      //   },
+      //   previewTexts: { reccuring: '' },
+      // },
+      // ],
       validationCopyScheduleEventData: {
         id: '',
         startExpression: {

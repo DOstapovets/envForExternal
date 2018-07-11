@@ -1,8 +1,8 @@
 
 <template>
   <div>
-    highlightedDates
-    {{highlightedDates}}
+    <!-- highlightedDates
+    {{highlightedDates}} -->
     <!-- {{selectedDays}} -->
     <!-- {{highlightedDates}} -->
     <!-- {{highlightedDates}}

@@ -1,5 +1,5 @@
 <template>
-  <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': false}]" @click="doEditable">
+  <div :class="['schedule-event-preview', {'schedule-event-preview_invalid': invalid}]" @click="doEditable">
     <template v-if="!invalid">
       <span 
           class="schedule-event-preview__circle"
@@ -282,6 +282,10 @@ export default {
     border: 2px solid #f95d5d;
     color: #f95d5d;
     font-size: 16px;
+
+    .schedule-event-preview__settings {
+      top: 25px;
+    }
   }
 
   &__settings {
