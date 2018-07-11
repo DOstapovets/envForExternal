@@ -1,6 +1,6 @@
 <template>
   <div>
-    19
+    20
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
         :step="step"
@@ -207,7 +207,9 @@ export default {
   },
   watch: {
     scheduleEventsComp(newValue) {
-      this.scheduleEventsValidation = newValue;
+      setTimeout(() => {
+        this.scheduleEventsValidation = newValue;
+      }, 2000);
     },
   },
   methods: {
@@ -230,7 +232,53 @@ export default {
   },
   data() {
     return {
-      scheduleEventsValidation: [],
+      scheduleEventsValidation: [
+        {
+          id: '',
+          startExpression: {
+            time: '00:00',
+            date: '',
+          },
+          deactivateAfterLastRun: false,
+          includeEndTime: false,
+          isReccuring: false,
+          expressions: [],
+          isEndTime: false,
+          eventName: '',
+          endExpression: {
+            time: '00:00',
+            date: '',
+          },
+          timeZone: {
+            label: '',
+            value: '',
+          },
+          daily: defaultValues.daily,
+          weekly: defaultValues.weekly,
+          monthly: defaultValues.monthly,
+          yearly: defaultValues.yearly,
+          times: [
+            {
+              start: {
+                HH: '',
+                mm: '',
+              },
+              end: {
+                HH: '',
+                mm: '',
+              },
+              every: {
+                val: 10,
+                units: 'mm',
+              },
+              endTime: false,
+              vforkey: '',
+            },
+          ],
+          color: '',
+          savedAccordionSlotName: null,
+        },
+      ],
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
       // scheduleEvents: [
