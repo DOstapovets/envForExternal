@@ -314,7 +314,7 @@ export default {
         );
 
         // this.copyScheduleEventData = Object.assign({}, this.scheduleEvents[index].scheduleEventData, {id: uuidv4()});
-        console.log('this.copyScheduleEventData', this.copyScheduleEventData);
+        // console.log('this.copyScheduleEventData', this.copyScheduleEventData);
       }
     },
     // saveCopy(index) {

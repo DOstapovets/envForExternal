@@ -15,9 +15,9 @@ import * as _ from 'lodash';
 
 /* eslint-disable */
 // if (process.env.NODE_ENV === 'development') {
-// import { validators } from '../../../../../validators.js';
+import { validators } from '../../../../../validators.js';
 // } else {
-import { validators } from '_validators';
+// import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
@@ -32,7 +32,7 @@ const { required, generateValidators } = validators;
 const schemaValidation = {
   required,
   custom(value) {
-    console.log('valuevalue', value);
+    // console.log('valuevalue', value);
     if (!value) {
       return false;
     }
@@ -78,7 +78,7 @@ const schemaValidation = {
   },
   times: {
     custom(value) {
-      console.log('valuevalue', value);
+      // console.log('valuevalue', value);
       if (!value) {
         return false;
       }
@@ -139,12 +139,12 @@ export const validator = template => {
       required,
       scheduleEvents: {
         required,
-        $each: {
-          scheduleEventData: _.cloneDeep(schemaValidation),
-        },
+        //     $each: {
+        //       scheduleEventData: _.cloneDeep(schemaValidation),
+        //     },
       },
     },
-    // validationCopyScheduleEventData: _.cloneDeep(schemaValidation),
+    validationCopyScheduleEventData: _.cloneDeep(schemaValidation),
   };
 };
 
@@ -158,60 +158,7 @@ export default {
     template: null,
     schema: {
       type: Object,
-      default: () => ({
-        scheduleEvents: [
-          {
-            scheduleEventData: {
-              id: '',
-              startExpression: {
-                time: '00:00',
-                date: '',
-              },
-              deactivateAfterLastRun: false,
-              includeEndTime: false,
-              isReccuring: false,
-              expressions: [],
-              isEndTime: false,
-              eventName: '',
-              endExpression: {
-                time: '00:00',
-                date: '',
-              },
-              timeZone: {
-                label: '',
-                value: '',
-              },
-              daily: defaultValues.daily,
-              weekly: defaultValues.weekly,
-              monthly: defaultValues.monthly,
-              yearly: defaultValues.yearly,
-              times: [
-                {
-                  start: {
-                    HH: '',
-                    mm: '',
-                  },
-                  end: {
-                    HH: '',
-                    mm: '',
-                  },
-                  every: {
-                    val: 10,
-                    units: 'mm',
-                  },
-                  endTime: false,
-                  vforkey: '',
-                },
-              ],
-              color: '',
-              savedAccordionSlotName: null,
-            },
-            previewTexts: {
-              reccuring: '',
-            },
-          },
-        ],
-      }),
+      default: () => ({}),
     },
     step: null,
     stepId: null,
@@ -241,11 +188,17 @@ export default {
   watch: {
     schema: {
       handler(newValue) {
-        console.log('newValue234234234', JSON.stringify(newValue));
+        // console.log('newValue234234234', JSON.stringify(newValue));
         if (newValue.scheduleEvents) {
           this.scheduleEventsValidation.scheduleEvents =
             newValue.scheduleEvents;
         }
+      },
+      deep: true,
+    },
+    $v: {
+      handler(newValue) {
+        this.$emit('step-validation', newValue);
       },
       deep: true,
     },
@@ -269,7 +222,7 @@ export default {
     return validator(this.template);
   },
   data() {
-    console.log('this.schema', this.schema);
+    // console.log('this.schema', this.schema);
 
     return {
       scheduleEventsValidation: { scheduleEvents: this.schema.scheduleEvents },

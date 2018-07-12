@@ -159,11 +159,9 @@ export default {
       }
     },
     doStateMonth() {
-      console.log(2);
       this.state = 'month';
     },
     doStateYear() {
-      console.log(1);
       this.state = 'year';
     },
     selectDateHandler(day, month, year) {

@@ -78,8 +78,8 @@ import _ from 'lodash';
 
 export default {
   created() {
-    console.log('countAtDates', this.countAtDates);
-    console.log('moreDates', this.moreDates);
+    // console.log('countAtDates', this.countAtDates);
+    // console.log('moreDates', this.moreDates);
   },
   data() {
     return {
@@ -226,7 +226,7 @@ export default {
           )
           .map(item => moment(item).format('L'));
 
-        console.log('startsAt', result);
+        // console.log('startsAt', result);
 
         return result;
       } catch (e) {

@@ -134,7 +134,7 @@ export default {
       }
     },
     cronExpression() {
-      console.log(this.runAtTime);
+      // console.log(this.runAtTime);
       return _.map(
         this.runAtTime,
         item =>
