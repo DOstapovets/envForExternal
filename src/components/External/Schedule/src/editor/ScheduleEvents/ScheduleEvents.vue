@@ -454,9 +454,11 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+body {
+  -webkit-transform: translateZ(0); //fix performance scroll for safari
+}
 .schedule-events {
   min-width: 410px;
-  -webkit-transform: translateZ(0);
   // div.ui-modal.ui-modal__mask.big-modal.ui-modal--size-normal.is-open {
   //   -webkit-backface-visibility: hidden;
   //   -webkit-perspective: 1000;
