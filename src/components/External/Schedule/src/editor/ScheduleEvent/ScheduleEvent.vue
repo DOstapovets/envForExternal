@@ -1,6 +1,7 @@
 <template>
   <div class="schedule-event">
-    <!-- {{$v.validationCopyScheduleEventData.$invalid}} -->
+    {{$v.validationCopyScheduleEventData.$invalid}}
+    <!-- {{dataStateComp}} -->
     <!-- {{$v.schemaValidation.scheduleEvents.$each.$iter[index].scheduleEventData.startExpression.date}} -->
     <!-- <div class="date">
       <span v-if="!copyScheduleEventData.eventName">Choose date on calendar</span>
@@ -18,7 +19,10 @@
       <or-textbox
         placeholder="Specify event name…"
         class="textbox-without-border"
+        :class="{'textbox-without-border_invalid': invalidNameOfEvent}"
         v-model="copyScheduleEventData.eventName"
+        :invalid="invalidNameOfEvent"
+        @blur="$v.validationCopyScheduleEventData.eventName.$touch()"
       ></or-textbox>
     </div>
     <div class="wr-tizezone-start-date">
@@ -26,11 +30,17 @@
         <div class="schedule-event__label">Date</div>
         <div class="recurring-controls__date">
           <or-icon class="recurring-controls__custom-icon-date" icon="view_comfy"></or-icon>
-          <ui-datepicker :disabled="readonly" class="recurring-controls__calendar-picker-custom" iconPosition="right" placeholder="Select date"
-              :custom-formatter="formatDate" v-model="startDate"
-              :invalid="validdationDate"
+          <div 
+            @click="$v.validationCopyScheduleEventData.startExpression.date.$touch()"
           >
-          </ui-datepicker>
+            <ui-datepicker
+              :disabled="readonly" 
+              class="recurring-controls__calendar-picker-custom" iconPosition="right" placeholder="Select date"
+              :custom-formatter="formatDate" v-model="startDate"
+              :invalid="validationDate"
+            >
+            </ui-datepicker>
+          </div>
         </div>
       </div>
       <label class="timezone timezone_top">
@@ -42,7 +52,8 @@
             :has-search="true" 
             :options="getRegions"
             v-model="timeZoneComp"
-            :invalid="validdationTimeZone"
+            :invalid="validationTimeZone"
+            @dropdown-close="$v.validationCopyScheduleEventData.timeZone.value.$touch()"
           >
           </or-select>
       </label>
@@ -65,15 +76,19 @@
                     <div class="">
                       <div class="recurring-controls__date">
                         <or-icon class="recurring-controls__custom-icon-date" icon="view_comfy"></or-icon>
-                        <ui-datepicker 
-                          :disabled="readonly"
-                          class="recurring-controls__calendar-picker-custom"
-                          iconPosition="right" placeholder="Select date"
-                          :custom-formatter="formatDate" 
-                          v-model="endDate"
-                          :invalid="!endDate"
+                        <div
+                          @click="$v.validationCopyScheduleEventData.endExpression.date.$touch()"
                         >
-                        </ui-datepicker>
+                          <ui-datepicker 
+                            :disabled="readonly"
+                            class="recurring-controls__calendar-picker-custom"
+                            iconPosition="right" placeholder="Select date"
+                            :custom-formatter="formatDate" 
+                            v-model="endDate"
+                            :invalid="$v.validationCopyScheduleEventData.endExpression.date.$invalid && $v.validationCopyScheduleEventData.endExpression.date.$dirty"
+                          >
+                          </ui-datepicker>
+                        </div>
                       </div>
                     </div>
                 </div>
@@ -94,7 +109,8 @@
       @opened-item="openedAccordionItem"
       @do-editable="doEditable"
       :slot-errors="errorsAccordion"
-      :invalid="!copyScheduleEventData.savedAccordionSlotName"
+      :invalid="$v.validationCopyScheduleEventData.savedAccordionSlotName.$invalid && $v.validationCopyScheduleEventData.savedAccordionSlotName.$dirty"
+      @touch="$v.validationCopyScheduleEventData.savedAccordionSlotName.$touch()"
     >
         <template slot="item1">
             <div 
@@ -192,7 +208,7 @@
       </or-button>
       <or-button 
         :loading="loadingApply"
-        :disabled="dataStateComp === 'saved' || dataStateComp === 'canceled'"
+        :disabled="(dataStateComp === 'saved' || dataStateComp === 'canceled') || ($v.validationCopyScheduleEventData.$invalid && $v.validationCopyScheduleEventData.$dirty)"
         @click="apply"
         class="schedule-event__bottom-button" 
         color="primary"
@@ -200,6 +216,14 @@
         Apply
       </or-button>
     </div>
+    <or-modal  :contain-focus="false" ref="cancelAndDataNotSave" title="Discard unsaved changes">
+        You have unsaved changes. Are you sure you want to discard them?
+
+        <div slot="footer">
+            <or-button color="red" @click="discardNotSaved">Discard</or-button>
+            <or-button color="primary" type="secondary" @click="closeModal('cancelAndDataNotSave')">Cancel</or-button>
+        </div>
+    </or-modal>
   </div>
 </template>
 
@@ -349,7 +373,7 @@ export default {
     },
     startDate: {
       get() {
-        const date = _.get(this.copyScheduleEventData.startExpression, 'date');
+        const date = _.get(this.copyScheduleEventData, 'startExpression.date');
         return date ? new Date(date) : null;
       },
       set(newValue) {
@@ -382,30 +406,106 @@ export default {
     },
     errorsAccordion() {
       return {
-        item1: !valdationsReccurin.daily(this.copyScheduleEventData),
-        item2: !valdationsReccurin.weekly(this.copyScheduleEventData),
-        item3: !valdationsReccurin.monthly(this.copyScheduleEventData),
-        item4: !valdationsReccurin.yearly(this.copyScheduleEventData),
+        item1:
+          _.get(
+            this.$v,
+            'validationCopyScheduleEventData.daily.$anyDirty',
+            false,
+          ) &&
+          _.get(
+            this.$v,
+            'validationCopyScheduleEventData.daily.$invalid',
+            false,
+          ),
+        // item1: !valdationsReccurin.daily(this.copyScheduleEventData),
+        item2:
+          _.get(
+            this.$v,
+            'validationCopyScheduleEventData.weekly.$anyDirty',
+            false,
+          ) &&
+          _.get(
+            this.$v,
+            'validationCopyScheduleEventData.weekly.$invalid',
+            false,
+          ),
+        // item2: !valdationsReccurin.weekly(this.copyScheduleEventData),
+        item3:
+          _.get(
+            this.$v,
+            'validationCopyScheduleEventData.monthly.$anyDirty',
+            false,
+          ) &&
+          _.get(
+            this.$v,
+            'validationCopyScheduleEventData.monthly.$invalid',
+            false,
+          ),
+        // item3: !valdationsReccurin.monthly(this.copyScheduleEventData),
+        // item4: !valdationsReccurin.yearly(this.copyScheduleEventData),
+        item4:
+          _.get(
+            this.$v,
+            'validationCopyScheduleEventData.yearly.$anyDirty',
+            false,
+          ) &&
+          _.get(
+            this.$v,
+            'validationCopyScheduleEventData.yearly.$invalid',
+            false,
+          ),
       };
     },
-    validdationDate() {
-      return _.get(
-        this.$v,
-        'validationCopyScheduleEventData.startExpression.date.$invalid',
-        false,
+    validationDate() {
+      return (
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.startExpression.date.$invalid',
+          false,
+        ) &&
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.startExpression.date.$dirty',
+          false,
+        )
       );
     },
-    validdationTimeZone() {
-      return _.get(
-        this.$v,
-        'validationCopyScheduleEventData.timeZone.value.$invalid',
-        false,
+    validationTimeZone() {
+      return (
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.timeZone.value.$invalid',
+          false,
+        ) &&
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.timeZone.value.$dirty',
+          false,
+        )
+      );
+    },
+    invalidNameOfEvent() {
+      return (
+        this.$v.validationCopyScheduleEventData.eventName.$dirty &&
+        this.$v.validationCopyScheduleEventData.eventName.$invalid
       );
     },
   },
   methods: {
+    openModal(ref) {
+      this.$refs[ref].open();
+    },
+    closeModal(ref) {
+      this.$refs[ref].close();
+    },
     apply() {
-      if (this.dataStateComp !== 'canceled' && this.dataStateComp !== 'saved') {
+      if (this.$v.validationCopyScheduleEventData.$invalid) {
+        this.$v.validationCopyScheduleEventData.$touch();
+      } else if (
+        this.dataStateComp !== 'canceled' &&
+        this.dataStateComp !== 'saved'
+      ) {
+        this.copyScheduleEventData.saved = true;
         this.$emit('apply-changes');
 
         this.loadingApply = true;
@@ -414,13 +514,20 @@ export default {
         }, 200);
 
         this.dataStateComp = 'saved';
+        this.$emit('update:editableEventNum', null);
+        // this.$emit('saved-event');
       }
     },
 
     cancel() {
-      if (this.dataStateComp !== 'canceled' && this.dataStateComp !== 'saved') {
-        this.$emit('cancel-changes');
-        this.dataStateComp = 'canceled';
+      if (this.dataStateComp === 'new') {
+        this.deleteEvent();
+        this.$emit('cancel-event');
+      } else if (
+        this.dataStateComp !== 'canceled' &&
+        this.dataStateComp !== 'saved'
+      ) {
+        this.openModal('cancelAndDataNotSave');
       }
     },
 
@@ -558,6 +665,11 @@ export default {
     //   console.log('textWhenScheduled', text);
     //   this.copyScheduleEventData.previewTexts.reccuring = text;
     // }
+    discardNotSaved() {
+      this.$emit('cancel-changes');
+      this.dataStateComp = 'canceled';
+      this.$emit('cancel-event');
+    },
   },
   watch: {
     'copyScheduleEventData.times': {
@@ -565,7 +677,8 @@ export default {
         // this.$emit('update:times', newVal);
         this.runAtTimeLocal = [];
         _.forEach(newVal, item => {
-          if (item.start.HH && item.start.mm && parseInt(item.every.val, 10)) {
+          const evertVal = item.every.val ? item.every.val : 1;
+          if (item.start.HH && item.start.mm && parseInt(evertVal, 10)) {
             const units = item.every.units === 'hh' ? 'hours' : 'minutes';
 
             let nextRunAtTime = moment(`${item.start.HH}:${item.start.mm}`, [
@@ -581,10 +694,7 @@ export default {
                 mm: nextRunAtTime.minutes(),
               });
 
-              nextRunAtTime = nextRunAtTime.add(
-                parseInt(10, item.every.val),
-                units,
-              );
+              nextRunAtTime = nextRunAtTime.add(parseInt(10, evertVal), units);
             } while (
               nextRunAtTime.isSameOrBefore(endTimeHmmA) &&
               item.end.HH &&
@@ -723,6 +833,9 @@ export default {
   }
 
   .textbox-without-border {
+    &_invalid {
+      border-bottom: 1.2px solid #f95d5d;
+    }
     .ui-textbox__input {
       border: none;
       background: #fff;

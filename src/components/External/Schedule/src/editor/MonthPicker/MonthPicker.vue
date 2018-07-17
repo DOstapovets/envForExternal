@@ -46,9 +46,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    $v: null,
   },
   methods: {
     onMonthClick(newMonth) {
+      this.$emit('touch');
       this.$emit('input', this.getNewValue(newMonth));
     },
 

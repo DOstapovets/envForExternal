@@ -21,6 +21,7 @@
             v-model="selectedMonthsComp"
             :disabled="readonly"
             :invalid="validdationSelectedMonths"
+            @touch="$v.validationCopyScheduleEventData.yearly.selectedMonths.$touch()"
           ></month-picker>
       </div>
       <div class="monthly-periods monthly-periods__yearly">
@@ -225,10 +226,17 @@ export default {
       );
     },
     validdationSelectedMonths() {
-      return _.get(
-        this.$v,
-        'validationCopyScheduleEventData.yearly.selectedMonths.$invalid',
-        false,
+      return (
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.yearly.selectedMonths.$invalid',
+          false,
+        ) &&
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.yearly.selectedMonths.$dirty',
+          false,
+        )
       );
     },
   },

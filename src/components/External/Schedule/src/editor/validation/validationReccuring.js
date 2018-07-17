@@ -1,7 +1,8 @@
 export default {
     daily: (value) => {
         let valid = true;
-        if (value.daily.periodMode === 'everyDay' &&
+        if (value.savedAccordionSlotName === 'item1'
+            && value.daily.periodMode === 'everyDay' &&
             (!value.daily.period || value.daily.period < 1)
         ) {
             valid = false;

@@ -1,9 +1,11 @@
 <template>
   <div class="schedule-events">
+    <!-- {{editableEventNum}} -->
     <!-- {{scheduleEvents}} -->
     <!-- {{scheduleEvents[0].daily}} -->
+    <!-- {{dataStates}} -->
     <or-list
-      v-model="scheduleEvents" 
+      v-model="scheduleEventsLocal" 
       :steps="steps" 
       :step-id="stepId"
       add-button-label="Add Event"
@@ -28,7 +30,6 @@
             @do-editable="doEditable"
             @copy-event="copyEvent"
             @delete-event="deleteEvent"
-            :invalid="validdationScheduleEventData(item.index)"
           >
           </schedule-event-preview>
         </div>
@@ -53,7 +54,7 @@
         </div>
         <div class="schedule__events">
           <or-list
-            v-model="scheduleEvents" 
+            v-model="scheduleEventsLocal" 
             :steps="steps" 
             :step-id="stepId"
             add-button-label="Add Event"
@@ -66,19 +67,21 @@
                 v-if="editableEventNum == item.index && copyScheduleEventData"
                 :index="item.index"
                 :copy-schedule-event-data.sync="copyScheduleEventData"
-                :schedule-event-data.sync="scheduleEvents[editableEventNum].scheduleEventData"
+                :schedule-event-data.sync="scheduleEventsLocal[editableEventNum].scheduleEventData"
                 :$v="$v"
                 :readonly="readonly"
                 :step-id="stepId"
                 :steps="steps"
                 :data-state.sync="dataStates[item.index]"
                 :preview-texts="item.item.previewTexts"
+                :editable-event-num.sync="editableEventNum"
                 @save-copy="/*saveCopy*/"
                 @return-state="/*returnState*/"
                 @apply-changes="applyChanges"
                 @cancel-changes="cancelChanges"
                 @data-state="/*changeDataState*/"
                 @delete-event="deleteEvent"
+                @cancel-event="cancelEvent"
               >
               </schedule-event>
               <schedule-event-preview
@@ -95,13 +98,20 @@
                 @do-editable="doEditable"
                 @copy-event="copyEvent"
                 @delete-event="deleteEvent"
-                :invalid="validdationScheduleEventData(item.index)"
               >
               </schedule-event-preview>
             </template>
           </or-list>
         </div>
       </div>
+    </or-modal>
+    <or-modal  :contain-focus="false" ref="deleteEvent" title="Сonfirmation of delete">
+        Are you sure want delete event?
+
+        <div slot="footer">
+            <or-button color="red" @click="deleteСonfirmation()">Delete</or-button>
+            <or-button color="primary" type="secondary" @click="closeModal('deleteEvent')">Cancel</or-button>
+        </div>
     </or-modal>
     <or-modal  :contain-focus="false" ref="dataNotSave" title="Discard unsaved changes">
         You have unsaved changes. Are you sure you want to discard them?
@@ -167,16 +177,18 @@ export default {
   data() {
     return {
       // scheduleEventsLocal: this.scheduleEvents,
+      itemIndexForDelete: null,
+      scheduleEventsLocal: _.cloneDeep(this.scheduleEvents),
       editableEventNum: null,
       copyScheduleEventData: null,
       dataStates: [],
-      numOfTrueEdit: null,
+      numOfTryEdit: null,
       // editableCopy: [],
     };
   },
   computed: {
     startDays() {
-      const dates = this.scheduleEvents
+      const dates = this.scheduleEventsLocal
         .map(item => {
           const dateSplice = item.scheduleEventData.startExpression.date.split(
             '-',
@@ -288,6 +300,8 @@ export default {
       if (this.changedNumber !== -1) {
         this.$refs[ref].open();
         this.openModal('dataNotSave');
+      } else {
+        this.deleteNotSaved();
       }
     },
     changeSelectedDate(day, month, year) {
@@ -297,8 +311,9 @@ export default {
       // this.copyScheduleEventData.startExpression.date = new Date(`${year}-${month}-${day}`);
       // this.selectedDateLocal = `${year}-${month}-${day}`;
     },
-    doEditable(index) {
-      this.numOfTrueEdit = index;
+    doEditable(index, isNewItem) {
+      this.numOfTryEdit = index;
+
       if (this.changedNumber !== -1) {
         this.openModal('dataNotSaveEndSwitchToOtherEvent');
       } else {
@@ -306,33 +321,35 @@ export default {
           this.openModal('modal');
         }
         this.editableEventNum = index;
-        // this.copyScheduleEventData = _.cloneDeep(this.scheduleEvents[index].scheduleEventData);
+        // this.copyScheduleEventData = _.cloneDeep(this.scheduleEventsLocal[index].scheduleEventData);
         this.$set(
           this,
           'copyScheduleEventData',
-          _.cloneDeep(this.scheduleEvents[index].scheduleEventData),
+          _.cloneDeep(this.scheduleEventsLocal[index].scheduleEventData),
         );
+        this.deleteNotSaved(true, isNewItem);
 
-        // this.copyScheduleEventData = Object.assign({}, this.scheduleEvents[index].scheduleEventData, {id: uuidv4()});
+        // this.copyScheduleEventData = Object.assign({}, this.scheduleEventsLocal[index].scheduleEventData, {id: uuidv4()});
         // console.log('this.copyScheduleEventData', this.copyScheduleEventData);
       }
     },
     // saveCopy(index) {
-    //   this.editableCopy[index] = this.scheduleEvents[index];
+    //   this.editableCopy[index] = this.scheduleEventsLocal[index];
     //   console.log('this.editableCopy',this.editableCopy);
     // },
     // returnState(index) {
-    //   this.scheduleEvents[index] = this.editableCopy[index];
-    //   console.log('this.scheduleEvents[index]', this.scheduleEvents[index]);
+    //   this.scheduleEventsLocal[index] = this.editableCopy[index];
+    //   console.log('this.scheduleEventsLocal[index]', this.scheduleEventsLocal[index]);
     // },
     applyChanges() {
-      this.scheduleEvents[
+      this.scheduleEventsLocal[
         this.editableEventNum
       ].scheduleEventData = _.cloneDeep(this.copyScheduleEventData);
+      this.$emit('update:scheduleEvents', this.scheduleEventsLocal);
     },
     cancelChanges() {
       this.copyScheduleEventData = _.cloneDeep(
-        this.scheduleEvents[this.editableEventNum].scheduleEventData,
+        this.scheduleEventsLocal[this.editableEventNum].scheduleEventData,
       );
     },
     changeDataState(newDataState) {
@@ -346,38 +363,75 @@ export default {
     discardSwitchToOtherEvent() {
       this.$set(this.dataStates, this.changedNumber, 'canceled');
       this.closeModal('dataNotSaveEndSwitchToOtherEvent');
-      this.doEditable(this.numOfTrueEdit);
+      this.doEditable(this.numOfTryEdit);
     },
     copyEvent(index) {
-      const copyOfEvent = _.cloneDeep(this.scheduleEvents[index]);
+      const copyOfEvent = _.cloneDeep(this.scheduleEventsLocal[index]);
       copyOfEvent.vforkey = uuid.v4();
       copyOfEvent.scheduleEventData.id = uuid.v4();
       copyOfEvent.scheduleEventData.eventName = `Copy of ${
         copyOfEvent.scheduleEventData.eventName
       }`;
       copyOfEvent.scheduleEventData.color = randomColor();
-      this.scheduleEvents.push(copyOfEvent);
+      this.scheduleEventsLocal.push(copyOfEvent);
     },
     deleteEvent(index) {
-      this.editableEventNum = null;
-      this.scheduleEvents.splice(index, 1);
+      this.itemIndexForDelete = index;
+      this.openModal('deleteEvent');
     },
     eventAdded() {
-      // this.$set(this.dataStates, this.scheduleEvents.length - 1, 'new');
-      this.doEditable(this.scheduleEvents.length - 1);
+      // this.$set(this.dataStates, this.scheduleEventsLocal.length - 1, 'new');
+      this.doEditable(this.scheduleEventsLocal.length - 1, true);
     },
-    validdationScheduleEventData(index) {
-      console.log(
-        'this.$v.scheduleEventsValidation',
-        JSON.stringify(this.$v.scheduleEventsValidation),
+    // validdationScheduleEventData(index) {
+    //   console.log(
+    //     'this.$v.scheduleEventsValidation',
+    //     JSON.stringify(this.$v.scheduleEventsValidation),
+    //   );
+    //   // return this.$v.scheduleEventsValidation.scheduleEvents.$each.$iter[index]
+    //   //   .scheduleEventData.$invalid;
+    //   return _.get(
+    //     this.$v,
+    //     `scheduleEventsValidation.scheduleEvents.$each.$iter[${index}].scheduleEventData.$invalid`,
+    //     false,
+    //   );
+    // },
+    // savedEvent() {
+    //   this.$emit(
+    //     'update:scheduleEvents',
+    //     _.cloneDeep(this.scheduleEventsLocal),
+    //   );
+    // },
+    deleteNotSaved(isDelCurrEditable = false, isNewItem = false) {
+      this.scheduleEventsLocal = this.scheduleEventsLocal.filter(
+        (item, index) => {
+          let res;
+          if (this.editableEventNum === index && isDelCurrEditable) {
+            res = true;
+          } else {
+            res = _.get(item, 'scheduleEventData.saved');
+          }
+          return res;
+        },
       );
-      // return this.$v.scheduleEventsValidation.scheduleEvents.$each.$iter[index]
-      //   .scheduleEventData.$invalid;
-      return _.get(
-        this.$v,
-        `scheduleEventsValidation.scheduleEvents.$each.$iter[${index}].scheduleEventData.$invalid`,
-        false,
-      );
+      if (!isNewItem) {
+        this.$emit(
+          'update:scheduleEvents',
+          _.cloneDeep(this.scheduleEventsLocal),
+        );
+      } else {
+        this.editableEventNum = this.scheduleEventsLocal.length - 1;
+      }
+    },
+    cancelEvent() {
+      this.editableEventNum = null;
+      this.deleteNotSaved();
+    },
+    deleteСonfirmation() {
+      this.editableEventNum = null;
+      this.scheduleEventsLocal.splice(this.itemIndexForDelete, 1);
+      this.$emit('update:scheduleEvents', this.scheduleEventsLocal);
+      this.closeModal('deleteEvent');
     },
   },
   watch: {
@@ -386,6 +440,9 @@ export default {
         this.$emit('new-copy-schedule-event-data', newValue);
       },
       deep: true,
+    },
+    scheduleEventsLocal(newValue) {
+      console.log('newValuenewValue', newValue);
     },
   },
 };

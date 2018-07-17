@@ -83,6 +83,7 @@ export default {
       return _.find(this.selectedDaysComp, monthDay => monthDay === day);
     },
     toggleMonthDays(day) {
+      this.$emit('touch');
       if (_.includes(this.selectedDaysComp, day)) {
         this.selectedDaysComp = this.selectedDaysComp.filter(
           item => item !== day,

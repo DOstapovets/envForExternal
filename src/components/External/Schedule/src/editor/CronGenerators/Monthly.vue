@@ -6,6 +6,8 @@
             v-model="selectedMonthsComp" 
             :disabled="readonly"
             :invalid="validdationSelectedMonths"
+            :$v="$v"
+            @touch="$v.validationCopyScheduleEventData.monthly.selectedMonths.$touch()"
           ></month-picker>
       </div>
       <div class="recuring-configs__monthly-day_configs">
@@ -24,6 +26,8 @@
                 :selected-days.sync="selectedDaysComp"
                 :readonly="readonly || modeComp === 'onThe'"
                 :invalid="validdationSelectedDays"
+                :$v="$v"
+                @touch="$v.validationCopyScheduleEventData.monthly.selectedDays.$touch()"
               ></days-picker>
           </div>
           <div class="config-line" v-if="selectedMonths.length">
@@ -239,15 +243,29 @@ export default {
       return text;
     },
     validdationSelectedMonths() {
-      return _.get(
-        this.$v,
-        'validationCopyScheduleEventData.monthly.selectedMonths.$invalid',
+      return (
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.monthly.selectedMonths.$invalid',
+        ) &&
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.monthly.selectedMonths.$dirty',
+          false,
+        )
       );
     },
     validdationSelectedDays() {
-      return _.get(
-        this.$v,
-        'validationCopyScheduleEventData.monthly.selectedDays.$invalid',
+      return (
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.monthly.selectedDays.$invalid',
+        ) &&
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.monthly.selectedDays.$dirty',
+          false,
+        )
       );
     },
   },

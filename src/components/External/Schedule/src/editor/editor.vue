@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- {{$v}} -->
     <!-- 33 -->
       <schedule-events
         :schedule-events.sync="scheduleEventsComp"
@@ -15,9 +16,9 @@ import * as _ from 'lodash';
 
 /* eslint-disable */
 // if (process.env.NODE_ENV === 'development') {
-// import { validators } from '../../../../../validators.js';
+import { validators } from '../../../../../validators.js';
 // } else {
-import { validators } from '_validators';
+// import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
@@ -28,48 +29,64 @@ import defaultValues from './Constants/DefaultValues.js';
 
 /* eslint-enable */
 
-const { required, generateValidators } = validators;
+const { required, generateValidators, minValue } = validators;
 const schemaValidation = {
   required,
-  custom(value) {
-    // console.log('valuevalue', value);
-    if (!value) {
-      return false;
-    }
-    let valid = true;
-    if (value.isReccuring) {
-      if (!value.isEndTime && !value.endExpression.date) {
-        valid = false;
-      }
+  eventName: { required },
+  // custom(value) {
+  //   // console.log('valuevalue', value);
+  //   if (!value) {
+  //     return false;
+  //   }
+  //   let valid = true;
+  //   if (value.isReccuring) {
+  //     if (!value.isEndTime && !value.endExpression.date) {
+  //       valid = false;
+  //     }
 
-      if (!value.savedAccordionSlotName) {
-        valid = false;
-      }
+  //     if (!value.savedAccordionSlotName) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.daily(value)) {
-        valid = false;
-      }
+  //     if (!valdationsReccurin.daily(value)) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.weekly(value)) {
-        valid = false;
-      }
+  //     if (!valdationsReccurin.weekly(value)) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.monthly(value)) {
-        valid = false;
-      }
+  //     if (!valdationsReccurin.monthly(value)) {
+  //       valid = false;
+  //     }
 
-      if (!valdationsReccurin.yearly(value)) {
-        valid = false;
-      }
-    }
+  //     if (!valdationsReccurin.yearly(value)) {
+  //       valid = false;
+  //     }
+  //   }
 
-    return valid;
-  },
+  //   return valid;
+  // },
   startExpression: {
     required,
-    date: generateValidators('template.validateRequired', {
+    date: {
       required,
-    }),
+    },
+  },
+  endExpression: {
+    required,
+    date: {
+      custom(value) {
+        let valid = true;
+        if (
+          _.get(this, 'validationCopyScheduleEventData.isReccuring') &&
+          !_.get(this, 'validationCopyScheduleEventData.isEndTime')
+        ) {
+          valid = !!value;
+        }
+        return valid;
+      },
+    },
   },
   timeZone: {
     value: {
@@ -77,73 +94,205 @@ const schemaValidation = {
     },
   },
   times: {
+    $each: {
+      start: {
+        custom(value, state) {
+          let valid = true;
+          if (state) {
+            valid = !!value.HH && !!value.mm;
+          }
+          return valid;
+        },
+      },
+      end: {
+        custom(value, state) {
+          let valid = true;
+          if (state) {
+            if (_.get(state, 'endTime', false)) {
+              valid = !!value.HH && !!value.mm;
+            }
+          }
+          return valid;
+        },
+      },
+      endTime: {},
+      every: {
+        custom(value, state) {
+          let valid = true;
+          if (state) {
+            valid = value.val && parseInt(value.val, 10) > 0;
+          }
+          return valid;
+        },
+      },
+    },
+    // custom(value) {
+    //   // console.log('valuevalue', value);
+    //   if (!value) {
+    //     return false;
+    //   }
+    //   let valid = true;
+    //   value.forEach(item => {
+    //     if (!item.start.HH || !item.start.mm) {
+    //       valid = false;
+    //     }
+    //     if (item.endTime && (!item.end.HH || !item.end.mm)) {
+    //       valid = false;
+    //     }
+    //     if (item.endTime && (!item.every.val || item.every.val < 1)) {
+    //       valid = false;
+    //     }
+    //   });
+    //   return valid;
+    // },
+  },
+  savedAccordionSlotName: {
     custom(value) {
-      // console.log('valuevalue', value);
-      if (!value) {
-        return false;
-      }
       let valid = true;
-      value.forEach(item => {
-        if (!item.start.HH || !item.start.mm) {
-          valid = false;
-        }
-        if (item.endTime && (!item.end.HH || !item.end.mm)) {
-          valid = false;
-        }
-        if (item.endTime && (!item.every.val || item.every.val < 1)) {
-          valid = false;
-        }
-      });
+      if (_.get(this, 'validationCopyScheduleEventData.isReccuring'))
+        valid = !!value;
       return valid;
     },
   },
   daily: {
     period: {
-      // validPeriod: (stateCurr, stateAbove) =>
-      //   stateAbove.periodMode !== 'everyDay'
-      //     ? true
-      //     : stateCurr && stateCurr > 0,
+      custom(stateCurr, stateAbove) {
+        let valid = true;
+        if (
+          _.get(this, 'validationCopyScheduleEventData.isReccuring') &&
+          _.get(
+            this,
+            'validationCopyScheduleEventData.savedAccordionSlotName',
+          ) === 'item1'
+        ) {
+          valid =
+            _.get(stateAbove, 'periodMode') !== 'everyDay'
+              ? true
+              : stateCurr && stateCurr > 0;
+        }
+        return valid;
+      },
     },
   },
   weekly: {
     period: {
-      // required,
-      // minValue: minValue(1),
+      custom(value) {
+        console.log('validationCopyScheduleEventData3', this);
+        let valid = true;
+        if (
+          _.get(this, 'validationCopyScheduleEventData.isReccuring') &&
+          _.get(
+            this,
+            'validationCopyScheduleEventData.savedAccordionSlotName',
+          ) === 'item2' &&
+          (!value || value < 1)
+        ) {
+          valid = false;
+        }
+        return valid;
+      },
     },
     weekDays: {
-      // required
+      custom(value) {
+        let valid = true;
+        if (
+          _.get(this, 'validationCopyScheduleEventData.isReccuring') &&
+          _.get(
+            this,
+            'validationCopyScheduleEventData.savedAccordionSlotName',
+          ) === 'item2' &&
+          !value.length
+        ) {
+          valid = false;
+        }
+        return valid;
+      },
     },
   },
+
   monthly: {
     selectedMonths: {
-      // required,
+      custom(value) {
+        let valid = true;
+        if (
+          _.get(this, 'validationCopyScheduleEventData.isReccuring') &&
+          _.get(
+            this,
+            'validationCopyScheduleEventData.savedAccordionSlotName',
+          ) === 'item3' &&
+          !value.length
+        ) {
+          valid = false;
+        }
+        return valid;
+      },
     },
     selectedDays: {
-      // validSelectedDays: (stateCurr, stateAbove) =>
-      //   stateAbove.mode === 'onThe' ? true : stateCurr.length,
+      custom(value) {
+        let valid = true;
+        if (
+          _.get(this, 'validationCopyScheduleEventData.isReccuring') &&
+          _.get(
+            this,
+            'validationCopyScheduleEventData.savedAccordionSlotName',
+          ) === 'item3' &&
+          (_.get(this, 'validationCopyScheduleEventData.monthly.mode') ===
+            'each' &&
+            !value.length)
+        ) {
+          valid = false;
+        }
+        return valid;
+      },
     },
   },
   yearly: {
     period: {
-      // required, minValue: minValue(1)
+      custom(value) {
+        let valid = true;
+        if (
+          _.get(this, 'validationCopyScheduleEventData.isReccuring') &&
+          _.get(
+            this,
+            'validationCopyScheduleEventData.savedAccordionSlotName',
+          ) === 'item4' &&
+          (!value || value < 1)
+        ) {
+          valid = false;
+        }
+        return valid;
+      },
     },
     selectedMonths: {
-      // required,
+      custom(value) {
+        let valid = true;
+        if (
+          _.get(this, 'validationCopyScheduleEventData.isReccuring') &&
+          _.get(
+            this,
+            'validationCopyScheduleEventData.savedAccordionSlotName',
+          ) === 'item4' &&
+          !value.length
+        ) {
+          valid = false;
+        }
+        return valid;
+      },
     },
   },
 };
 
 export const validator = template => {
   return {
-    scheduleEventsValidation: {
-      required,
-      scheduleEvents: {
-        required,
-        //     $each: {
-        //       scheduleEventData: _.cloneDeep(schemaValidation),
-        //     },
-      },
-    },
+    // scheduleEventsValidation: {
+    // required,
+    // scheduleEvents: {
+    // required,
+    //     $each: {
+    //       scheduleEventData: _.cloneDeep(schemaValidation),
+    //     },
+    // },
+    // },
     validationCopyScheduleEventData: _.cloneDeep(schemaValidation),
   };
 };
@@ -186,16 +335,16 @@ export default {
     // }
   },
   watch: {
-    schema: {
-      handler(newValue) {
-        // console.log('newValue234234234', JSON.stringify(newValue));
-        if (newValue.scheduleEvents) {
-          this.scheduleEventsValidation.scheduleEvents =
-            newValue.scheduleEvents;
-        }
-      },
-      deep: true,
-    },
+    // schema: {
+    //   handler(newValue) {
+    //     // console.log('newValue234234234', JSON.stringify(newValue));
+    //     if (newValue.scheduleEvents) {
+    //       this.scheduleEventsValidation.scheduleEvents =
+    //         newValue.scheduleEvents;
+    //     }
+    //   },
+    //   deep: true,
+    // },
     $v: {
       handler(newValue) {
         this.$emit('step-validation', newValue);
@@ -225,7 +374,7 @@ export default {
     // console.log('this.schema', this.schema);
 
     return {
-      scheduleEventsValidation: { scheduleEvents: this.schema.scheduleEvents },
+      // scheduleEventsValidation: { scheduleEvents: this.schema.scheduleEvents },
       // scheduleEvents: _.get(this, 'schema.scheduleEvents', null) || [],
       // scheduleEvents: this.schema.scheduleEvents,
       validationCopyScheduleEventData: {},

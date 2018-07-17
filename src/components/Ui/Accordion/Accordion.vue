@@ -79,6 +79,7 @@ export default {
       }
     },
     openItem(index) {
+      this.$emit('touch');
       this.$emit('do-editable', index);
       if (this.openedItemComp) return;
       this.$emit('opened-item', index);

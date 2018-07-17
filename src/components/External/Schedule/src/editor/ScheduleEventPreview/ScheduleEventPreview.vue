@@ -53,7 +53,7 @@
     </template>
     <or-icon-button
       has-dropdown icon="more_vert" 
-      ref="dropdownButton" 
+      :ref="ref" 
       size="normal"
       class="schedule-event-preview__settings"
       @click.stop="/**/"
@@ -63,7 +63,7 @@
           has-icons
           slot="dropdown"
           :options="menuOptions"
-          @close="$refs.dropdownButton.closeDropdown()"
+          @close="$refs[ref].closeDropdown()"
           @select="selectOption"
         >
         </or-menu>
@@ -75,17 +75,20 @@
 import moment from 'moment';
 import later from 'later';
 import _ from 'lodash';
+import uuid from 'uuid';
 
 export default {
-  created() {
-    // console.log('countAtDates', this.countAtDates);
-    // console.log('moreDates', this.moreDates);
-  },
+  // created() {
+  // console.log('countAtDates', this.countAtDates);
+  // console.log('moreDates', this.moreDates);
+  // this.ref = uuid.v4()
+  // },
   data() {
     return {
       countAtDates: 16,
       moreDates: false,
       moreTimes: false,
+      ref: uuid.v4(),
       menuOptions: [
         {
           label: 'Edit',

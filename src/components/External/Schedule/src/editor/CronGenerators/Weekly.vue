@@ -2,9 +2,9 @@
 <div class="weekly">
     <div v-if="isEditable">
       <div class="radio-custom__wr">
-          <or-radio v-model="periodMode" true-value="everyWeek" :disabled="readonly">
+          <!-- <or-radio v-model="periodMode" true-value="everyWeek" :disabled="readonly">
               Every:
-          </or-radio>
+          </or-radio> -->
           <or-textbox
             :disabled="readonly"
             :class="['xs-input', /*{'text-box-error': !dailySchedule.isDailyDaysValid}*/]"
@@ -125,6 +125,7 @@ export default {
       return _.find(this.weekDaysLocal, weekDay => weekDay.value === day.value);
     },
     toggleWeeklyDays(day) {
+      this.$v.validationCopyScheduleEventData.weekly.weekDays.$touch();
       if (_.some(this.weekDaysLocal, day)) {
         this.weekDaysLocal = this.weekDaysLocal.filter(
           item => item.value !== day.value,
@@ -194,10 +195,17 @@ export default {
       );
     },
     validdationWeekDays() {
-      return _.get(
-        this.$v,
-        'validationCopyScheduleEventData.weekly.weekDays.$invalid',
-        false,
+      return (
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.weekly.weekDays.$invalid',
+          false,
+        ) &&
+        _.get(
+          this.$v,
+          'validationCopyScheduleEventData.weekly.weekDays.$dirty',
+          false,
+        )
       );
     },
   },
@@ -251,7 +259,7 @@ export default {
   }
 
   .weekly-days {
-    margin: 10px 0 0 30px;
+    margin: 10px 0 0 0;
 
     &_error {
       border: #f95d5d 1px solid;
@@ -260,7 +268,7 @@ export default {
     .btn-group {
       font-size: 14px;
       color: #0f232e;
-      width: 35px;
+      width: 34px;
       height: 25px;
       border: solid 1px #e7e7e7;
       background-color: #fbfbfb;

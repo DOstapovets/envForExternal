@@ -11,6 +11,7 @@
                       :class="[{ readony: readonly, 'timepicker-error': timepickerStartError}]"
                       format="HH:mm"
                       hideClearButton
+                      @close-dropdown="$v.validationCopyScheduleEventData.times.$each.$iter[index].start.$touch()"
                     ></or-timepicker>
                 </div>
                 <span class="configs-time__from-to" v-if="endTime">To</span>
@@ -21,6 +22,7 @@
                       :class="[{ readony: readonly, 'timepicker-error': timepickerEndError}]"
                       format="HH:mm" 
                       hideClearButton
+                      @close-dropdown="$v.validationCopyScheduleEventData.times.$each.$iter[index].end.$touch()"
                     ></or-timepicker>
                 </div>
             </div>
@@ -34,6 +36,7 @@
                   :disabled="readonly"
                   v-model="localEvery.val"
                   mask="##########"
+                  @change="$v.validationCopyScheduleEventData.times.$each.$iter[index].every.$touch()"
                 >
                 </or-textbox>
                 <or-select label="" :disabled="readonly" class="dimention-selector" :options="[{value:'hh', label:'hr'}, {value:'mm', label:'min'}]"
@@ -129,13 +132,25 @@ export default {
       },
     },
     timepickerStartError() {
-      return !(this.localStart.HH && this.localStart.mm);
+      const item = this.$v.validationCopyScheduleEventData.times.$each.$iter[
+        this.index
+      ].start;
+      return item.$invalid && item.$dirty;
+      // return !(this.localStart.HH && this.localStart.mm);
     },
     timepickerEndError() {
-      return !(this.localEnd.HH && this.localEnd.mm);
+      const item = this.$v.validationCopyScheduleEventData.times.$each.$iter[
+        this.index
+      ].end;
+      return item.$invalid && item.$dirty;
+      // return !(this.localEnd.HH && this.localEnd.mm);
     },
     timepickerEveryValError() {
-      return !(this.localEvery.val && this.localEvery.val > 0);
+      const item = this.$v.validationCopyScheduleEventData.times.$each.$iter[
+        this.index
+      ].every;
+      return item.$invalid && item.$dirty;
+      // return !(this.localEvery.val && this.localEvery.val > 0);
     },
   },
 };
