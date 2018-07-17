@@ -41,6 +41,7 @@
       ref="modal"
       title="Set schedule"
       @close="closeModalEvent('modal')"
+      size="large"
     >
       <div class="schedule__wr-events-calendar">
         <div class="schedule__calendar">
@@ -403,6 +404,7 @@ export default {
     //   );
     // },
     deleteNotSaved(isDelCurrEditable = false, isNewItem = false) {
+      this.dataStates[this.itemIndexForDelete] = 'canceled';
       this.scheduleEventsLocal = this.scheduleEventsLocal.filter(
         (item, index) => {
           let res;
@@ -422,6 +424,7 @@ export default {
       } else {
         this.editableEventNum = this.scheduleEventsLocal.length - 1;
       }
+      this.$v.validationCopyScheduleEventData.$reset();
     },
     cancelEvent() {
       this.editableEventNum = null;
@@ -429,9 +432,11 @@ export default {
     },
     deleteСonfirmation() {
       this.editableEventNum = null;
+      this.dataStates[this.itemIndexForDelete] = 'canceled';
       this.scheduleEventsLocal.splice(this.itemIndexForDelete, 1);
       this.$emit('update:scheduleEvents', this.scheduleEventsLocal);
       this.closeModal('deleteEvent');
+      this.$v.validationCopyScheduleEventData.$reset();
     },
   },
   watch: {
@@ -451,10 +456,23 @@ export default {
 <style lang="scss" rel="stylesheet/scss">
 .schedule-events {
   min-width: 410px;
+  -webkit-transform: translateZ(0);
+  // div.ui-modal.ui-modal__mask.big-modal.ui-modal--size-normal.is-open {
+  //   -webkit-backface-visibility: hidden;
+  //   -webkit-perspective: 1000;
+  //   transform: translate3d(0, 0, 0);
+  //   background-attachment: fixed;
+  //   background-size: cover;
+  //   will-change: transform;
+  //   // z-index: -1;
+  // }
+
   .big-modal > .ui-modal__wrapper > .ui-modal__container {
     width: 100%;
   }
-
+  // .ui-modal__mask {
+  //   -webkit-transform: translateZ(0);
+  // }
   .schedule-event-preview {
     margin-bottom: 20px;
   }
