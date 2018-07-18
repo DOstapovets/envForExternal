@@ -455,14 +455,24 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss">
 body {
-  -webkit-transform: translateZ(0); //fix performance scroll for safari
 }
 .schedule-events {
   min-width: 410px;
+  // position: fixed;
+  // top: 0;
+  // left: 0;
+  // width: 100vw;
+  // height: 100vh;
+  // will-change: scroll-position;
+  // -webkit-backface-visibility: hidden;
+  // -webkit-transform: translateZ(0) scale(1, 1);
+  // transform: translateZ(0);
+  // top: 0;
+  // -webkit-transform: translateZ(0); //fix performance scroll for safari
   // div.ui-modal.ui-modal__mask.big-modal.ui-modal--size-normal.is-open {
   //   -webkit-backface-visibility: hidden;
   //   -webkit-perspective: 1000;
-  //   transform: translate3d(0, 0, 0);
+  // transform: translate3d(0, 0, 0);
   //   background-attachment: fixed;
   //   background-size: cover;
   //   will-change: transform;
@@ -472,9 +482,14 @@ body {
   .big-modal > .ui-modal__wrapper > .ui-modal__container {
     width: 100%;
   }
-  // .ui-modal__mask {
-  //   -webkit-transform: translateZ(0);
-  // }
+  .ui-modal__mask {
+    // position: fixed;
+    // top: 0;
+    // transform: translateZ(0);
+    // position: sticky;
+    width: 100%;
+    // will-change: transform;
+  }
   .schedule-event-preview {
     margin-bottom: 20px;
   }
