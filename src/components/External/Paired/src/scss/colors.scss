@@ -1,0 +1,51 @@
+$active: #64b2da;
+$active-hover: #4b99c1;
+$active-pressed: #317fa7;
+
+$danger: #f95d5d;
+$danger-hover: #e04c4c;
+$danger-pressed: #f95d5d;
+
+$primary-ripple-ink : #053f64;
+$danger-ripple-ink : #a90b02;
+$default-ripple-ink : #5ab7f1;
+
+$dark-background : #0f232e;
+$slate-grey : rgba(94, 101, 109, 0.55);
+$text-grey: #91969d;
+$silver-grey : #bbbbbb;
+$light-silver-grey : #bfcbd3;
+$disabled-white : rgba(255, 255, 255, 0.65);
+$disabled-grey: rgba(145, 150, 157, 0.65);
+
+/* header */
+$default-header-btn-color: #9bbdce;
+$default-header-btn-bg-color: #193d50;
+
+$default-grey : #6b7278;
+$default-grey-button : $default-grey;
+$default-grey-button-hover : darken($default-grey-button, 10%);
+$default-grey-icon-button : #d1d1d1;
+$default-grey-icon-button-hover : #7f8991;
+
+/* dark button
+ ------------- */
+/* grey color */
+$grey-button-icon-color: #a1a6aa;
+$grey-label-color: #a1a5aa;
+$grey-main-bg-color: #f6f6f6;
+$grey-main-border-color: #dfdfdf;
+
+/* default color */
+$dark-button-default-background : #1d465e;
+$dark-button-default-background-hover : lighten($dark-button-default-background, 10%);
+$dark-button-default-color : #fff;
+/* primary color */
+$dark-button-primary-background : lighten($dark-button-default-background, 15%);
+$dark-button-primary-background-hover : lighten($dark-button-primary-background, 10%);
+$dark-button-primary-color : #fff;
+
+/* flows & bots
+------------ */
+$bots-colors-list: #808080 #ac7a49 #9f4849 #9f497f #5f50a0 #4f6d9e #51887b #849f52 #d2b66c;
+$flows-colors-list: #808080 #ac7a49 #9f4849 #9f497f #5f50a0 #4f6d9e #51887b #849f52 #d2b66c;

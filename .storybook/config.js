@@ -18,9 +18,11 @@ Vue.use(Vuelidate);
 
 function loadStories() {
   // You can require as many stories as you need.
-  require('../src/components/Ui/Calendar/Calendar.stories.js');
-  require('../src/components/Ui/Accordion/Accordion.stories.js');
-  require('../src/components/External/Schedule/Schedule.stories.js');
+  //require('../src/components/Ui/Calendar/Calendar.stories.js');
+  //require('../src/components/Ui/Accordion/Accordion.stories.js');
+  //require('../src/components/External/Schedule/Schedule.stories.js');
+  //require('../src/components/External/Paired/Paired.stories.js')
+  require('../src/components/External/Test/Test.stories');
 }
 
 configure(loadStories, module);

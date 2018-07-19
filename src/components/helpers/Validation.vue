@@ -31,6 +31,7 @@ export default {
 
 <style lang="scss" scoped>
 .validation {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   margin-top: 10px;
   width: 60px;
   transform: rotate(45deg);
@@ -60,9 +61,8 @@ export default {
     padding: 20px;
   }
   &__wr-component {
-    border-top: 1px solid #a1a6aa;
-    border-left: 1px solid #a1a6aa;
-    border-right: 1px solid #a1a6aa;
+    margin: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     // transform: translateY(23px);
   }
 }

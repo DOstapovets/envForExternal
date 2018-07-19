@@ -16,9 +16,9 @@ import * as _ from 'lodash';
 
 /* eslint-disable */
 // if (process.env.NODE_ENV === 'development') {
-// import { validators } from '../../../../../validators.js';
+import { validators } from '../../../../../validators.js';
 // } else {
-import { validators } from '_validators';
+//import { validators } from '_validators';
 // }
 
 import ScheduleEvents from './ScheduleEvents/ScheduleEvents.vue';
@@ -33,40 +33,6 @@ const { required, generateValidators, minValue } = validators;
 const schemaValidation = {
   required,
   eventName: { required },
-  // custom(value) {
-  //   // console.log('valuevalue', value);
-  //   if (!value) {
-  //     return false;
-  //   }
-  //   let valid = true;
-  //   if (value.isReccuring) {
-  //     if (!value.isEndTime && !value.endExpression.date) {
-  //       valid = false;
-  //     }
-
-  //     if (!value.savedAccordionSlotName) {
-  //       valid = false;
-  //     }
-
-  //     if (!valdationsReccurin.daily(value)) {
-  //       valid = false;
-  //     }
-
-  //     if (!valdationsReccurin.weekly(value)) {
-  //       valid = false;
-  //     }
-
-  //     if (!valdationsReccurin.monthly(value)) {
-  //       valid = false;
-  //     }
-
-  //     if (!valdationsReccurin.yearly(value)) {
-  //       valid = false;
-  //     }
-  //   }
-
-  //   return valid;
-  // },
   startExpression: {
     required,
     date: {

@@ -1,0 +1,200 @@
+<template>
+  <div class="variable">
+    <or-code mode="json" :fullScreen="false" class="variable__code" v-if="variableIsCodeLocal" v-model="variableCodeLocal"> 
+  </or-code>
+    <div v-else class="variable__name">
+    <or-select-expression v-model="variableNameLocal"
+      :readonly="readonly"
+      placeholder="Name"
+      hasSearch
+      extendableOptions
+      :steps="steps" 
+      :step-id="stepId"
+      :options.sync="optionsDataOut"
+      ></or-select-expression>
+    </div>
+    <div v-if="!variableIsCodeLocal" class="variable__value">
+      <or-select
+      :disabled="readonly"
+      :options="variableTypeOptions"
+      v-model="valueTypeLocal"
+      ></or-select>
+      <or-text-expression v-if="valueTypeLocal !== 'boolean'"
+          class="or-text-expression__inline"
+          v-model="variableValueLocal"
+          :readonly="readonly || isNull"
+          placeholder="Value"
+          :steps="steps" 
+          :step-id="stepId"
+          ></or-text-expression>
+      <or-radio-group v-else
+        name="Value bool radio"
+        :disabled="readonly"
+        :options="[true, false]"
+        v-model="variableValueLocal"
+      ></or-radio-group>    
+  </div>
+  
+  <or-icon-button type="secondary" class="variable__btn" has-dropdown icon="more_vert" ref="dropdownButton" size="small">
+        <or-menu                        
+        contain-focus
+        has-icons
+        @select="selectOptions"
+        slot="dropdown"
+        :options="menuOptions"
+        @close="$refs.dropdownButton.closeDropdown()"             
+        ></or-menu>
+      </or-icon-button>
+  <div class="variable_error">
+    <div class="variable_error__name">
+        <!-- <span v-if="isInvalidVariableName">{{errorText}}</span> -->
+    </div>
+    <div class="variable_error__value">
+        <!-- <span v-if="isInvalidVariableValue">{{valueErrorText}}</span> -->
+    </div>
+  </div>
+</div>
+</template>
+
+<script>
+import * as _ from "lodash";
+
+export default {
+  props: {
+    variableName: {
+      type: String,
+      default: ""
+    },
+    variableValue: {
+      default: "``"
+    },
+    valueType: {
+      type: String,
+      default: "string"
+    },
+    variableIsCode: {
+      type: Boolean,
+      defaut: false
+    },
+    variableCode: {
+      type: String,
+      defaut: "``"
+    },
+    steps: "",
+    stepId: "",
+    readonly: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  computed: {
+    isNull() {
+      return this.valueTypeLocal === "null";
+    },
+    variableCodeLocal: {
+      get() {
+        return this.variableCode;
+      },
+      set(newValue) {
+        this.$emit("update:variableCode", newValue);
+      }
+    },
+    variableIsCodeLocal: {
+      get() {
+        return this.variableIsCode;
+      },
+      set(newValue) {
+        this.$emit("update:variableIsCode", newValue);
+      }
+    },
+    variableNameLocal: {
+      get() {
+        return this.variableName;
+      },
+      set(newValue) {
+        this.$emit("update:variableName", newValue);
+      }
+    },
+    variableValueLocal: {
+      get() {
+        return this.variableValue;
+      },
+      set(newValue) {
+        this.$emit("update:variableValue", newValue);
+      }
+    },
+    valueTypeLocal: {
+      get() {
+        return this.valueType;
+      },
+
+      set(newValue) {
+        switch (newValue) {
+          case "string":
+          case "number":
+            this.variableValueLocal = "``";
+            break;
+          case "boolean":
+            this.variableValueLocal = true;
+            break;
+          case "null":
+            this.variableValueLocal = "`null`";
+            break;
+        }
+        this.$emit("update:valueType", newValue);
+      }
+    }
+  },
+
+  data() {
+    return {
+      variableTypeOptions: ["string", "number", "boolean", "null"],
+      isInvalidVariableName: false,
+      isInvalidVariableValue: false,
+      errorText: "Use another variable name.",
+      valueErrorText: "The value is required.",
+      isTextInput: true,
+      optionsDataOut: [],
+      menuOptions: [
+        {
+          label: "Code mode",
+          icon: "code",
+          event: "code_mode"
+        },
+        {
+          label: "Delete",
+          icon: "delete_forever",
+          event: "delete_item"
+        }
+      ]
+    };
+  },
+
+  methods: {
+    selectOptions(value) {
+      switch (value.event) {
+        case "delete_item":
+          this.$emit("remove-item");
+          break;
+        case "code_mode":
+          this.variableIsCodeLocal=!this.variableIsCodeLocal;
+          break;
+      }
+    }
+  },
+
+  mounted() {
+    this.optionsDataOut = _.map(this.steps, step => step.data.dataOut);
+  }
+};
+</script>
+
+<style scoped lang="scss" rel="stylesheet/scss">
+@import "../scss/colors.scss";
+@import "../scss/fonts.scss";
+</style>
+
+<style lang="scss" rel="stylesheet/scss">
+@import "../scss/colors.scss";
+</style>
