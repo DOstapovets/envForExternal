@@ -11,7 +11,7 @@
                       :class="[{ readony: readonly, 'timepicker-error': timepickerStartError}]"
                       format="HH:mm"
                       hideClearButton
-                      @close-dropdown="$v.validationCopyScheduleEventData.times.$each.$iter[index].start.$touch()"
+                      @close-dropdown="touchStartTime"
                     ></or-timepicker>
                 </div>
                 <span class="configs-time__from-to" v-if="endTime">To</span>
@@ -22,7 +22,7 @@
                       :class="[{ readony: readonly, 'timepicker-error': timepickerEndError}]"
                       format="HH:mm" 
                       hideClearButton
-                      @close-dropdown="$v.validationCopyScheduleEventData.times.$each.$iter[index].end.$touch()"
+                      @close-dropdown="touchEndTime"
                     ></or-timepicker>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                   :disabled="readonly"
                   v-model="localEvery.val"
                   mask="##########"
-                  @change="$v.validationCopyScheduleEventData.times.$each.$iter[index].every.$touch()"
+                  @change="touchEveryTime"
                 >
                 </or-textbox>
                 <or-select label="" :disabled="readonly" class="dimention-selector" :options="[{value:'hh', label:'hr'}, {value:'mm', label:'min'}]"
@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import _ from 'lodash';
+
 export default {
   props: {
     start: {
@@ -132,25 +134,69 @@ export default {
       },
     },
     timepickerStartError() {
-      const item = this.$v.validationCopyScheduleEventData.times.$each.$iter[
-        this.index
-      ].start;
-      return item.$invalid && item.$dirty;
+      const item = _.get(
+        this.$v,
+        `validationCopyScheduleEventData.times.$each.$iter[
+        ${this.index}
+      ].start`,
+      );
+      return item && item.$invalid && item.$dirty;
       // return !(this.localStart.HH && this.localStart.mm);
     },
     timepickerEndError() {
-      const item = this.$v.validationCopyScheduleEventData.times.$each.$iter[
-        this.index
-      ].end;
-      return item.$invalid && item.$dirty;
+      const item = _.get(
+        this.$v,
+        `validationCopyScheduleEventData.times.$each.$iter[
+        ${this.index}
+      ].end`,
+      );
+      return item && item.$invalid && item.$dirty;
       // return !(this.localEnd.HH && this.localEnd.mm);
     },
     timepickerEveryValError() {
-      const item = this.$v.validationCopyScheduleEventData.times.$each.$iter[
-        this.index
-      ].every;
-      return item.$invalid && item.$dirty;
+      const item = _.get(
+        this.$v,
+        `validationCopyScheduleEventData.times.$each.$iter[
+        ${this.index}
+      ].every`,
+      );
+      return item && item.$invalid && item.$dirty;
       // return !(this.localEvery.val && this.localEvery.val > 0);
+    },
+  },
+  methods: {
+    touchStartTime() {
+      const touch = _.get(
+        this.$v,
+        `validationCopyScheduleEventData.times.$each.$iter[
+        ${this.index}
+      ].start`,
+      );
+      if (touch) {
+        touch.$touch();
+      }
+    },
+    touchEndTime() {
+      const touch = _.get(
+        this.$v,
+        `validationCopyScheduleEventData.times.$each.$iter[
+        ${this.index}
+      ].end`,
+      );
+      if (touch) {
+        touch.$touch();
+      }
+    },
+    touchEveryTime() {
+      const touch = _.get(
+        this.$v,
+        `validationCopyScheduleEventData.times.$each.$iter[
+        ${this.index}
+      ].every`,
+      );
+      if (touch) {
+        touch.$touch();
+      }
     },
   },
 };

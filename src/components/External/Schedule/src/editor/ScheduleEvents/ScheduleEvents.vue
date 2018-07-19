@@ -1,5 +1,7 @@
 <template>
-  <div class="schedule-events">
+  <div
+    class="schedule-events"
+    :class="{'translate-z': translateZ}">
     <!-- {{editableEventNum}} -->
     <!-- {{scheduleEvents}} -->
     <!-- {{scheduleEvents[0].daily}} -->
@@ -42,6 +44,7 @@
       title="Set schedule"
       @close="closeModalEvent('modal')"
       size="large"
+      @open="openedModal"
     >
       <div class="schedule__wr-events-calendar">
         <div class="schedule__calendar">
@@ -175,6 +178,10 @@ export default {
     // console.log('!!!!!!!!!!!!!!', this.$v);
   },
 
+  // mounted() {
+  //   this.translateZ = false;
+  // },
+
   data() {
     return {
       // scheduleEventsLocal: this.scheduleEvents,
@@ -184,6 +191,7 @@ export default {
       copyScheduleEventData: null,
       dataStates: [],
       numOfTryEdit: null,
+      translateZ: true,
       // editableCopy: [],
     };
   },
@@ -239,6 +247,11 @@ export default {
   },
 
   methods: {
+    openedModal() {
+      setTimeout(() => {
+        this.translateZ = false;
+      }, 2000);
+    },
     listNewItemMethod() {
       return {
         scheduleEventData: {
@@ -457,6 +470,10 @@ export default {
 body {
 }
 .schedule-events {
+  &.translate-z {
+    transform: translateZ(0);
+  }
+
   min-width: 410px;
   // position: fixed;
   // top: 0;
