@@ -1,11 +1,6 @@
 <template>
   <div
-    class="schedule-events"
-    :class="{'translate-z': translateZ}">
-    <!-- {{editableEventNum}} -->
-    <!-- {{scheduleEvents}} -->
-    <!-- {{scheduleEvents[0].daily}} -->
-    <!-- {{dataStates}} -->
+    class="schedule-events">
     <or-list
       v-model="scheduleEventsLocal" 
       :steps="steps" 
@@ -37,78 +32,84 @@
         </div>
       </template>
     </or-list>
+    <portal
+      name="modal-portal"
+      target-el="#modal-portal">
     <or-modal
-      :contain-focus="false"
-      class="big-modal"
-      ref="modal"
-      title="Set schedule"
-      @close="closeModalEvent('modal')"
-      size="large"
-      @open="openedModal"
-    >
-      <div class="schedule__wr-events-calendar">
-        <div class="schedule__calendar">
-          <calendar
-            :month="1"
-            @selected-date="changeSelectedDate"
-            :selected-days="startDays"
+        :contain-focus="false"
+        class="schedule-events__big-modal"
+        ref="modal"
+        title="Set schedule"
+        @close="closeModalEvent('modal')"
+        size="large"
+      >dsfsdfds
+      <!-- <vue-portal>
+        <span><span>Will be appended to body</span></span>
+      </vue-portal> -->
+        <div class="schedule__wr-events-calendar">
+          <div class="schedule__calendar">
+            <calendar
+              :month="1"
+              @selected-date="changeSelectedDate"
+              :selected-days="startDays"
 
-          >
-          </calendar>
+            >
+            </calendar>
+          </div>
+          <div class="schedule__events">
+            <or-list
+              v-model="scheduleEventsLocal" 
+              :steps="steps" 
+              :step-id="stepId"
+              add-button-label="Add Event"
+              :new-item-method="listNewItemMethod"
+              :drag-handle-right="true"
+              @item-added="eventAdded"
+            >
+              <template scope="item">
+                <schedule-event
+                  v-if="editableEventNum == item.index && copyScheduleEventData"
+                  :index="item.index"
+                  :copy-schedule-event-data.sync="copyScheduleEventData"
+                  :schedule-event-data.sync="scheduleEventsLocal[editableEventNum].scheduleEventData"
+                  :$v="$v"
+                  :readonly="readonly"
+                  :step-id="stepId"
+                  :steps="steps"
+                  :data-state.sync="dataStates[item.index]"
+                  :preview-texts="item.item.previewTexts"
+                  :editable-event-num.sync="editableEventNum"
+                  @save-copy="/*saveCopy*/"
+                  @return-state="/*returnState*/"
+                  @apply-changes="applyChanges"
+                  @cancel-changes="cancelChanges"
+                  @data-state="/*changeDataState*/"
+                  @delete-event="deleteEvent"
+                  @cancel-event="cancelEvent"
+                >
+                </schedule-event>
+                <schedule-event-preview
+                  v-if="editableEventNum !== item.index"
+                  :color="item.item.scheduleEventData.color"
+                  :index="item.index"
+                  :event-name="item.item.scheduleEventData.eventName"
+                  :preview-texts="item.item.previewTexts"
+                  :is-reccuring="item.item.scheduleEventData.isReccuring"
+                  :startTimes="item.item.scheduleEventData.times"
+                  :end-date="{ noEnd: item.item.scheduleEventData.isEndTime, date: item.item.scheduleEventData.endExpression.date}"
+                  :start-date="item.item.scheduleEventData.startExpression.date"
+                  :expressions="item.item.scheduleEventData.expressions"
+                  @do-editable="doEditable"
+                  @copy-event="copyEvent"
+                  @delete-event="deleteEvent"
+                >
+                </schedule-event-preview>
+              </template>
+            </or-list>
+          </div>
         </div>
-        <div class="schedule__events">
-          <or-list
-            v-model="scheduleEventsLocal" 
-            :steps="steps" 
-            :step-id="stepId"
-            add-button-label="Add Event"
-            :new-item-method="listNewItemMethod"
-            :drag-handle-right="true"
-            @item-added="eventAdded"
-          >
-            <template scope="item">
-              <schedule-event
-                v-if="editableEventNum == item.index && copyScheduleEventData"
-                :index="item.index"
-                :copy-schedule-event-data.sync="copyScheduleEventData"
-                :schedule-event-data.sync="scheduleEventsLocal[editableEventNum].scheduleEventData"
-                :$v="$v"
-                :readonly="readonly"
-                :step-id="stepId"
-                :steps="steps"
-                :data-state.sync="dataStates[item.index]"
-                :preview-texts="item.item.previewTexts"
-                :editable-event-num.sync="editableEventNum"
-                @save-copy="/*saveCopy*/"
-                @return-state="/*returnState*/"
-                @apply-changes="applyChanges"
-                @cancel-changes="cancelChanges"
-                @data-state="/*changeDataState*/"
-                @delete-event="deleteEvent"
-                @cancel-event="cancelEvent"
-              >
-              </schedule-event>
-              <schedule-event-preview
-                v-if="editableEventNum !== item.index"
-                :color="item.item.scheduleEventData.color"
-                :index="item.index"
-                :event-name="item.item.scheduleEventData.eventName"
-                :preview-texts="item.item.previewTexts"
-                :is-reccuring="item.item.scheduleEventData.isReccuring"
-                :startTimes="item.item.scheduleEventData.times"
-                :end-date="{ noEnd: item.item.scheduleEventData.isEndTime, date: item.item.scheduleEventData.endExpression.date}"
-                :start-date="item.item.scheduleEventData.startExpression.date"
-                :expressions="item.item.scheduleEventData.expressions"
-                @do-editable="doEditable"
-                @copy-event="copyEvent"
-                @delete-event="deleteEvent"
-              >
-              </schedule-event-preview>
-            </template>
-          </or-list>
-        </div>
-      </div>
-    </or-modal>
+      </or-modal>
+    </portal>
     <or-modal  :contain-focus="false" ref="deleteEvent" title="Сonfirmation of delete">
         Are you sure want delete event?
 
@@ -140,6 +141,8 @@ import _ from 'lodash';
 import moment from 'moment';
 import uuid from 'uuid';
 import randomMC from 'random-material-color';
+import { Portal, PortalTarget } from 'portal-vue';
+
 /* eslint-disable */
 import defaultValues from '../Constants/DefaultValues.js';
 /* eslint-enable */
@@ -172,28 +175,28 @@ export default {
     'steps',
     'readonly',
   ],
-  components: { ScheduleEvent, Calendar, ScheduleEventPreview },
-
-  created() {
-    // console.log('!!!!!!!!!!!!!!', this.$v);
+  components: {
+    ScheduleEvent,
+    Calendar,
+    ScheduleEventPreview,
+    Portal,
+    PortalTarget,
   },
-
-  // mounted() {
-  //   this.translateZ = false;
-  // },
 
   data() {
     return {
-      // scheduleEventsLocal: this.scheduleEvents,
       itemIndexForDelete: null,
       scheduleEventsLocal: _.cloneDeep(this.scheduleEvents),
       editableEventNum: null,
       copyScheduleEventData: null,
       dataStates: [],
       numOfTryEdit: null,
-      translateZ: true,
-      // editableCopy: [],
     };
+  },
+  beforeCreate() {
+    const div = document.createElement('div');
+    div.setAttribute('id', 'modal-portal');
+    document.body.appendChild(div);
   },
   computed: {
     startDays() {
@@ -247,11 +250,6 @@ export default {
   },
 
   methods: {
-    openedModal() {
-      setTimeout(() => {
-        this.translateZ = false;
-      }, 2000);
-    },
     listNewItemMethod() {
       return {
         scheduleEventData: {
@@ -467,72 +465,51 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-body {
-}
 .schedule-events {
-  &.translate-z {
-    transform: translateZ(0);
-  }
-
-  min-width: 410px;
-  // position: fixed;
-  // top: 0;
-  // left: 0;
-  // width: 100vw;
-  // height: 100vh;
-  // will-change: scroll-position;
-  // -webkit-backface-visibility: hidden;
-  // -webkit-transform: translateZ(0) scale(1, 1);
-  // transform: translateZ(0);
-  // top: 0;
-  // -webkit-transform: translateZ(0); //fix performance scroll for safari
-  // div.ui-modal.ui-modal__mask.big-modal.ui-modal--size-normal.is-open {
-  //   -webkit-backface-visibility: hidden;
-  //   -webkit-perspective: 1000;
-  // transform: translate3d(0, 0, 0);
-  //   background-attachment: fixed;
-  //   background-size: cover;
-  //   will-change: transform;
-  //   // z-index: -1;
-  // }
-
-  .big-modal > .ui-modal__wrapper > .ui-modal__container {
-    width: 100%;
-  }
-  .ui-modal__mask {
-    // position: fixed;
-    // top: 0;
-    // transform: translateZ(0);
-    // position: sticky;
-    width: 100%;
-    // will-change: transform;
-  }
-  .schedule-event-preview {
-    margin-bottom: 20px;
-  }
-
-  .schedule {
-    &__wr-events-calendar {
-      display: flex;
-    }
-    &__calendar {
-      min-width: 930px;
-      width: 100%;
-      padding-right: 30px;
-    }
-    &__wr-event-preview {
+  &__big-modal {
+    position: absolute;
+    display: table;
+    & > .ui-modal__wrapper > .ui-modal__container {
       width: 100%;
     }
-    &__events {
-      min-width: 410px;
-    }
   }
-
   .bold-text {
     color: #0f232e;
     font-size: 14px;
     font-weight: bold;
     line-height: 21px;
+  }
+}
+
+.schedule-events {
+  min-width: 410px;
+  // &.translate-z {
+  //   transform: translateZ(0);
+  // }
+
+  // .ui-modal__mask {
+  //   width: 100%;
+  // }
+}
+
+.schedule-event-preview {
+  margin-bottom: 20px;
+}
+
+.schedule {
+  &__wr-events-calendar {
+    display: flex;
+  }
+  &__calendar {
+    min-width: 930px;
+    width: 100%;
+    padding-right: 30px;
+  }
+  &__wr-event-preview {
+    width: 100%;
+  }
+  &__events {
+    min-width: 410px;
   }
 }
 </style>
