@@ -1,7 +1,7 @@
 <template>
     <div class="example-input-component-wrapper">
         <div class="wrapper" @click="$refs.configModal.open()">
-            <editor :template="input.data"
+            <editor :template="defaultValue"
                     :schema="defaultStep.data"
                     :step="defaultStep"
                     :steps="[defaultStep]"
@@ -13,25 +13,13 @@
                   title="Configure component"
                   class="input-message-settings"
                   :contain-focus="false">
-            <or-textbox name="label" label="Email Label" placeholder="label text"
-                        v-model="input.data.emailLabel"
-                        help="input label text">
-            </or-textbox>
 
-            <or-textbox name="label" label="Email placeholder" placeholder="placeholder text"
-                        v-model="input.data.emailPlaceholder"
+            <or-textbox name="label" label="Title" placeholder="Title text"
+                        v-model="input.data.title"
                         help="input label text">
             </or-textbox>
+            <or-switch label="Use header" v-model="input.data.isHeader"></or-switch>
 
-            <or-textbox name="label" label="Password Label" placeholder="label text"
-                        v-model="input.data.passwordLabel"
-                        help="input label text">
-            </or-textbox>
-
-            <or-textbox name="label" label="Password placeholder" placeholder="placeholder text"
-                        v-model="input.data.passwordPlaceholder"
-                        help="input label text">
-            </or-textbox>
 
             <div slot="footer">
                 <or-button color="primary"
@@ -46,11 +34,11 @@
 
 <script>
     import _ from 'lodash';
-    //import base from '@default/src/inputs/_design_base.vue';
+    import base from '@default/src/inputs/_design_base.vue';
     import editor from '../editor/editor.vue';
 
     export default {
-        //extends    : base,
+        extends    : base,
         components : {
             editor
         },
@@ -61,13 +49,9 @@
 
     export const label = 'Test example';
     export const data = {
-        email               : '',
-        emailPlaceholder    : 'Test email placeholder',
-        emailLabel          : '',
-        password            : '',
-        passwordPlaceholder : 'Test password placeholder',
-        passwordLabel       : '',
-        validateRequired    : true
+        validateRequired    : true,
+        title               : 'Variables',
+        isHeader            : true
     };
 
     export const meta = {
@@ -76,3 +60,9 @@
         version : '1.0'
     };
 </script>
+
+<style>
+    .example-input-component-wrapper{
+        width: 100%;
+    }
+</style>

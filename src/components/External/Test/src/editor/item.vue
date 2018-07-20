@@ -1,6 +1,11 @@
 <template>
   <div class="variable">
-    <or-code mode="json" :fullScreen="false" class="variable__code" v-if="variableIsCodeLocal" v-model="variableCodeLocal"> 
+    <or-code 
+    :fullScreen="false" 
+    class="variable__code"
+    @input="$v.$touch()"
+    v-if="variableIsCodeLocal" 
+    v-model="variableCodeLocal"> 
   </or-code>
     <div v-else class="variable__name">
     <or-select-expression v-model="variableNameLocal"
@@ -28,14 +33,14 @@
           :step-id="stepId"
           ></or-text-expression>
       <or-radio-group v-else
-        name="Value bool radio"
+        :invalid="$v.code.$invalid"
         :disabled="readonly"
         :options="[true, false]"
         v-model="variableValueLocal"
       ></or-radio-group>    
   </div>
   
-  <or-icon-button type="secondary" class="variable__btn" has-dropdown icon="more_vert" ref="dropdownButton" size="small">
+  <or-icon-button :style="{'align-self':(variableIsCodeLocal)?'center':'flex-end'}" type="secondary" class="variable__btn" has-dropdown icon="more_vert" ref="dropdownButton" size="small">
         <or-menu                        
         contain-focus
         has-icons
@@ -78,14 +83,15 @@ export default {
     },
     variableCode: {
       type: String,
-      defaut: "``"
+      defaut: "{}"
     },
     steps: "",
     stepId: "",
     readonly: {
       type: Boolean,
       default: false
-    }
+    },
+    $v:null
   },
 
   computed: {

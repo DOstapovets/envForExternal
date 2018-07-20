@@ -1,24 +1,10 @@
 <template>
   <div>
-    <div class="email-wrapper">
-            <email :schema.sync="schema"
-                   :label="template.emailLabel"
-                   :placeholder="template.emailPlaceholder"
-                   :$v="$v">
-            </email>
-        </div>
-        <div class="password-wrapper">
-            <password :schema="schema"
-                      :label="template.passwordLabel"
-                      :placeholder="template.passwordPlaceholder"
-                      :$v="$v">
-            </password>
-        </div>
-        <hr>
-        <div class="paired-component-wrapper">
-        <or-collapsible title="Variables">
-            <div v-if="!variables.length" class="empty-list">Your variables list is empty.</div>
-            <or-list v-model="variables" 
+    <div class="paired-component-wrapper">
+        <div v-if="template.isHeader">
+          <h3 style="padding-left: 10px;">{{template.title}}</h3>
+          <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
+          <or-list style="margin: 10px;" v-model="variables" 
             ref="variablesOrList"
             :steps="steps" 
             :step-id="stepId" 
@@ -38,19 +24,51 @@
                 :steps="item.steps" 
                 :step-id="item.stepId"
                 :readonly="item.readonly"
+                :$v="$v.schema.variables.$each[item.index]"
+                ></item>
+            </template>
+            </or-list>
+        </div>
+          
+        <or-collapsible v-else :title="template.title||'Header'">
+            <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
+              <or-list v-model="variables" 
+              ref="variablesOrList"
+              :steps="steps" 
+              :step-id="stepId" 
+              :readonly="readonly"
+              :new-item-method="newVariable"
+              :add-button-label="'Add new variable'"
+              class="variables-list"
+              dragMode="false"
+              :can-remove-last-item="false"
+              >
+            <template slot-scope="item">
+                <item @remove-item="removeItem(item.index)" :variable-name.sync="item.item.variableName"
+                :variable-value.sync="item.item.variableValue"
+                :value-type.sync="item.item.valueType"
+                :variable-code.sync="item.item.variableCode"
+                :variable-is-code.sync="item.item.isCode"
+                :steps="item.steps" 
+                :step-id="item.stepId"
+                :readonly="item.readonly"
+                :$v="$v.schema.variables.$each[item.index]"
                 ></item>
             </template>
             </or-list>
         </or-collapsible>    
     </div>
+    <template id="">
+
+    </template>
   </div>
   
 </template>
 <script>
 import * as _ from "lodash";
 
-import { validators } from "../../../../../validators.js";
-//import { validators } from '_validators';
+//import { validators } from "../../../../../validators.js";
+import { validators } from "_validators";
 import email from "./email.vue";
 import password from "./password.vue";
 import item from "./item.vue";
@@ -60,16 +78,21 @@ const { required, generateValidators, minValue } = validators;
 export const validator = template => {
   return {
     schema: {
-      email: generateValidators(template.validateRequired, { required }),
-      password: generateValidators(template.validateRequired, { required })
+      variables: {
+        $each: {
+          // name: generateValidators(template.validateRequired, { required }),
+          // value: generateValidators(template.validateRequired, { required }),
+          // code: generateValidators(template.validateRequired, { required })
+        }
+      }
     }
   };
 };
 
 export const data = template => ({
-  email: "",
-  password: "",
-  variables: []
+  variables: [],
+  title: template.title,
+  isHeader: template.isHeader
 });
 
 export default {
@@ -91,20 +114,21 @@ export default {
   watch: {
     variables: {
       handler(newValue) {
-        this.schema.variables=_.map(newValue,(el)=>(el.isCode)?JSON.parse(el.variableCode)||{}:{[el.variableName]:el.variableValue});
-      },
-      deep: true
-    },
-    $v: {
-      handler(newValue) {
-        this.$emit("step-validation", newValue);
+        //_.map(newValue,(el)=>(el.isCode)?`${el.variableCode}`||`{}`:{[`[${el.variableName}]`]:`${el.variableValue}`})
+        this.schema.variables = newValue;
       },
       deep: true
     }
+    // $v: {
+    //   handler(newValue) {
+    //     this.$emit("step-validation", newValue);
+    //   },
+    //   deep: true
+    // }
   },
   methods: {
     removeItem(index) {
-      this.$refs.variablesOrList.removeItem();
+      this.$refs.variablesOrList.removeItem(index);
     },
     newVariable() {
       return {
@@ -120,7 +144,7 @@ export default {
   validations() {
     return validator(this.template);
   },
-  mounted(){
+  mounted() {
     this.variables = _.cloneDeep(this.schema.variables);
   },
   data() {
@@ -145,14 +169,14 @@ export const meta = {
     color: #91969d;
     font-size: 12px;
     line-height: 18px;
+    padding-left: 20px;
   }
 
   .variables-list {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 30px;
-
+    
     .or-list-items {
       width: 100%;
     }
@@ -209,10 +233,10 @@ export const meta = {
       }
     }
     &__code {
+      margin-top: 20px;
       width: calc(100% - 32px);
     }
     &__btn {
-      align-self: center;
     }
     &__name {
       width: calc(50% - 16px);
