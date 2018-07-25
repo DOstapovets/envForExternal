@@ -66,8 +66,6 @@ import * as _ from "lodash";
 
 //import { validators } from "../../../../../validators.js";
 import { validators } from "_validators";
-import email from "./email.vue";
-import password from "./password.vue";
 import item from "./item.vue";
 
 const { required, generateValidators, minValue } = validators;

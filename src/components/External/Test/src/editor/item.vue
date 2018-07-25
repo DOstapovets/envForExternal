@@ -1,12 +1,12 @@
 <template>
   <div class="variable">
-    <or-code 
-    :fullScreen="false" 
+    <or-code
+    :fullScreen="false"
     class="variable__code"
-    v-if="variableIsCodeLocal" 
+    v-if="variableIsCodeLocal"
     @input="$v.$touch()"
-    :invalid="$v.variableCode.$error"  
-    v-model="variableCodeLocal"> 
+    :invalid="$v.variableCode.$error"
+    v-model="variableCodeLocal">
   </or-code>
     <div v-else class="variable__name">
      <or-text-expression
@@ -16,7 +16,7 @@
       placeholder="Name"
       :invalid="$v.variableName.$error"
       @input="$v.$touch()"
-      :steps="steps" 
+      :steps="steps"
       :step-id="stepId"
       ></or-text-expression>
     </div>
@@ -33,24 +33,24 @@
           @input="$v.$touch()"
           :readonly="readonly || isNull"
           placeholder="Value"
-          :steps="steps" 
+          :steps="steps"
           :step-id="stepId"
           ></or-text-expression>
       <or-radio-group v-else
         :disabled="readonly"
         :options="[true, false]"
         v-model="variableValueLocal"
-      ></or-radio-group>    
+      ></or-radio-group>
   </div>
-  
+
   <or-icon-button :style="{'align-self':(variableIsCodeLocal)?'center':'flex-end'}" type="secondary" class="variable__btn" has-dropdown icon="more_vert" ref="dropdownButton" size="small">
-        <or-menu                        
+        <or-menu
         contain-focus
         has-icons
         @select="selectOptions"
         slot="dropdown"
         :options="menuOptions"
-        @close="$refs.dropdownButton.closeDropdown()"             
+        @close="$refs.dropdownButton.closeDropdown()"
         ></or-menu>
       </or-icon-button>
   <div class="variable_error">
