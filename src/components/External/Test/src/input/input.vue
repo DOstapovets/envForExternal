@@ -15,11 +15,12 @@
                   :contain-focus="false">
 
             <or-textbox name="label" label="Title" placeholder="Title text"
-                        v-model="input.data.title"
-                        help="input label text">
+                        v-model="input.data.title">
             </or-textbox>
             <or-switch label="Use header" v-model="input.data.isHeader"></or-switch>
-
+            <or-textbox name="name" label="Button label" placeholder="Enter button label"
+                        v-model="input.data.btn_label">
+            </or-textbox>
 
             <div slot="footer">
                 <or-button color="primary"
@@ -51,7 +52,8 @@
     export const data = {
         validateRequired    : true,
         title               : 'Variables',
-        isHeader            : true
+        isHeader            : true,
+        btn_label           : 'Add new variable'
     };
 
     export const meta = {

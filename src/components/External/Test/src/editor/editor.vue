@@ -4,13 +4,13 @@
         <div v-if="template.isHeader">
           <h3 style="padding-left: 10px;">{{template.title}}</h3>
           <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
-          <or-list style="margin: 10px;" v-model="variables" 
+          <or-list style="margin: 10px;" v-model="variables"
             ref="variablesOrList"
-            :steps="steps" 
-            :step-id="stepId" 
+            :steps="steps"
+            :step-id="stepId"
             :readonly="readonly"
             :new-item-method="newVariable"
-            :add-button-label="'Add new variable'"
+            :add-button-label="template.btn_label"
             class="variables-list"
             dragMode="false"
             :can-remove-last-item="false"
@@ -21,7 +21,7 @@
                 :value-type.sync="item.item.valueType"
                 :variable-code.sync="item.item.variableCode"
                 :variable-is-code.sync="item.item.isCode"
-                :steps="item.steps" 
+                :steps="item.steps"
                 :step-id="item.stepId"
                 :readonly="item.readonly"
                 :$v="$v.schema.variables.$each[item.index]"
@@ -29,16 +29,16 @@
             </template>
             </or-list>
         </div>
-          
+
         <or-collapsible v-else :title="template.title||'Header'">
             <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
-              <or-list v-model="variables" 
+              <or-list v-model="variables"
               ref="variablesOrList"
-              :steps="steps" 
-              :step-id="stepId" 
+              :steps="steps"
+              :step-id="stepId"
               :readonly="readonly"
               :new-item-method="newVariable"
-              :add-button-label="'Add new variable'"
+              :add-button-label="template.btn_label"
               class="variables-list"
               dragMode="false"
               :can-remove-last-item="false"
@@ -49,20 +49,17 @@
                 :value-type.sync="item.item.valueType"
                 :variable-code.sync="item.item.variableCode"
                 :variable-is-code.sync="item.item.isCode"
-                :steps="item.steps" 
+                :steps="item.steps"
                 :step-id="item.stepId"
                 :readonly="item.readonly"
                 :$v="$v.schema.variables.$each[item.index]"
                 ></item>
             </template>
             </or-list>
-        </or-collapsible>    
+        </or-collapsible>
     </div>
-    <template id="">
-
-    </template>
   </div>
-  
+
 </template>
 <script>
 import * as _ from "lodash";
@@ -77,22 +74,32 @@ const { required, generateValidators, minValue } = validators;
 
 export const validator = template => {
   return {
-    schema: {
-      variables: {
-        $each: {
-          // name: generateValidators(template.validateRequired, { required }),
-          // value: generateValidators(template.validateRequired, { required }),
-          // code: generateValidators(template.validateRequired, { required })
+    variables: {
+      $each: {
+        variableName: {
+          custom(value) {
+            return validators.jsExpressionNonEmptyString(value);
+          }
+        },
+        variableValue: {
+          custom(value) {
+            return validators.jsExpressionNonEmptyString(value);
+          }
+        },
+        variableCode: {
+          custom(value){
+            return validators.jsExpression(value);
+          }
         }
       }
     }
   };
 };
-
 export const data = template => ({
   variables: [],
   title: template.title,
-  isHeader: template.isHeader
+  isHeader: template.isHeader,
+  btn_label:template.btn_label
 });
 
 export default {
@@ -132,7 +139,7 @@ export default {
     },
     newVariable() {
       return {
-        variableName: "",
+        variableName: "``",
         variableValue: "``",
         valueType: "string",
         isCode: false,
@@ -142,7 +149,7 @@ export default {
   },
   components: { email, password, item },
   validations() {
-    return validator(this.template);
+    return { schema: validator(this.template) };
   },
   mounted() {
     this.variables = _.cloneDeep(this.schema.variables);
@@ -176,7 +183,7 @@ export const meta = {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    
+
     .or-list-items {
       width: 100%;
     }
@@ -213,51 +220,7 @@ export const meta = {
       }
     }
   }
-
-  .variable {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    &_error {
-      display: flex;
-      color: #f95d5d;
-      font-size: 12px;
-      width: 100%;
-
-      &__name {
-        width: calc(50% - 16px);
-        padding-right: 3px;
-      }
-      &__value {
-        width: calc(50% - 16px);
-      }
-    }
-    &__code {
-      margin-top: 20px;
-      width: calc(100% - 32px);
-    }
-    &__btn {
-    }
-    &__name {
-      width: calc(50% - 16px);
-      padding-right: 3px;
-      display: flex;
-      align-items: flex-end;
-      .or-select-expression {
-        width: 100%;
-        .ui-select__content .ui-select__label .ui-select__display {
-          min-height: 38px;
-        }
-      }
-    }
-
-    .ui-select,
-    .or-text-expression,
-    .ui-textbox {
-      margin-bottom: 0;
-    }
-
-    .or-text-expression__inline {
+  .or-text-expression__inline {
       display: flex;
       flex-direction: row-reverse;
       border-radius: 3px;
@@ -288,6 +251,48 @@ export const meta = {
         border-color: #f95d5d;
       }
     }
+  .variable {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    &_error {
+      display: flex;
+      color: #f95d5d;
+      font-size: 12px;
+      width: 100%;
+
+      &__name {
+        width: calc(50% - 16px);
+        padding-right: 3px;
+      }
+      &__value {
+        width: calc(50% - 16px);
+      }
+    }
+    &__code {
+      margin: 20px 0px 0px 0px;
+      width: calc(100% - 32px);
+    }
+    &__btn {
+      margin-bottom: 3px;
+    }
+    &__name {
+      width: calc(50% - 16px);
+      padding-right: 3px;
+      display: flex;
+      align-items: flex-end;
+      .or-text-expression {
+        width: 100%;
+      }
+    }
+
+    .ui-select,
+    .or-text-expression,
+    .ui-textbox {
+      margin-bottom: 0;
+    }
+
+
 
     &__value {
       width: calc(50% - 16px);

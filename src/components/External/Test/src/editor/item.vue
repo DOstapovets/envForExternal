@@ -3,20 +3,22 @@
     <or-code 
     :fullScreen="false" 
     class="variable__code"
-    @input="$v.$touch()"
     v-if="variableIsCodeLocal" 
+    @input="$v.$touch()"
+    :invalid="$v.variableCode.$error"  
     v-model="variableCodeLocal"> 
   </or-code>
     <div v-else class="variable__name">
-    <or-select-expression v-model="variableNameLocal"
+     <or-text-expression
+    class="or-text-expression__inline"
+     v-model="variableNameLocal"
       :readonly="readonly"
       placeholder="Name"
-      hasSearch
-      extendableOptions
+      :invalid="$v.variableName.$error"
+      @input="$v.$touch()"
       :steps="steps" 
       :step-id="stepId"
-      :options.sync="optionsDataOut"
-      ></or-select-expression>
+      ></or-text-expression>
     </div>
     <div v-if="!variableIsCodeLocal" class="variable__value">
       <or-select
@@ -27,13 +29,14 @@
       <or-text-expression v-if="valueTypeLocal !== 'boolean'"
           class="or-text-expression__inline"
           v-model="variableValueLocal"
+          :invalid="$v.variableValue.$error"
+          @input="$v.$touch()"
           :readonly="readonly || isNull"
           placeholder="Value"
           :steps="steps" 
           :step-id="stepId"
           ></or-text-expression>
       <or-radio-group v-else
-        :invalid="$v.code.$invalid"
         :disabled="readonly"
         :options="[true, false]"
         v-model="variableValueLocal"
@@ -52,10 +55,11 @@
       </or-icon-button>
   <div class="variable_error">
     <div class="variable_error__name">
-        <!-- <span v-if="isInvalidVariableName">{{errorText}}</span> -->
+        <span v-if="!variableIsCodeLocal&&$v.variableName.$error">{{errorText}}</span>
+        <span v-if="variableIsCodeLocal&&$v.variableName.$error">{{errorCodeReq}}</span>
     </div>
     <div class="variable_error__value">
-        <!-- <span v-if="isInvalidVariableValue">{{valueErrorText}}</span> -->
+        <span v-if="!variableIsCodeLocal&&$v.variableValue.$error">{{valueErrorText}}</span>
     </div>
   </div>
 </div>
@@ -98,6 +102,18 @@ export default {
     isNull() {
       return this.valueTypeLocal === "null";
     },
+    menuOptions(){return [
+        {
+          label: (this.variableIsCodeLocal)?"UI mode":"Code mode",
+          icon: "code",
+          event: "code_mode"
+        },
+        {
+          label: "Delete",
+          icon: "delete_forever",
+          event: "delete_item"
+        }
+      ]},
     variableCodeLocal: {
       get() {
         return this.variableCode;
@@ -156,24 +172,11 @@ export default {
   data() {
     return {
       variableTypeOptions: ["string", "number", "boolean", "null"],
-      isInvalidVariableName: false,
-      isInvalidVariableValue: false,
-      errorText: "Use another variable name.",
-      valueErrorText: "The value is required.",
+      errorText: "The Name is required.",
+      valueErrorText: "The Value is required.",
+      errorCodeReq:"The Code is required.",
       isTextInput: true,
       optionsDataOut: [],
-      menuOptions: [
-        {
-          label: "Code mode",
-          icon: "code",
-          event: "code_mode"
-        },
-        {
-          label: "Delete",
-          icon: "delete_forever",
-          event: "delete_item"
-        }
-      ]
     };
   },
 
