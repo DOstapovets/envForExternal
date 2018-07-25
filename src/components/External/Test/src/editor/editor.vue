@@ -145,7 +145,7 @@ export default {
       };
     }
   },
-  components: { email, password, item },
+  components: { item },
   validations() {
     return { schema: validator(this.template) };
   },
