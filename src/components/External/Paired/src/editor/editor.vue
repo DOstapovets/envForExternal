@@ -1,87 +1,162 @@
 <template>
+  <div>
     <div class="paired-component-wrapper">
-        <or-collapsible title="Variables">
-            <div v-if="!variables.length" class="empty-list">Your variables list is empty.</div>
-            <or-list v-model="variables" 
+        <div v-if="template.isHeader">
+          <h3 style="padding-left: 10px;">{{template.title}}</h3>
+          <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
+          <or-list style="margin: 10px;" v-model="variables"
             ref="variablesOrList"
-            :steps="steps" 
-            :step-id="stepId" 
+            :steps="steps"
+            :step-id="stepId"
             :readonly="readonly"
             :new-item-method="newVariable"
-            :add-button-label="'Add new variable'"
+            :add-button-label="template.btn_label"
             class="variables-list"
-            prettifyDrag
+            dragMode="false"
             :can-remove-last-item="false"
             >
-            <template scope="item">
-                <item :variable-name.sync="item.item.variableName"
+            <template slot-scope="item">
+                <item @remove-item="removeItem(item.index)" :variable-name.sync="item.item.variableName"
                 :variable-value.sync="item.item.variableValue"
                 :value-type.sync="item.item.valueType"
-                :variables="variables"
-                :steps="item.steps" 
+                :variable-code.sync="item.item.variableCode"
+                :variable-is-code.sync="item.item.isCode"
+                :steps="item.steps"
                 :step-id="item.stepId"
                 :readonly="item.readonly"
+                :$v="$v.schema.variables.$each[item.index]"
                 ></item>
             </template>
             </or-list>
-        </or-collapsible>    
+        </div>
+
+        <or-collapsible v-else :title="template.title||'Header'">
+            <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
+              <or-list v-model="variables"
+              ref="variablesOrList"
+              :steps="steps"
+              :step-id="stepId"
+              :readonly="readonly"
+              :new-item-method="newVariable"
+              :add-button-label="template.btn_label"
+              class="variables-list"
+              dragMode="false"
+              :can-remove-last-item="false"
+              >
+            <template slot-scope="item">
+                <item @remove-item="removeItem(item.index)" :variable-name.sync="item.item.variableName"
+                :variable-value.sync="item.item.variableValue"
+                :value-type.sync="item.item.valueType"
+                :variable-code.sync="item.item.variableCode"
+                :variable-is-code.sync="item.item.isCode"
+                :steps="item.steps"
+                :step-id="item.stepId"
+                :readonly="item.readonly"
+                :$v="$v.schema.variables.$each[item.index]"
+                ></item>
+            </template>
+            </or-list>
+        </or-collapsible>
     </div>
+  </div>
+
 </template>
 <script>
 import * as _ from "lodash";
-import { validators } from '../../../../../validators.js';
 
-//import { validators } from "_validators";
-import email from "./email.vue";
-import password from "./password.vue";
+//import { validators } from "../../../../../validators.js";
+import { validators } from "_validators";
 import item from "./item.vue";
 
-const { required, jsExpressionNonEmptyString, generateValidators } = validators;
-
-export default {
-  name: "editor-test-example",
-  props: ["template", "schema", "step", "stepId", "steps", "readonly"],
-  components: { email, password, item },
-  watch: {
-    variables: {
-      handler(newValue) {
-        this.$emit("input", newValue);
-      },
-      deep: true
-    }
-  },
-
-  data() {
-    return {
-      variables: this.schema.value || [],
-      oldVariables: [],
-      newVariable() {
-        return {
-          variableName: "",
-          variableValue: "``",
-          valueType: "string"
-        };
-      }
-    };
-  },
-
-  mounted() {
-    if (this.variables && this.$refs.variablesOrList && !this.variables.length)
-      this.$refs.variablesOrList.addItem();
-
-    this.oldVariables = _.cloneDeep(this.variables);
-  }
-};
-
-export const data = template => ({
-  value: template.value
-});
+const { required, generateValidators, minValue } = validators;
 
 export const validator = template => {
   return {
-    email: generateValidators(template.validateRequired, { required }),
-    password: generateValidators(template.validateRequired, { required })
+    variables: {
+      $each: {
+        variableName: {
+          custom(value) {
+            return validators.jsExpressionNonEmptyString(value);
+          }
+        },
+        variableValue: {
+          custom(value) {
+            return validators.jsExpressionNonEmptyString(value);
+          }
+        },
+        variableCode: {
+          custom(value){
+            return validators.jsExpression(value);
+          }
+        }
+      }
+    }
   };
+};
+export const data = template => ({
+  variables: [],
+  title: template.title,
+  isHeader: template.isHeader,
+  btn_label:template.btn_label
+});
+
+export default {
+  props: {
+    template: {
+      type: Object,
+      default: () => ({})
+    },
+    schema: {
+      type: Object,
+      default: () => ({})
+    },
+    step: null,
+    stepId: null,
+    steps: null,
+    readonly: null
+  },
+  computed: {},
+  watch: {
+    variables: {
+      handler(newValue) {
+        //_.map(newValue,(el)=>(el.isCode)?`${el.variableCode}`||`{}`:{[`[${el.variableName}]`]:`${el.variableValue}`})
+        this.schema.variables = newValue;
+      },
+      deep: true
+    }
+    // $v: {
+    //   handler(newValue) {
+    //     this.$emit("step-validation", newValue);
+    //   },
+    //   deep: true
+    // }
+  },
+  methods: {
+    removeItem(index) {
+      this.$refs.variablesOrList.removeItem(index);
+    },
+    newVariable() {
+      return {
+        variableName: "``",
+        variableValue: "``",
+        valueType: "string",
+        isCode: false,
+        variableCode: "{}"
+      };
+    }
+  },
+  components: { item },
+  validations() {
+    return { schema: validator(this.template) };
+  },
+  mounted() {
+    this.variables = _.cloneDeep(this.schema.variables);
+  },
+  data() {
+    return {
+      variables: []
+    };
+  }
 };
 
 export const meta = {
@@ -90,12 +165,6 @@ export const meta = {
   version: "1.0"
 };
 </script>
-
-<style scoped lang="scss" rel="stylesheet/scss">
-@import "../scss/colors.scss";
-</style>
-
-
 <style lang="scss" rel="stylesheet/scss">
 @import "../scss/colors.scss";
 
@@ -105,13 +174,13 @@ export const meta = {
     color: #91969d;
     font-size: 12px;
     line-height: 18px;
+    padding-left: 20px;
   }
 
   .variables-list {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 30px;
 
     .or-list-items {
       width: 100%;
@@ -149,45 +218,7 @@ export const meta = {
       }
     }
   }
-
-  .variable {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    &_error {
-      display: flex;
-      color: #f95d5d;
-      font-size: 12px;
-      width: 100%;
-
-      &__name {
-        width: 50%;
-        padding-right: 3px;
-      }
-      &__value {
-        width: 50%;
-      }
-    }
-    &__name {
-      width: 50%;
-      padding-right: 3px;
-      display: flex;
-      align-items: flex-end;
-      .or-select-expression {
-        width: 100%;
-        .ui-select__content .ui-select__label .ui-select__display {
-          min-height: 38px;
-        }
-      }
-    }
-
-    .ui-select,
-    .or-text-expression,
-    .ui-textbox {
-      margin-bottom: 0;
-    }
-
-    .or-text-expression__inline {
+  .or-text-expression__inline {
       display: flex;
       flex-direction: row-reverse;
       border-radius: 3px;
@@ -218,9 +249,51 @@ export const meta = {
         border-color: #f95d5d;
       }
     }
+  .variable {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    &_error {
+      display: flex;
+      color: #f95d5d;
+      font-size: 12px;
+      width: 100%;
+
+      &__name {
+        width: calc(50% - 16px);
+        padding-right: 3px;
+      }
+      &__value {
+        width: calc(50% - 16px);
+      }
+    }
+    &__code {
+      margin: 20px 0px 0px 0px;
+      width: calc(100% - 32px);
+    }
+    &__btn {
+      margin-bottom: 3px;
+    }
+    &__name {
+      width: calc(50% - 16px);
+      padding-right: 3px;
+      display: flex;
+      align-items: flex-end;
+      .or-text-expression {
+        width: 100%;
+      }
+    }
+
+    .ui-select,
+    .or-text-expression,
+    .ui-textbox {
+      margin-bottom: 0;
+    }
+
+
 
     &__value {
-      width: 50%;
+      width: calc(50% - 16px);
 
       .input-wrapper {
         position: relative;

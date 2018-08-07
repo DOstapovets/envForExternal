@@ -1,46 +1,65 @@
 <template>
-    <div class="variable">
-  <div class="variable__name">
-    <or-select-expression v-model="variableNameLocal"
+  <div class="variable">
+    <or-code
+    :fullScreen="false"
+    class="variable__code"
+    v-if="variableIsCodeLocal"
+    @input="$v.$touch()"
+    :invalid="$v.variableCode.$error"
+    v-model="variableCodeLocal">
+  </or-code>
+    <div v-else class="variable__name">
+     <or-text-expression
+    class="or-text-expression__inline"
+     v-model="variableNameLocal"
       :readonly="readonly"
       placeholder="Name"
-      hasSearch
-      extendableOptions
-      :steps="steps" 
+      :invalid="$v.variableName.$error"
+      @input="$v.$touch()"
+      :steps="steps"
       :step-id="stepId"
-      :options.sync="optionsDataOut"
-      ></or-select-expression>
-  </div>
-  <div class="variable__value">
-    <or-select
-      v-if="isTextInput"
-      ref="valueTypeSelect"
+      ></or-text-expression>
+    </div>
+    <div v-if="!variableIsCodeLocal" class="variable__value">
+      <or-select
       :disabled="readonly"
       :options="variableTypeOptions"
       v-model="valueTypeLocal"
-    ></or-select>
-    <or-text-expression v-if="valueTypeLocal !== 'boolean'"
-        ref="variableValueInput"
-        class="or-text-expression__inline"
+      ></or-select>
+      <or-text-expression v-if="valueTypeLocal !== 'boolean'"
+          class="or-text-expression__inline"
+          v-model="variableValueLocal"
+          :invalid="$v.variableValue.$error"
+          @input="$v.$touch()"
+          :readonly="readonly || isNull"
+          placeholder="Value"
+          :steps="steps"
+          :step-id="stepId"
+          ></or-text-expression>
+      <or-radio-group v-else
+        :disabled="readonly"
+        :options="[true, false]"
         v-model="variableValueLocal"
-        :readonly="readonly || isNull"
-        placeholder="Value"
-        :steps="steps" 
-        :step-id="stepId"
-        ></or-text-expression>
-    <or-radio-group v-else
-      name="Value bool radio"
-      :disabled="readonly"
-      :options="[true, false]"
-      v-model="variableValueLocal"
-    ></or-radio-group>
+      ></or-radio-group>
   </div>
+
+  <or-icon-button :style="{'align-self':(variableIsCodeLocal)?'center':'flex-end'}" type="secondary" class="variable__btn" has-dropdown icon="more_vert" ref="dropdownButton" size="small">
+        <or-menu
+        contain-focus
+        has-icons
+        @select="selectOptions"
+        slot="dropdown"
+        :options="menuOptions"
+        @close="$refs.dropdownButton.closeDropdown()"
+        ></or-menu>
+      </or-icon-button>
   <div class="variable_error">
     <div class="variable_error__name">
-        <!-- <span v-if="isInvalidVariableName">{{errorText}}</span> -->
+        <span v-if="!variableIsCodeLocal&&$v.variableName.$error">{{errorText}}</span>
+        <span v-if="variableIsCodeLocal&&$v.variableName.$error">{{errorCodeReq}}</span>
     </div>
     <div class="variable_error__value">
-        <!-- <span v-if="isInvalidVariableValue">{{valueErrorText}}</span> -->
+        <span v-if="!variableIsCodeLocal&&$v.variableValue.$error">{{valueErrorText}}</span>
     </div>
   </div>
 </div>
@@ -48,8 +67,6 @@
 
 <script>
 import * as _ from "lodash";
-import { validators } from '../../../../../validators.js';
-//import { validators } from "_validators";
 
 export default {
   props: {
@@ -70,25 +87,48 @@ export default {
     },
     variableCode: {
       type: String,
-      defaut: "``"
-    },
-    variables: {
-      type: Array,
-      default() {
-        return [];
-      }
+      defaut: "{}"
     },
     steps: "",
     stepId: "",
     readonly: {
       type: Boolean,
       default: false
-    }
+    },
+    $v:null
   },
 
   computed: {
     isNull() {
       return this.valueTypeLocal === "null";
+    },
+    menuOptions(){return [
+        {
+          label: (this.variableIsCodeLocal)?"UI mode":"Code mode",
+          icon: "code",
+          event: "code_mode"
+        },
+        {
+          label: "Delete",
+          icon: "delete_forever",
+          event: "delete_item"
+        }
+      ]},
+    variableCodeLocal: {
+      get() {
+        return this.variableCode;
+      },
+      set(newValue) {
+        this.$emit("update:variableCode", newValue);
+      }
+    },
+    variableIsCodeLocal: {
+      get() {
+        return this.variableIsCode;
+      },
+      set(newValue) {
+        this.$emit("update:variableIsCode", newValue);
+      }
     },
     variableNameLocal: {
       get() {
@@ -132,19 +172,29 @@ export default {
   data() {
     return {
       variableTypeOptions: ["string", "number", "boolean", "null"],
-      isInvalidVariableName: false,
-      isInvalidVariableValue: false,
-      errorText: "Use another variable name.",
-      valueErrorText: "The value is required.",
+      errorText: "The Name is required.",
+      valueErrorText: "The Value is required.",
+      errorCodeReq:"The Code is required.",
       isTextInput: true,
-      optionsDataOut: []
+      optionsDataOut: [],
     };
   },
 
-  methods: {},
+  methods: {
+    selectOptions(value) {
+      switch (value.event) {
+        case "delete_item":
+          this.$emit("remove-item");
+          break;
+        case "code_mode":
+          this.variableIsCodeLocal=!this.variableIsCodeLocal;
+          break;
+      }
+    }
+  },
 
   mounted() {
-    this.optionsDataOut= _.map(this.steps,step=>step.data.dataOut);
+    this.optionsDataOut = _.map(this.steps, step => step.data.dataOut);
   }
 };
 </script>
