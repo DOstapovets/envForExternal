@@ -1,13 +1,14 @@
 <template>
     <div class="example-input-component-wrapper">
         <div class="wrapper" @click="$refs.configModal.open()">
-            <editor :template="defaultValue"
+            <editor :template="input.data"
                     :schema="defaultStep.data"
                     :step="defaultStep"
                     :steps="[defaultStep]"
                     :readonly="true">
             </editor>
         </div>
+
 
         <or-modal ref="configModal" :remove-close-button="true"
                   title="Configure component"
@@ -50,7 +51,6 @@
 
     export const label = 'Paired value';
     export const data = {
-        validateRequired    : true,
         title               : 'Variables',
         isHeader            : true,
         btn_label           : 'Add new variable'

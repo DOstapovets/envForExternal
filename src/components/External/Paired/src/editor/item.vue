@@ -1,14 +1,7 @@
 <template>
-  <div class="variable">
-    <or-code
-    :fullScreen="false"
-    class="variable__code"
-    v-if="variableIsCodeLocal"
-    @input="$v.$touch()"
-    :invalid="$v.code.$error"
-    v-model="variableCodeLocal">
-  </or-code>
-    <div v-else class="variable__name">
+  <div class="variable" :style="{'border-color':($v.$error)?'#f95d5d':''}">
+
+    <div class="variable__name">
      <or-text-expression
     class="or-text-expression__inline"
      v-model="variableNameLocal"
@@ -19,6 +12,18 @@
       :steps="steps"
       :step-id="stepId"
       ></or-text-expression>
+    </div>
+    <div v-if="variableIsCodeLocal" class="variable__value">
+      <or-code
+        adjustToHeight
+        :steps="steps"
+        :step-id="stepId"
+        :readonly="readonly"
+        class="variable__code"
+        @input="$v.$touch()"
+        :invalid="$v.code.$error"
+        v-model="variableCodeLocal">
+      </or-code>
     </div>
     <div v-if="!variableIsCodeLocal" class="variable__value">
       <or-select
@@ -55,10 +60,10 @@
       </or-icon-button>
   <div class="variable_error">
     <div class="variable_error__name">
-        <span v-if="!variableIsCodeLocal&&$v.name.$error">{{errorText}}</span>
-        <span v-if="variableIsCodeLocal&&$v.name.$error">{{errorCodeReq}}</span>
+        <span v-if="$v.name.$error">{{errorText}}</span>
     </div>
     <div class="variable_error__value">
+        <span v-if="variableIsCodeLocal&&$v.code.$error">{{errorCodeReq}}</span>
         <span v-if="!variableIsCodeLocal&&$v.value.$error">{{valueErrorText}}</span>
     </div>
   </div>
@@ -189,6 +194,7 @@ export default {
           this.variableIsCodeLocal=!this.variableIsCodeLocal;
           break;
       }
+      this.$nextTick(()=>{this.$v.$touch()})
     }
   },
 

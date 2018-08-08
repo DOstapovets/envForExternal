@@ -77,18 +77,18 @@ export const validator = template => {
     variables: {
       $each: {
         name: {
-          custom(value) {
+          custom(value,ctx) {
             return validators.jsExpressionNonEmptyString(value);
           }
         },
         value: {
-          custom(value) {
-            return validators.jsExpressionNonEmptyString(value);
+          custom(value,ctx) {
+            return ctx.isCode||validators.jsExpressionNonEmptyString(value);
           }
         },
         code: {
-          custom(value){
-            return validators.jsExpression(value);
+          custom(value,ctx){
+            return !ctx.isCode||validators.jsExpression(value);
           }
         }
       }
@@ -168,8 +168,7 @@ export const meta = {
 @import "../scss/colors.scss";
 
 .paired-component-wrapper {
-  // border-left: 3px solid #7ED321;
-  // border-radius: 3px;
+  //
   background-color: #f6f6f6;
   .empty-list {
     color: #91969d;
@@ -203,12 +202,7 @@ export const meta = {
     &.or-list {
 
       .list-item {
-        position: relative;
-        margin-bottom: 10px;
-        border-radius: 3px;
-        padding: 10px;
-        padding-top: 0px;
-        background-color: #fff;
+
 
         > .remove-button {
           display: none;
@@ -255,6 +249,13 @@ export const meta = {
       }
     }
   .variable {
+    border-left: 3px solid #7ED321;
+    position: relative;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    padding: 10px;
+    padding-top: 0px;
+    background-color: #fff;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -273,8 +274,7 @@ export const meta = {
       }
     }
     &__code {
-      margin: 20px 0px 0px 0px;
-      width: calc(100% - 32px);
+      margin: 0;
     }
     &__btn {
       margin-bottom: 3px;
