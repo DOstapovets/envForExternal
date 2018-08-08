@@ -5,7 +5,7 @@
     class="variable__code"
     v-if="variableIsCodeLocal"
     @input="$v.$touch()"
-    :invalid="$v.variableCode.$error"
+    :invalid="$v.code.$error"
     v-model="variableCodeLocal">
   </or-code>
     <div v-else class="variable__name">
@@ -14,7 +14,7 @@
      v-model="variableNameLocal"
       :readonly="readonly"
       placeholder="Name"
-      :invalid="$v.variableName.$error"
+      :invalid="$v.name.$error"
       @input="$v.$touch()"
       :steps="steps"
       :step-id="stepId"
@@ -29,7 +29,7 @@
       <or-text-expression v-if="valueTypeLocal !== 'boolean'"
           class="or-text-expression__inline"
           v-model="variableValueLocal"
-          :invalid="$v.variableValue.$error"
+          :invalid="$v.value.$error"
           @input="$v.$touch()"
           :readonly="readonly || isNull"
           placeholder="Value"
@@ -55,11 +55,11 @@
       </or-icon-button>
   <div class="variable_error">
     <div class="variable_error__name">
-        <span v-if="!variableIsCodeLocal&&$v.variableName.$error">{{errorText}}</span>
-        <span v-if="variableIsCodeLocal&&$v.variableName.$error">{{errorCodeReq}}</span>
+        <span v-if="!variableIsCodeLocal&&$v.name.$error">{{errorText}}</span>
+        <span v-if="variableIsCodeLocal&&$v.name.$error">{{errorCodeReq}}</span>
     </div>
     <div class="variable_error__value">
-        <span v-if="!variableIsCodeLocal&&$v.variableValue.$error">{{valueErrorText}}</span>
+        <span v-if="!variableIsCodeLocal&&$v.value.$error">{{valueErrorText}}</span>
     </div>
   </div>
 </div>
@@ -95,7 +95,7 @@ export default {
       type: Boolean,
       default: false
     },
-    $v:null
+    $v:{}
   },
 
   computed: {
@@ -176,7 +176,6 @@ export default {
       valueErrorText: "The Value is required.",
       errorCodeReq:"The Code is required.",
       isTextInput: true,
-      optionsDataOut: [],
     };
   },
 
@@ -194,7 +193,7 @@ export default {
   },
 
   mounted() {
-    this.optionsDataOut = _.map(this.steps, step => step.data.dataOut);
+    this.$v.$touch();
   }
 };
 </script>

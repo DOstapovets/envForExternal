@@ -48,7 +48,7 @@
         }
     };
 
-    export const label = 'Test example';
+    export const label = 'Paired value';
     export const data = {
         validateRequired    : true,
         title               : 'Variables',

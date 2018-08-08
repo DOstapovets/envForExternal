@@ -6,6 +6,6 @@ export default [
 export const meta = {
     name    : 'test-external-component',
     type    : 'onereach-studio-plugin',
-    label   : 'Test example',
+    label   : 'Paired Value',
     version : '1.0'
 };
