@@ -16,10 +16,11 @@
             :can-remove-last-item="false"
             >
             <template slot-scope="item">
-                <item @remove-item="removeItem(item.index)" :variable-name.sync="item.item.variableName"
-                :variable-value.sync="item.item.variableValue"
-                :value-type.sync="item.item.valueType"
-                :variable-code.sync="item.item.variableCode"
+                <item @remove-item="removeItem(item.index)"
+                :variable-name.sync="item.item.name"
+                :variable-value.sync="item.item.value"
+                :value-type.sync="item.item.type"
+                :variable-code.sync="item.item.code"
                 :variable-is-code.sync="item.item.isCode"
                 :steps="item.steps"
                 :step-id="item.stepId"
@@ -30,7 +31,7 @@
             </or-list>
         </div>
 
-        <or-collapsible v-else :title="template.title||'Header'">
+        <or-collapsible invalid="$v.schema.variables.$error" v-else :title="template.title||'Header'">
             <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
               <or-list v-model="variables"
               ref="variablesOrList"
@@ -44,10 +45,11 @@
               :can-remove-last-item="false"
               >
             <template slot-scope="item">
-                <item @remove-item="removeItem(item.index)" :variable-name.sync="item.item.variableName"
-                :variable-value.sync="item.item.variableValue"
-                :value-type.sync="item.item.valueType"
-                :variable-code.sync="item.item.variableCode"
+                <item @remove-item="removeItem(item.index)"
+                :variable-name.sync="item.item.name"
+                :variable-value.sync="item.item.value"
+                :value-type.sync="item.item.type"
+                :variable-code.sync="item.item.code"
                 :variable-is-code.sync="item.item.isCode"
                 :steps="item.steps"
                 :step-id="item.stepId"
@@ -74,19 +76,19 @@ export const validator = template => {
   return {
     variables: {
       $each: {
-        variableName: {
-          custom(value) {
+        name: {
+          custom(value,ctx) {
             return validators.jsExpressionNonEmptyString(value);
           }
         },
-        variableValue: {
-          custom(value) {
-            return validators.jsExpressionNonEmptyString(value);
+        value: {
+          custom(value,ctx) {
+            return ctx.isCode||validators.jsExpressionNonEmptyString(value);
           }
         },
-        variableCode: {
-          custom(value){
-            return validators.jsExpression(value);
+        code: {
+          custom(value,ctx){
+            return !ctx.isCode||validators.jsExpression(value);
           }
         }
       }
@@ -94,10 +96,7 @@ export const validator = template => {
   };
 };
 export const data = template => ({
-  variables: [],
-  title: template.title,
-  isHeader: template.isHeader,
-  btn_label:template.btn_label
+  variables: []
 });
 
 export default {
@@ -137,11 +136,11 @@ export default {
     },
     newVariable() {
       return {
-        variableName: "``",
-        variableValue: "``",
-        valueType: "string",
+        name: "``",
+        value: "``",
+        type: "string",
         isCode: false,
-        variableCode: "{}"
+        code: "{}"
       };
     }
   },
@@ -169,12 +168,16 @@ export const meta = {
 @import "../scss/colors.scss";
 
 .paired-component-wrapper {
+  //
   background-color: #f6f6f6;
   .empty-list {
     color: #91969d;
     font-size: 12px;
     line-height: 18px;
     padding-left: 20px;
+  }
+  .or-collapsible__description{
+    display: none;
   }
 
   .variables-list {
@@ -197,13 +200,9 @@ export const meta = {
     }
 
     &.or-list {
+
       .list-item {
-        position: relative;
-        margin-bottom: 10px;
-        border-radius: 3px;
-        padding: 10px;
-        padding-top: 0px;
-        background-color: #fff;
+
 
         > .remove-button {
           display: none;
@@ -250,6 +249,13 @@ export const meta = {
       }
     }
   .variable {
+    border-left: 3px solid #7ED321;
+    position: relative;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    padding: 10px;
+    padding-top: 0px;
+    background-color: #fff;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -268,8 +274,7 @@ export const meta = {
       }
     }
     &__code {
-      margin: 20px 0px 0px 0px;
-      width: calc(100% - 32px);
+      margin: 0;
     }
     &__btn {
       margin-bottom: 3px;
@@ -389,6 +394,7 @@ export const meta = {
 
         &__radios {
           position: relative;
+          justify-content:space-evenly !important;
         }
 
         &:not(.is-disabled):not(.is-invalid):hover .ui-radio-group__label-text,
