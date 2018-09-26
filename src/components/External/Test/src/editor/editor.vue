@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="paired-component-wrapper">
-        <div v-if="template.isHeader">
+        <div v-if="!template.isCollabsible">
           <h3 style="padding-left: 10px;">{{template.title}}</h3>
           <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
           <or-list style="margin: 10px;" v-model="variables"
@@ -17,6 +17,7 @@
             >
             <template slot-scope="item">
                 <item @remove-item="removeItem(item.index)"
+                :template.sync="template"
                 :variable-name.sync="item.item.name"
                 :variable-value.sync="item.item.value"
                 :value-type.sync="item.item.type"
@@ -31,7 +32,7 @@
             </or-list>
         </div>
 
-        <or-collapsible invalid="$v.schema.variables.$error" v-else :title="template.title||'Header'">
+        <or-collapsible :open="template.collapsibleOpen" invalid="$v.schema.variables.$error" v-else :title="template.title||'Header'">
             <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
               <or-list v-model="variables"
               ref="variablesOrList"
@@ -51,6 +52,7 @@
                 :value-type.sync="item.item.type"
                 :variable-code.sync="item.item.code"
                 :variable-is-code.sync="item.item.isCode"
+                :template.sync="template"
                 :steps="item.steps"
                 :step-id="item.stepId"
                 :readonly="item.readonly"
@@ -77,18 +79,21 @@ export const validator = template => {
     variables: {
       $each: {
         name: {
-          custom(value,ctx) {
-            return validators.jsExpressionNonEmptyString(value);
+          custom(value, ctx) {
+            return (
+              value != "this.get('')" ||
+              validators.jsExpressionNonEmptyString(value)
+            );
           }
         },
         value: {
-          custom(value,ctx) {
-            return ctx.isCode||validators.jsExpressionNonEmptyString(value);
+          custom(value, ctx) {
+            return ctx.isCode || validators.jsExpressionNonEmptyString(value);
           }
         },
         code: {
-          custom(value,ctx){
-            return !ctx.isCode||validators.jsExpression(value);
+          custom(value, ctx) {
+            return !ctx.isCode || validators.jsExpression(value);
           }
         }
       }
@@ -114,11 +119,22 @@ export default {
     steps: null,
     readonly: null
   },
-  computed: {},
+  computed: {
+    variableComp() {
+      return this.variables;
+    }
+  },
   watch: {
     variables: {
       handler(newValue) {
-        //_.map(newValue,(el)=>(el.isCode)?`${el.variableCode}`||`{}`:{[`[${el.variableName}]`]:`${el.variableValue}`})
+        newValue.forEach(el => {
+          delete el.vforkey;
+          if (!this.template.types) delete el.type;
+          if (!this.template.types) {
+            delete el.isCode;
+            delete el.code;
+          }
+        });
         this.schema.variables = newValue;
       },
       deep: true
@@ -136,7 +152,7 @@ export default {
     },
     newVariable() {
       return {
-        name: "``",
+        name: this.template.nameType == "or-text-expression" ? "``" : "",
         value: "``",
         type: "string",
         isCode: false,
@@ -149,7 +165,11 @@ export default {
     return { schema: validator(this.template) };
   },
   mounted() {
-    this.variables = _.cloneDeep(this.schema.variables);
+    if (this.schema.variables.length) {
+      this.variables = _.cloneDeep(this.schema.variables);
+    } else {
+      this.variables.push(this.newVariable());
+    }
   },
   data() {
     return {
@@ -169,20 +189,21 @@ export const meta = {
 
 .paired-component-wrapper {
   //
-  background-color: #f6f6f6;
   .empty-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: #91969d;
-    font-size: 12px;
-    line-height: 18px;
+    font-size: 14px;
+    height: 75px;
     padding-left: 20px;
   }
-  .or-collapsible__description{
+  .or-collapsible__description {
     display: none;
   }
 
   .variables-list {
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
 
     .or-list-items {
@@ -200,90 +221,85 @@ export const meta = {
     }
 
     &.or-list {
-
       .list-item {
-
-
+        padding: 0;
         > .remove-button {
           display: none;
-        }
-
-        .handle,
-        .sortable-handle {
-          //display: none;
-          align-self: flex-start;
-          margin-top: 2.6rem;
         }
       }
     }
   }
   .or-text-expression__inline {
-      display: flex;
-      flex-direction: row-reverse;
-      border-radius: 3px;
-      border: 1px solid #dfdfdf;
-      .header {
-        background-color: #f6f6f6;
-        width: 30px;
-
-        .ui-icon-button.add-variable {
-          display: block;
-          width: 30px;
-          filter: grayscale(1) opacity(100%) saturate(250%);
-        }
-        .ui-icon-button.js-mode-btn {
-          display: none;
-        }
-      }
-
-      .input-wrapper {
-        width: calc(100% - 30px);
-
-        .or-editable-wrapper {
-          border: none;
-        }
-      }
-      &.invalid,
-      &.invalid-char-length {
-        border-color: #f95d5d;
-      }
-    }
-  .variable {
-    border-left: 3px solid #7ED321;
-    position: relative;
-    margin-bottom: 10px;
-    border-radius: 3px;
-    padding: 10px;
-    padding-top: 0px;
-    background-color: #fff;
     width: 100%;
+    position: relative;
+    margin: 0;
+    flex-direction: row-reverse;
+
+    .header {
+      position: absolute;
+      right: 0;
+      z-index: 2;
+    }
+    .input-wrapper {
+      width: 100%;
+    }
+    .or-editable-wrapper {
+      height: 37px;
+    }
+  }
+  .modern {
+    background-color: #f6f6f6;
+    border-left: 3px solid #7ed321;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    padding-bottom: 15px;
+    padding-left: 10px;
+  }
+  .variable {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100%;
+
     &_error {
       display: flex;
       color: #f95d5d;
       font-size: 12px;
       width: 100%;
-
-      &__name {
-        width: calc(50% - 16px);
-        padding-right: 3px;
-      }
-      &__value {
-        width: calc(50% - 16px);
+    }
+    &__header {
+      display: flex;
+      min-height: 36px;
+      justify-content: space-between;
+      .label {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+        align-items: center;
+        -ms-flex-positive: 1;
+        flex-grow: 1;
+        font-size: 12px;
+        line-height: 1.3;
+        color: #91969d;
+        -webkit-transition: color 0.1s ease;
+        -o-transition: color 0.1s ease;
+        transition: color 0.1s ease;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
     }
+
     &__code {
       margin: 0;
     }
     &__btn {
-      margin-bottom: 3px;
+      width: 24px;
+      align-self: center;
     }
     &__name {
       width: calc(50% - 16px);
       padding-right: 3px;
-      display: flex;
-      align-items: flex-end;
       .or-text-expression {
         width: 100%;
       }
@@ -295,10 +311,16 @@ export const meta = {
       margin-bottom: 0;
     }
 
-
+    &__delimiter {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 2.5px;
+      margin-top: 25px;
+    }
 
     &__value {
-      width: calc(50% - 16px);
+      width: calc(50% - 12px);
 
       .input-wrapper {
         position: relative;
@@ -394,7 +416,7 @@ export const meta = {
 
         &__radios {
           position: relative;
-          justify-content:space-evenly !important;
+          justify-content: space-evenly !important;
         }
 
         &:not(.is-disabled):not(.is-invalid):hover .ui-radio-group__label-text,
@@ -420,12 +442,19 @@ export const meta = {
       }
     }
   }
+  .flex-box {
+    display: flex;
+    width: 100%;
+  }
 
   .value-type-helper {
     display: block;
     color: rgba(0, 0, 0, 0.38);
     line-height: 1.2;
     font-size: 12px;
+  }
+  .or-collapsible > .body-wrapper > .body {
+    padding: 0 16px;
   }
 }
 </style>

@@ -1,43 +1,60 @@
 <template>
-  <div class="variable" :style="{'border-color':($v.$error)?'#f95d5d':''}">
-
+  <div :class="['variable',(template.isIndicator)?'modern':'']" :style="{'border-color':($v.$error)?'#f95d5d':''}">
+  <div class="flex-box" >
     <div class="variable__name">
-     <or-text-expression
-    class="or-text-expression__inline"
-     v-model="variableNameLocal"
+      <div class="variable__header">
+        <div class="label">{{template.nameLabel}}</div>
+      </div>
+      <!-- 'or-merge-tag-input' -->
+      <component :is="template.nameType"
+      class="or-text-expression__inline"
+      v-model="variableNameLocal"
       :readonly="readonly"
-      placeholder="Name"
+      :placeholder="template.namePlaceholder"
+      disable-code-mode
       :invalid="$v.name.$error"
       @input="$v.$touch()"
       :steps="steps"
-      :step-id="stepId"
-      ></or-text-expression>
+      :step-id="stepId"></component>
+      <div class="variable_error">
+        <span v-if="$v.name.$error">{{errorText}}</span>
+      </div>
     </div>
-    <div v-if="variableIsCodeLocal" class="variable__value">
+    <div v-html="template.delimiter" class="variable__delimiter">
+    </div>
+    <div v-if="variableIsCodeLocal&&template.codeMode" class="variable__value">
       <or-code
         adjustToHeight
         :steps="steps"
         :step-id="stepId"
         :readonly="readonly"
+        :label="template.valueLabel"
         class="variable__code"
         @input="$v.$touch()"
         :invalid="$v.code.$error"
         v-model="variableCodeLocal">
       </or-code>
+      <div class="variable_error">
+        <span v-if="variableIsCodeLocal&&$v.code.$error">{{errorCodeReq}}</span>
+      </div>
     </div>
     <div v-if="!variableIsCodeLocal" class="variable__value">
-      <or-select
-      :disabled="readonly"
-      :options="variableTypeOptions"
-      v-model="valueTypeLocal"
-      ></or-select>
+      <div class="variable__header">
+        <div class="label">{{template.valueLabel}}</div>
+        <or-select v-if="template.types"
+        :disabled="readonly"
+        :options="variableTypeOptions"
+        v-model="valueTypeLocal"
+        ></or-select>
+      </div>
       <or-text-expression v-if="valueTypeLocal !== 'boolean'"
           class="or-text-expression__inline"
           v-model="variableValueLocal"
+          disable-code-mode
           :invalid="$v.value.$error"
           @input="$v.$touch()"
           :readonly="readonly || isNull"
-          placeholder="Value"
+          :placeholder="template.valuePlaceholder"
           :steps="steps"
           :step-id="stepId"
           ></or-text-expression>
@@ -46,9 +63,12 @@
         :options="[true, false]"
         v-model="variableValueLocal"
       ></or-radio-group>
+      <div class="variable_error">
+        <span v-if="!variableIsCodeLocal&&$v.value.$error">{{valueErrorText}}</span>
+      </div>
   </div>
 
-  <or-icon-button :style="{'align-self':(variableIsCodeLocal)?'center':'flex-end'}" type="secondary" class="variable__btn" has-dropdown icon="more_vert" ref="dropdownButton" size="small">
+  <or-icon-button disableRipple type="secondary" class="variable__btn flat  " has-dropdown icon="more_vert" ref="dropdownButton" size="small">
         <or-menu
         contain-focus
         has-icons
@@ -58,14 +78,6 @@
         @close="$refs.dropdownButton.closeDropdown()"
         ></or-menu>
       </or-icon-button>
-  <div class="variable_error">
-    <div class="variable_error__name">
-        <span v-if="$v.name.$error">{{errorText}}</span>
-    </div>
-    <div class="variable_error__value">
-        <span v-if="variableIsCodeLocal&&$v.code.$error">{{errorCodeReq}}</span>
-        <span v-if="!variableIsCodeLocal&&$v.value.$error">{{valueErrorText}}</span>
-    </div>
   </div>
 </div>
 </template>
@@ -75,6 +87,10 @@ import * as _ from "lodash";
 
 export default {
   props: {
+    template: {
+      type: Object,
+      default: () => ({})
+    },
     variableName: {
       type: String,
       default: ""
@@ -108,7 +124,7 @@ export default {
       return this.valueTypeLocal === "null";
     },
     menuOptions() {
-      return [
+      let menu = [
         {
           label: this.variableIsCodeLocal ? "UI mode" : "Code mode",
           icon: "code",
@@ -120,6 +136,8 @@ export default {
           event: "delete_item"
         }
       ];
+      if (!this.template.codeMode) menu.shift();
+      return menu;
     },
     variableCodeLocal: {
       get() {
@@ -179,10 +197,9 @@ export default {
   data() {
     return {
       variableTypeOptions: ["string", "number", "boolean", "null"],
-      errorText: "The Name is required.",
-      valueErrorText: "The Value is required.",
-      errorCodeReq: "The Code is required.",
-      isTextInput: true
+      errorText: `The ${this.template.nameLabel} is required.`,
+      valueErrorText: `The ${this.template.valueLabel} is required.`,
+      errorCodeReq: "The Code is required."
     };
   },
 
