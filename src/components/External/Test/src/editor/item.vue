@@ -87,6 +87,10 @@ import * as _ from "lodash";
 
 export default {
   props: {
+    variables: {
+      type: Array,
+      default: () => []
+    },
     template: {
       type: Object,
       default: () => ({})
@@ -133,7 +137,8 @@ export default {
         {
           label: "Delete",
           icon: "delete_forever",
-          event: "delete_item"
+          event: "delete_item",
+          disabled: !(this.variables.length - 1)
         }
       ];
       if (!this.template.codeMode) menu.shift();

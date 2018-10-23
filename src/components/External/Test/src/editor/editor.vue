@@ -23,6 +23,7 @@
                 :value-type.sync="item.item.type"
                 :variable-code.sync="item.item.code"
                 :variable-is-code.sync="item.item.isCode"
+                :variables.sync="variables"
                 :steps="item.steps"
                 :step-id="item.stepId"
                 :readonly="item.readonly"
@@ -32,7 +33,7 @@
             </or-list>
         </div>
 
-        <or-collapsible :open="template.collapsibleOpen" invalid="$v.schema.variables.$error" v-else :title="template.title||'Header'">
+        <or-collapsible :open="template.collapsibleOpen" invalid="!variables.length||$v.schema.variables.$error" v-else :title="template.title||'Header'">
             <div v-if="!variables||!variables.length" class="empty-list">Your variables list is empty.</div>
               <or-list v-model="variables"
               ref="variablesOrList"
@@ -52,6 +53,7 @@
                 :value-type.sync="item.item.type"
                 :variable-code.sync="item.item.code"
                 :variable-is-code.sync="item.item.isCode"
+                :variables.sync="variables"
                 :template.sync="template"
                 :steps="item.steps"
                 :step-id="item.stepId"
@@ -81,7 +83,7 @@ export const validator = template => {
         name: {
           custom(value, ctx) {
             return (
-              value != "this.get('')" ||
+              value != "this.get('')" &&
               validators.jsExpressionNonEmptyString(value)
             );
           }
@@ -151,8 +153,19 @@ export default {
       this.$refs.variablesOrList.removeItem(index);
     },
     newVariable() {
+      let name;
+      switch (this.template.nameType) {
+        case "or-merge-tag-input":
+          name = "this.get('')";
+          break;
+        case "or-text-expression":
+          name = "``";
+          break;
+        default:
+          name = "";
+      }
       return {
-        name: this.template.nameType == "or-text-expression" ? "``" : "",
+        name,
         value: "``",
         type: "string",
         isCode: false,
