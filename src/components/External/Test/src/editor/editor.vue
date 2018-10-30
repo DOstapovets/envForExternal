@@ -10,7 +10,6 @@
             :step-id="stepId"
             :readonly="readonly"
             :new-item-method="newVariable"
-            :add-button-label="template.btn_label"
             class="variables-list"
             dragMode="false"
             :can-remove-last-item="false"
@@ -30,6 +29,11 @@
                 :$v="$v.schema.variables.$each[item.index]"
                 ></item>
             </template>
+            <template slot="footer">
+              <or-button disableRipple icon="add" class="flat add-button" @click="$refs.variablesOrList.addItem()" type="secondary" color="primary">
+                {{template.btn_label}}
+              </or-button>
+            </template>
             </or-list>
         </div>
 
@@ -41,7 +45,6 @@
               :step-id="stepId"
               :readonly="readonly"
               :new-item-method="newVariable"
-              :add-button-label="template.btn_label"
               class="variables-list"
               dragMode="false"
               :can-remove-last-item="false"
@@ -60,6 +63,11 @@
                 :readonly="item.readonly"
                 :$v="$v.schema.variables.$each[item.index]"
                 ></item>
+            </template>
+            <template slot="footer">
+              <or-button disableRipple icon="add" class="flat add-button" @click="$refs.variablesOrList.addItem()" type="secondary" color="primary">
+                {{template.btn_label}}
+              </or-button>
             </template>
             </or-list>
         </or-collapsible>
@@ -222,17 +230,6 @@ export const meta = {
     .or-list-items {
       width: 100%;
     }
-
-    > button.ui-button.ui-button--type-secondary.ui-button--color-primary {
-      height: 30px;
-      margin: 30px auto 0;
-      border-radius: 6px;
-      background-color: #64b2da;
-      color: #ffffff;
-      font-size: 14px;
-      line-height: 14px;
-    }
-
     &.or-list {
       .list-item {
         padding: 0;
@@ -301,6 +298,9 @@ export const meta = {
         overflow: hidden;
         white-space: nowrap;
       }
+      .ui-select {
+        margin-right: -8px;
+      }
     }
 
     &__code {
@@ -309,10 +309,14 @@ export const meta = {
     &__btn {
       width: 24px;
       align-self: center;
+      margin-top: 24px;
     }
     &__name {
       width: calc(50% - 16px);
       padding-right: 3px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       .or-text-expression {
         width: 100%;
       }
@@ -329,7 +333,7 @@ export const meta = {
       justify-content: center;
       align-items: center;
       margin: 2.5px;
-      margin-top: 25px;
+      margin-top: 24px;
     }
 
     &__value {
@@ -387,6 +391,7 @@ export const meta = {
 
       .ui-select .ui-select__content .ui-select__label .ui-select__display {
         width: auto;
+        font-size: 13px;
         padding: 2px 0 2px 10px;
         border: 0;
         background: transparent;
@@ -400,6 +405,9 @@ export const meta = {
       .ui-select .ui-select__content .ui-select__label .ui-select__label-text {
         white-space: nowrap;
         font-size: 14px;
+      }
+      .ui-select .ui-select__options .ui-select-option {
+        font-size: 13px;
       }
 
       .ui-select.has-label .ui-select__dropdown-button {
@@ -468,6 +476,12 @@ export const meta = {
   }
   .or-collapsible > .body-wrapper > .body {
     padding: 0 16px;
+  }
+  .add-button {
+    padding-left: 24px;
+  }
+  .or-list .list-item > .sortable-handle {
+    margin-top: 24px;
   }
 }
 </style>

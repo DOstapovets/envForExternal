@@ -24,11 +24,10 @@
     </div>
     <div v-if="variableIsCodeLocal&&template.codeMode" class="variable__value">
       <or-code
-        adjustToHeight
         :steps="steps"
         :step-id="stepId"
         :readonly="readonly"
-        :label="template.valueLabel"
+        label="Code"
         class="variable__code"
         @input="$v.$touch()"
         :invalid="$v.code.$error"
@@ -138,7 +137,7 @@ export default {
           label: "Delete",
           icon: "delete_forever",
           event: "delete_item",
-          disabled: !(this.variables.length - 1)
+          disabled: !(this.variables.length - 1)||this.readonly
         }
       ];
       if (!this.template.codeMode) menu.shift();

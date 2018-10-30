@@ -35,7 +35,7 @@
                   class="input-message-settings"
                   :contain-focus="false">
              <or-textbox name="name" label="Label" placeholder="Enter name label"
-                v-model="input.data.nameLabel">
+                v-model="input.data.valueLabel">
               </or-textbox>
               <or-textbox name="name" label="Placeholder" placeholder="Enter value placeholder"
                 v-model="input.data.valuePlaceholder">
