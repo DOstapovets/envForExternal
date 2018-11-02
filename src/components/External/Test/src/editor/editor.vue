@@ -12,8 +12,7 @@
             :new-item-method="newVariable"
             class="variables-list"
             dragMode="false"
-            :can-remove-last-item="false"
-            >
+            :can-remove-last-item="false">
             <template slot-scope="item">
                 <item @remove-item="removeItem(item.index)"
                 :template.sync="template"
@@ -30,7 +29,10 @@
                 ></item>
             </template>
             <template slot="footer">
-              <or-button disableRipple icon="add" class="flat add-button" @click="$refs.variablesOrList.addItem()" type="secondary" color="primary">
+              <or-button disableRipple :disabled="readonly"
+              icon="add" class="flat add-button"
+              @click="$refs.variablesOrList.addItem()"
+               type="secondary" color="primary">
                 {{template.btn_label}}
               </or-button>
             </template>
@@ -65,7 +67,11 @@
                 ></item>
             </template>
             <template slot="footer">
-              <or-button disableRipple icon="add" class="flat add-button" @click="$refs.variablesOrList.addItem()" type="secondary" color="primary">
+              <or-button disableRipple :disabled="readonly"
+              icon="add" class="flat add-button"
+              @click="$refs.variablesOrList.addItem()"
+
+               type="secondary" color="primary">
                 {{template.btn_label}}
               </or-button>
             </template>
@@ -87,6 +93,11 @@ const { required, generateValidators, minValue } = validators;
 export const validator = template => {
   return {
     variables: {
+      uniq(value, ctx) {
+        return (
+          !template.isUniq || _.unionBy(value, "name").length == value.length
+        );
+      },
       $each: {
         name: {
           custom(value, ctx) {

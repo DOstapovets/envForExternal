@@ -12,12 +12,13 @@
       :readonly="readonly"
       :placeholder="template.namePlaceholder"
       disable-code-mode
-      :invalid="$v.name.$error"
+      :invalid="$v.name.$error||(template.isUniq&&variables.filter(el=>el.name===variableNameLocal).length>1)"
       @input="$v.$touch()"
       :steps="steps"
       :step-id="stepId"></component>
       <div class="variable_error">
         <span v-if="$v.name.$error">{{errorText}}</span>
+        <span v-if="(template.isUniq&&variables.filter(el=>el.name===variableNameLocal).length>1)">{{errorUniq}}</span>
       </div>
     </div>
     <div v-html="template.delimiter" class="variable__delimiter">
@@ -35,6 +36,7 @@
       </or-code>
       <div class="variable_error">
         <span v-if="variableIsCodeLocal&&$v.code.$error">{{errorCodeReq}}</span>
+
       </div>
     </div>
     <div v-if="!variableIsCodeLocal" class="variable__value">
@@ -67,7 +69,7 @@
       </div>
   </div>
 
-  <or-icon-button disableRipple type="secondary" class="variable__btn flat  " has-dropdown icon="more_vert" ref="dropdownButton" size="small">
+  <or-icon-button :disabled="readonly" disableRipple type="secondary" class="variable__btn flat  " has-dropdown icon="more_vert" ref="dropdownButton" size="small">
         <or-menu
         contain-focus
         has-icons
@@ -137,7 +139,7 @@ export default {
           label: "Delete",
           icon: "delete_forever",
           event: "delete_item",
-          disabled: !(this.variables.length - 1)||this.readonly
+          disabled: !(this.variables.length - 1) || this.readonly
         }
       ];
       if (!this.template.codeMode) menu.shift();
@@ -203,7 +205,8 @@ export default {
       variableTypeOptions: ["string", "number", "boolean", "null"],
       errorText: `The ${this.template.nameLabel} is required.`,
       valueErrorText: `The ${this.template.valueLabel} is required.`,
-      errorCodeReq: "The Code is required."
+      errorCodeReq: "The Code is required.",
+      errorUniq: "Use another variable name."
     };
   },
 

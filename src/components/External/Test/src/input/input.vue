@@ -19,7 +19,7 @@
             v-model="input.data.nameLabel">
           </or-textbox>
           <or-textbox name="name" label="Placeholder" placeholder="Enter value placeholder"
-            v-model="input.data.namePlaceholder">
+            v-model="input.data.namePlaceholder">x
           </or-textbox>
           <or-select label="Field component" :options="types" v-model="input.data.nameType"></or-select>
           <div slot="footer">
@@ -72,6 +72,8 @@
                         v-model="input.data.delimiter">
             </or-textbox>
             <or-switch label="Use Indicator" v-model="input.data.isIndicator"></or-switch>
+            <or-switch label="Use unique names" v-model="input.data.isUniq"></or-switch>
+
 
             <or-textbox name="label" label="Button label" placeholder="Enter button label"
                         v-model="input.data.btn_label">
@@ -146,7 +148,8 @@ export const data = {
   collapsibleOpen: false,
   isIndicator: true,
   variable: "variables",
-  delimiter: ""
+  delimiter: "",
+  isUniq: false
 };
 
 export const meta = {
