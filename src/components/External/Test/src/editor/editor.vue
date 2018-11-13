@@ -110,6 +110,14 @@ export const validator = template => {
         value: {
           custom(value, ctx) {
             return ctx.isCode || validators.jsExpressionNonEmptyString(value);
+          },
+          isNumber(value, ctx) {
+            return (
+              ctx.isCode ||
+              ctx.type != "number" ||
+              value.includes("this.get") ||
+              !_.isNaN(+value.slice(1, -1))
+            );
           }
         },
         code: {
@@ -282,7 +290,6 @@ export const meta = {
     width: 100%;
 
     &_error {
-      display: flex;
       color: #f95d5d;
       font-size: 12px;
       width: 100%;
@@ -365,7 +372,7 @@ export const meta = {
           }
 
           .editable {
-            width: 100%;
+            width: calc(100% - 32px);
           }
 
           .merge-tag input {
@@ -489,7 +496,7 @@ export const meta = {
     padding: 0 16px;
   }
   .add-button {
-    padding-left: 24px;
+    padding-left: 16px;
   }
   .or-list .list-item > .sortable-handle {
     margin-top: 24px;

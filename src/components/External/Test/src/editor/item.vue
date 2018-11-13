@@ -5,7 +5,6 @@
       <div class="variable__header">
         <div class="label">{{template.nameLabel}}</div>
       </div>
-      <!-- 'or-merge-tag-input' -->
       <component :is="template.nameType"
       class="or-text-expression__inline"
       v-model="variableNameLocal"
@@ -18,7 +17,7 @@
       :step-id="stepId"></component>
       <div class="variable_error">
         <span v-if="$v.name.$error">{{errorText}}</span>
-        <span v-if="(template.isUniq&&variables.filter(el=>el.name===variableNameLocal).length>1)">{{errorUniq}}</span>
+        <span v-if="(!$v.name.$error&&template.isUniq&&variables.filter(el=>el.name===variableNameLocal).length>1)">{{errorUniq}}</span>
       </div>
     </div>
     <div v-html="template.delimiter" class="variable__delimiter">
@@ -36,7 +35,6 @@
       </or-code>
       <div class="variable_error">
         <span v-if="variableIsCodeLocal&&$v.code.$error">{{errorCodeReq}}</span>
-
       </div>
     </div>
     <div v-if="!variableIsCodeLocal" class="variable__value">
@@ -69,7 +67,7 @@
       </div>
   </div>
 
-  <or-icon-button :disabled="readonly" disableRipple type="secondary" class="variable__btn flat  " has-dropdown icon="more_vert" ref="dropdownButton" size="small">
+  <or-icon-button :disabled="readonly" disableRipple type="secondary" class="variable__btn flat  " has-dropdown icon="more_vert" ref="dropdownButton">
         <or-menu
         contain-focus
         has-icons
@@ -186,7 +184,8 @@ export default {
         switch (newValue) {
           case "string":
           case "number":
-            this.variableValueLocal = "``";
+            let tmp = String(this.variableValueLocal);
+            this.variableValueLocal = tmp;
             break;
           case "boolean":
             this.variableValueLocal = true;
