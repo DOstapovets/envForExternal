@@ -30,7 +30,7 @@
             </template>
             <template slot="footer">
               <or-button disableRipple :disabled="readonly"
-              icon="add" class="flat add-button"
+              icon="add" :style="{'margin-left':variables.length>1?'':'0px'}" class="flat add-button"
               @click="$refs.variablesOrList.addItem()"
                type="secondary" color="primary">
                 {{template.btn_label}}
@@ -68,7 +68,7 @@
             </template>
             <template slot="footer">
               <or-button disableRipple :disabled="readonly"
-              icon="add" class="flat add-button"
+              icon="add" :style="{'margin-left':variables.length>1?'':'0px'}" class="flat add-button"
               @click="$refs.variablesOrList.addItem()"
 
                type="secondary" color="primary">
@@ -374,7 +374,6 @@ export const meta = {
           .editable {
             width: calc(100% - 32px);
           }
-
           .merge-tag input {
             text-overflow: ellipsis;
           }
@@ -483,9 +482,12 @@ export const meta = {
   }
   .flex-box {
     display: flex;
+    align-items: flex-start;
     width: 100%;
   }
-
+  button.ui-icon-button.flat.add-variable {
+    visibility: visible !important;
+  }
   .value-type-helper {
     display: block;
     color: rgba(0, 0, 0, 0.38);
@@ -496,7 +498,8 @@ export const meta = {
     padding: 0 16px;
   }
   .add-button {
-    padding-left: 16px;
+    padding: 0;
+    margin-left: 24px;
   }
   .or-list .list-item > .sortable-handle {
     margin-top: 24px;
