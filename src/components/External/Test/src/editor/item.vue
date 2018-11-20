@@ -203,7 +203,7 @@ export default {
     return {
       variableTypeOptions: ["string", "number", "boolean", "null"],
       errorText: `The ${this.template.nameLabel} is required.`,
-      valueErrorText: `The ${this.template.valueLabel} is required.`,
+      valueErrorText: `The ${this.template.valueLabel} isn't number.`,
       errorCodeReq: "The Code is required.",
       errorUniq: "Use another variable name."
     };

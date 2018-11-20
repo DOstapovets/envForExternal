@@ -108,9 +108,9 @@ export const validator = template => {
           }
         },
         value: {
-          custom(value, ctx) {
-            return ctx.isCode || validators.jsExpressionNonEmptyString(value);
-          },
+          // custom(value, ctx) {
+          //   return ctx.isCode || validators.jsExpressionNonEmptyString(value);
+          // },
           isNumber(value, ctx) {
             return (
               ctx.isCode ||
@@ -482,7 +482,7 @@ export const meta = {
   }
   .flex-box {
     display: flex;
-    align-items: flex-start;
+    //align-items: flex-start;
     width: 100%;
   }
   button.ui-icon-button.flat.add-variable {
