@@ -326,8 +326,7 @@ export const meta = {
     }
     &__btn {
       width: 24px;
-      align-self: center;
-      margin-top: 24px;
+      margin-top: 36px;
     }
     &__name {
       width: calc(50% - 16px);
@@ -351,7 +350,7 @@ export const meta = {
       justify-content: center;
       align-items: center;
       margin: 2.5px;
-      margin-top: 24px;
+      margin-top: 42px;
     }
 
     &__value {
@@ -390,6 +389,9 @@ export const meta = {
           right: 0;
           width: auto;
           min-width: auto;
+          &-button {
+            font-size: 20px;
+          }
         }
 
         &__options {
@@ -415,10 +417,6 @@ export const meta = {
         color: #64b2da;
       }
 
-      .ui-select__display-value {
-        flex-grow: 0;
-      }
-
       .ui-select .ui-select__content .ui-select__label .ui-select__label-text {
         white-space: nowrap;
         font-size: 14px;
@@ -427,13 +425,7 @@ export const meta = {
         font-size: 13px;
       }
 
-      .ui-select.has-label .ui-select__dropdown-button {
-        top: 0px;
-        font-size: 20px;
-        margin-top: 2px;
-      }
-
-      .ui-radio-group {
+      .ui-icon .ui-select__dropdown .ui-radio-group {
         &__label-text {
           display: flex;
           align-items: center;
@@ -471,18 +463,17 @@ export const meta = {
 
       .ui-radio-group__radios {
         display: flex; /*  */
-        justify-content: left;
+        justify-content: space-around;
         height: 38px;
         font-size: 14px;
         border-radius: 3px;
         padding: 7px 10px;
-        background: #f6f6f6;
       }
     }
   }
   .flex-box {
     display: flex;
-    //align-items: flex-start;
+    align-items: flex-start;
     width: 100%;
   }
   button.ui-icon-button.flat.add-variable {
@@ -500,9 +491,11 @@ export const meta = {
   .add-button {
     padding: 0;
     margin-left: 24px;
+    font-weight: bold;
   }
   .or-list .list-item > .sortable-handle {
-    margin-top: 24px;
+    margin-top: 42px;
+    align-self: flex-start;
   }
 }
 </style>
